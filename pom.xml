@@ -4,7 +4,7 @@
 
     <groupId>com.rkade</groupId>
     <artifactId>FFbWheelConfig</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>FFbWheelConfig</name>
@@ -26,4 +26,69 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>console</headerType>
+                            <outfile>target/FFbWheelConfig.exe</outfile>
+                            <jar>target/FFbWheelConfig-1.0.jar</jar>
+                            <errTitle>FFbWheelConfig</errTitle>
+                            <classPath>
+                                <mainClass>com.rkade.App</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <path>C:/Progra~1/Java/jre-1.8</path>
+                                <!--<opts>
+                                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
+                                </opts>-->
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <txtFileVersion>txt file version?</txtFileVersion>
+                                <fileDescription>a description</fileDescription>
+                                <copyright>my copyright</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>txt product version</txtProductVersion>
+                                <productName>FFbWheelConfig</productName>
+                                <internalName>FFbWheelConfig</internalName>
+                                <originalFilename>FFbWheelConfig.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>assembly</id>
+                        <phase>package</phase>
+                        <goals><goal>single</goal></goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
