@@ -19,13 +19,24 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="faa28" binding="inputsPanel" layout-manager="GridBagLayout">
+          <grid id="faa28" binding="inputsPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
             <constraints>
               <tabbedpane title="Inputs"/>
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="19d08" class="javax.swing.JComboBox" binding="rangeComboBox">
+                <constraints/>
+                <properties/>
+              </component>
+              <component id="22fd5" class="javax.swing.JLabel" binding="rangeLabel">
+                <constraints/>
+                <properties>
+                  <text value="Range"/>
+                </properties>
+              </component>
+            </children>
           </grid>
           <grid id="7fec8" binding="ffbPanel" layout-manager="GridBagLayout">
             <constraints>
@@ -47,7 +58,10 @@
         <children>
           <component id="763d7" class="javax.swing.JComboBox" binding="deviceComboBox">
             <constraints/>
-            <properties/>
+            <properties>
+              <minimumSize width="200" height="30"/>
+              <preferredSize width="200" height="30"/>
+            </properties>
           </component>
           <component id="ea116" class="javax.swing.JLabel" binding="firmwareLabel">
             <constraints/>

@@ -53,7 +53,7 @@ public class DataReport implements Serializable {
         this.reportIndex = buffer.get();
         if (reportType == DATA_REPORT_ID) {
             this.section = buffer.getShort();
-            for (int i = 0; i < DATA_REPORT_VALUE_COUNT; i++) {
+            while (buffer.hasRemaining()) {
                 values.add(buffer.getShort());
             }
         } else {
@@ -66,13 +66,12 @@ public class DataReport implements Serializable {
         return (short) (hi << 8 | lo & 0xFF);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder(String.format("DataReport{reportType=%d, reportIndex=%d, section=%d, ", reportType, reportIndex, section));
-        for (short value : values) {
-            s.append(String.format("%6d ", value));
-        }
-        return s.toString();
+    public short getSection() {
+        return section;
+    }
+
+    public List<Short> getValues() {
+        return values;
     }
 
     public byte getReportType() {
@@ -85,5 +84,14 @@ public class DataReport implements Serializable {
 
     public byte[] getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder(String.format("DataReport{reportType=%d, reportIndex=%d, section=%d, ", reportType, reportIndex, section));
+        for (short value : values) {
+            s.append(String.format("%6d ", value));
+        }
+        return s.toString();
     }
 }

@@ -11,6 +11,8 @@ public class MainForm implements DeviceListener {
     private JPanel bottomPanel;
     private JComboBox<String> deviceComboBox;
     private JLabel firmwareLabel;
+    private JComboBox<String> rangeComboBox;
+    private JLabel rangeLabel;
 
     @Override
     public void deviceAttached(Device device) {
@@ -25,6 +27,19 @@ public class MainForm implements DeviceListener {
     @Override
     public void deviceUpdated(Device device, String status, DataReport report) {
         firmwareLabel.setText(status);
+
+        if (report != null) {
+            if (report.getReportType() == DataReport.DATA_REPORT_ID) {
+                if (report.getReportIndex() == DataReport.CMD_GET_STEER) {
+                    String newRange = String.valueOf(report.getValues().get(3));
+                    String oldRange = (String) rangeComboBox.getSelectedItem();
+                    if (!newRange.equals(oldRange)) {
+                        rangeComboBox.removeAllItems();
+                        rangeComboBox.addItem(newRange);
+                    }
+                }
+            }
+        }
     }
 
     public JComponent getRootComponent() {
@@ -59,8 +74,13 @@ public class MainForm implements DeviceListener {
         gbc.fill = GridBagConstraints.BOTH;
         mainPanel.add(tabbedPane, gbc);
         inputsPanel = new JPanel();
-        inputsPanel.setLayout(new GridBagLayout());
+        inputsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         tabbedPane.addTab("Inputs", inputsPanel);
+        rangeComboBox = new JComboBox();
+        inputsPanel.add(rangeComboBox);
+        rangeLabel = new JLabel();
+        rangeLabel.setText("Range");
+        inputsPanel.add(rangeLabel);
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
         tabbedPane.addTab("Force Feedback", ffbPanel);
@@ -75,6 +95,8 @@ public class MainForm implements DeviceListener {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         mainPanel.add(bottomPanel, gbc);
         deviceComboBox = new JComboBox();
+        deviceComboBox.setMinimumSize(new Dimension(200, 30));
+        deviceComboBox.setPreferredSize(new Dimension(200, 30));
         bottomPanel.add(deviceComboBox);
         firmwareLabel = new JLabel();
         firmwareLabel.setText("Version 1.2");
