@@ -3,7 +3,6 @@ package com.rkade;
 import javax.swing.*;
 import java.awt.*;
 
-
 public class App {
     private static DeviceManager deviceManager;
 

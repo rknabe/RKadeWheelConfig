@@ -23,7 +23,7 @@ public class MainForm implements DeviceListener {
     }
 
     @Override
-    public void deviceUpdated(Device device, String status) {
+    public void deviceUpdated(Device device, String status, DataReport report) {
         firmwareLabel.setText(status);
     }
 

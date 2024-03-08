@@ -1,11 +1,15 @@
 package com.rkade;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataReport implements Serializable {
     public final static byte CMD_REPORT_ID = 15;
     public final static byte DATA_REPORT_ID = 16;
+    public final static byte DATA_REPORT_VALUE_COUNT = 14;
     public final static int CMD_GET_VER = 1;
     public final static int CMD_GET_STEER = 2;
     public final static int CMD_GET_ANALOG = 3;
@@ -38,17 +42,24 @@ public class DataReport implements Serializable {
     private final short reportIndex;
     private final short section;
     private final byte[] data;
+    private final List<Short> values = new ArrayList<>(DATA_REPORT_VALUE_COUNT);
 
     public DataReport(byte reportType, byte[] data) {
         this.reportType = reportType;
-        this.reportIndex = data[0];
+        this.data = data;
+        ByteBuffer buffer = ByteBuffer.allocate(data.length).order(ByteOrder.LITTLE_ENDIAN);
+        buffer.put(data);
+        buffer.rewind();
+        this.reportIndex = buffer.get();
         if (reportType == DATA_REPORT_ID) {
-            this.section = toShort(data[2], data[1]);
-            this.data = Arrays.copyOfRange(data, 3, data.length);
+            this.section = buffer.getShort();
+            for (int i = 0; i < DATA_REPORT_VALUE_COUNT; i++) {
+                values.add(buffer.getShort());
+            }
         } else {
             this.section = 0;
-            this.data = Arrays.copyOfRange(data, 1, data.length);
         }
+        System.out.println(this);
     }
 
     public static short toShort(byte hi, byte lo) {
@@ -58,8 +69,8 @@ public class DataReport implements Serializable {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder(String.format("DataReport{reportType=%d, reportIndex=%d, section=%d, ", reportType, reportIndex, section));
-        for (byte datum : data) {
-            s.append(String.format("%02X ", datum));
+        for (short value : values) {
+            s.append(String.format("%6d ", value));
         }
         return s.toString();
     }

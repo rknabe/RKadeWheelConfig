@@ -50,21 +50,21 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
         }
     }
 
-    private void notifyListenersDeviceUpdated(Device device, String status) {
+    private void notifyListenersDeviceUpdated(Device device, String status, DataReport report) {
         for (DeviceListener deviceListener : deviceListeners) {
-            deviceListener.deviceUpdated(device, status);
+            deviceListener.deviceUpdated(device, status, report);
         }
     }
 
     private Device getDevice(HidDevice hidDevice) {
-        return new Device(hidDevice.getHidDeviceInfo().getProductString());
+        return new Device(hidDevice);
     }
 
     @Override
     public void onInputReport(HidDevice hidDevice, byte id, byte[] data, int len) {
-        DataReport report = new DataReport(id, data);
         if (id == 16) {
-            System.out.println(report);
+            DataReport report = new DataReport(id, data);
+            notifyListenersDeviceUpdated(new Device(hidDevice), "Updating...", report);
         }
     }
 
@@ -83,7 +83,7 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
                 if (!deviceAttached) {
                     deviceInfo = null;
                     System.out.println("scanning");
-                    notifyListenersDeviceUpdated(null, "Scanning...");
+                    notifyListenersDeviceUpdated(null, "Scanning...", null);
                     List<HidDeviceInfo> devList = PureJavaHidApi.enumerateDevices();
                     for (HidDeviceInfo info : devList) {
                         if (info.getVendorId() == (short) LEONARDO_VENDOR_ID && info.getProductId() == (short) LEONARDO_PRODUCT_ID) {
@@ -93,18 +93,18 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
                     }
                     if (deviceInfo == null) {
                         System.out.println("device not found");
-                        notifyListenersDeviceUpdated(null, "Device Not Found...");
+                        notifyListenersDeviceUpdated(null, "Device Not Found...", null);
                         sleep(1000);
                     } else {
                         System.out.println("device found");
-                        notifyListenersDeviceUpdated(null, "Attached...");
+                        notifyListenersDeviceUpdated(null, "Attached...", null);
                         deviceAttached = true;
                         if (deviceAttached) {
                             try {
                                 openedDevice = PureJavaHidApi.openDevice(deviceInfo);
                                 if (openedDevice != null) {
                                     Device device = getDevice(openedDevice);
-                                    notifyListenersDeviceUpdated(device, "Opened");
+                                    notifyListenersDeviceUpdated(device, "Opened", null);
                                     SerialPort[] ports = SerialPort.getCommPorts();
                                     for (SerialPort port : ports) {
                                         if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
@@ -130,6 +130,7 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
 
         @Override
         public void run() {
+            int failCount = 0;
             while (true) {
                 if (openedDevice != null) {
                     byte[] data = new byte[7];
@@ -137,6 +138,7 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
                     data[1] = currentDataIndex;
                     int ret = openedDevice.setOutputReport(DataReport.CMD_REPORT_ID, data, 7);
                     if (ret > 0) {
+                        failCount = 0;
                         switch (currentDataType) {
                             case DataReport.CMD_GET_VER:
                                 currentDataIndex = 0;
@@ -168,6 +170,11 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
                         }
                     } else {
                         System.out.println("Error sending OutputReport");
+                        ++failCount;
+                        if (failCount > 3) {
+                            onDeviceRemoval(openedDevice);
+                        }
+                        sleep(1000);
                     }
                     sleep(1);
                 } else {
