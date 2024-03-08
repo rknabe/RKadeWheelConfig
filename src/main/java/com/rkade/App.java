@@ -1,8 +1,6 @@
 package com.rkade;
 
-import purejavahidapi.*;
-
-import java.util.List;
+import javax.swing.*;
 
 public class App {
     volatile static boolean deviceOpen = false;
@@ -11,7 +9,21 @@ public class App {
 
     public static void main(String[] args) {
         try {
-
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProIJTheme.setup();
+                    //com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme.setup();
+                    //FlatDarculaLaf.setup();
+                    JFrame frame = new JFrame("Wheel Config");
+                    frame.setContentPane(new MainForm().mainPanel);
+                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.pack();
+                    frame.setVisible(true);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+/*
             while (true) {
                 // System.exit(0);
                 HidDeviceInfo devInfo = null;
@@ -55,15 +67,6 @@ public class App {
 
                                     DataReport report = new DataReport(id, data);
                                     System.out.println(report);
-
-                                    /*switch (id) {
-                                        case 1:
-
-                                            break;
-                                        case DATA_REPORT_ID:
-                                            DataReport report = new DataReport(id, data);
-                                            break;
-                                    }*/
                                 }
                             });
 
@@ -124,8 +127,8 @@ public class App {
                         }
                     }
                 }
-            }
-        } catch (Throwable e) {
+            }*/
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
