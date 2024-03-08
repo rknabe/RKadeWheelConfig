@@ -20,6 +20,11 @@
             <version>0.0.3</version>
         </dependency>
         <dependency>
+            <groupId>com.fazecast</groupId>
+            <artifactId>jSerialComm</artifactId>
+            <version>2.10.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.4</version>
@@ -72,17 +77,21 @@
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
-                            <headerType>console</headerType>
+                            <headerType>gui</headerType>
                             <outfile>target/FFbWheelConfig.exe</outfile>
                             <jar>target/FFbWheelConfig-1.0.jar</jar>
                             <errTitle>FFbWheelConfig</errTitle>
+                            <icon>src/main/resources/wheel.ico</icon>
+                            <singleInstance>
+                                <mutexName>com.rkade.FFbWheelConfig</mutexName>
+                            </singleInstance>
                             <classPath>
                                 <mainClass>com.rkade.App</mainClass>
                                 <addDependencies>false</addDependencies>
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>
-                                <path>C:/Progra~1/Java/jre-1.8</path>
+                                <path>jre</path>
                                 <!--<opts>
                                     <opt>-Djava.endorsed.dirs=./endorsed</opt>
                                 </opts>-->
