@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rkade.DataReport.DATA_REPORT_ID;
+
 public final class DeviceManager implements InputReportListener, DeviceRemovalListener {
     private final static int LEONARDO_VENDOR_ID = 0x2341;
     private final static int LEONARDO_PRODUCT_ID = 0x8036;
@@ -63,8 +65,8 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
 
     @Override
     public void onInputReport(HidDevice hidDevice, byte id, byte[] data, int len) {
-        if (id == 16) {
-            DataReport report = new DataReport(id, data);
+        if (id == DATA_REPORT_ID) {
+            DataReport report = DataReportFactory.create(id, data);
             notifyListenersDeviceUpdated(new Device(hidDevice), null, report);
         }
     }

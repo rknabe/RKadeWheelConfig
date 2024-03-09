@@ -1,12 +1,8 @@
 package com.rkade;
 
-import java.io.Serializable;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.List;
 
-public class DataReport implements Serializable {
+public class DataReport {
     public final static byte CMD_REPORT_ID = 15;
     public final static byte DATA_REPORT_ID = 16;
     public final static byte DATA_REPORT_VALUE_COUNT = 14;
@@ -38,32 +34,16 @@ public class DataReport implements Serializable {
     public final static byte CMD_EESAVE = 21;
     public final static int CMD_DEFAULT = 22;
     public final static int CMD_CENTER = 23;
-    private final byte reportType;
-    private final short reportIndex;
-    private final short section;
-    private final byte[] data;
-    private final List<Short> values = new ArrayList<>(DATA_REPORT_VALUE_COUNT);
+    protected final byte reportType;
+    protected final short reportIndex;
+    protected final short section;
+    protected final List<Short> values;
 
-    public DataReport(byte reportType, byte[] data) {
+    public DataReport(byte reportType, byte reportIndex, short section, List<Short> values) {
         this.reportType = reportType;
-        this.data = data;
-        ByteBuffer buffer = ByteBuffer.allocate(data.length).order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(data);
-        buffer.rewind();
-        this.reportIndex = buffer.get();
-        if (reportType == DATA_REPORT_ID) {
-            this.section = buffer.getShort();
-            while (buffer.hasRemaining()) {
-                values.add(buffer.getShort());
-            }
-        } else {
-            this.section = 0;
-        }
-        //System.out.println(this);
-    }
-
-    public static short toShort(byte hi, byte lo) {
-        return (short) (hi << 8 | lo & 0xFF);
+        this.reportIndex = reportIndex;
+        this.section = section;
+        this.values = values;
     }
 
     public short getSection() {
@@ -82,9 +62,6 @@ public class DataReport implements Serializable {
         return reportIndex;
     }
 
-    public byte[] getData() {
-        return data;
-    }
 
     @Override
     public String toString() {

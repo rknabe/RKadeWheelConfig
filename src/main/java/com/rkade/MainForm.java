@@ -2,8 +2,12 @@ package com.rkade;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
-public class MainForm implements DeviceListener {
+public class MainForm implements DeviceListener, ActionListener {
+    private final static String CENTER_BUTTON = "Set Center";
     private JPanel mainPanel;
     private JTabbedPane tabbedPane;
     private JPanel inputsPanel;
@@ -14,6 +18,22 @@ public class MainForm implements DeviceListener {
     private JComboBox<String> rangeComboBox;
     private JLabel rangeLabel;
     private JSlider wheelSlider;
+    private JButton centerButton;
+    private JTextField velocityText;
+    private JTextField accText;
+    private JLabel accLabel;
+    private JLabel degreesLabel;
+
+    public MainForm() {
+        centerButton.addActionListener(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (CENTER_BUTTON.equals(e.getActionCommand())) {
+
+        }
+    }
 
     @Override
     public void deviceAttached(Device device) {
@@ -33,20 +53,22 @@ public class MainForm implements DeviceListener {
 
         if (report != null) {
             if (report.getReportType() == DataReport.DATA_REPORT_ID) {
-                switch (report.getReportIndex()) {
-                    case DataReport.CMD_GET_STEER:
-                        String newRange = String.valueOf(report.getValues().get(3));
-                        String oldRange = (String) rangeComboBox.getSelectedItem();
-                        if (!newRange.equals(oldRange)) {
-                            rangeComboBox.removeAllItems();
-                            rangeComboBox.addItem(newRange);
-                        }
-                        wheelSlider.setValue(report.getValues().get(2));
-                        break;
-                    case DataReport.CMD_GET_ANALOG:
-                        break;
+                List<Short> values = report.getValues();
+                if (report instanceof WheelDataReport) {
+                    WheelDataReport wheelData = (WheelDataReport) report;
+                    //System.out.println(report);
+                    String newRange = String.valueOf(wheelData.getRange());
+                    String oldRange = (String) rangeComboBox.getSelectedItem();
+                    if (!newRange.equals(oldRange)) {
+                        rangeComboBox.removeAllItems();
+                        rangeComboBox.addItem(newRange);
+                    }
+                    wheelSlider.setValue(wheelData.getValue());
+                    wheelSlider.setToolTipText(String.valueOf(wheelData.getValue()));
+                    velocityText.setText(String.valueOf(wheelData.getVelocity()));
+                    accText.setText(String.valueOf(wheelData.getAcceleration()));
+                    degreesLabel.setText(Math.round(wheelData.getAngle()) + "°");
                 }
-
             }
         }
     }
@@ -90,6 +112,11 @@ public class MainForm implements DeviceListener {
         rangeLabel = new JLabel();
         rangeLabel.setText("Range");
         inputsPanel.add(rangeLabel);
+        centerButton = new JButton();
+        centerButton.setLabel("Set Center");
+        centerButton.setPreferredSize(new Dimension(100, 30));
+        centerButton.setText("Set Center");
+        inputsPanel.add(centerButton);
         wheelSlider = new JSlider();
         wheelSlider.setEnabled(false);
         wheelSlider.setMajorTickSpacing(8192);
@@ -103,6 +130,23 @@ public class MainForm implements DeviceListener {
         wheelSlider.setValue(0);
         wheelSlider.setValueIsAdjusting(false);
         inputsPanel.add(wheelSlider);
+        degreesLabel = new JLabel();
+        degreesLabel.setHorizontalTextPosition(2);
+        degreesLabel.setPreferredSize(new Dimension(54, 17));
+        degreesLabel.setText("");
+        inputsPanel.add(degreesLabel);
+        final JLabel label1 = new JLabel();
+        label1.setText("Velocity:");
+        inputsPanel.add(label1);
+        velocityText = new JTextField();
+        velocityText.setPreferredSize(new Dimension(100, 30));
+        inputsPanel.add(velocityText);
+        accLabel = new JLabel();
+        accLabel.setText("Acceleration:");
+        inputsPanel.add(accLabel);
+        accText = new JTextField();
+        accText.setPreferredSize(new Dimension(100, 30));
+        inputsPanel.add(accText);
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
         tabbedPane.addTab("Force Feedback", ffbPanel);
@@ -123,6 +167,8 @@ public class MainForm implements DeviceListener {
         firmwareLabel = new JLabel();
         firmwareLabel.setText("Version 1.2");
         bottomPanel.add(firmwareLabel);
+        label1.setLabelFor(velocityText);
+        accLabel.setLabelFor(accText);
     }
 
     /**
