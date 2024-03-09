@@ -21,7 +21,7 @@ public final class WheelDataReport extends DataReport {
             angle = 0;
         }
         else {
-            angle = value / (Short.MAX_VALUE / (range / 2.0));
+            angle = value / ((double) Short.MAX_VALUE / (range / 2.0));
         }
     }
 

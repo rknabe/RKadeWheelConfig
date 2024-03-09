@@ -1,16 +1,15 @@
 package com.rkade;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 public class MainForm implements DeviceListener, ActionListener {
     private final static String CENTER_BUTTON = "Set Center";
     private JPanel mainPanel;
-    private JTabbedPane tabbedPane;
-    private JPanel inputsPanel;
+    private JTabbedPane Inputs;
     private JPanel ffbPanel;
     private JPanel bottomPanel;
     private JComboBox<String> deviceComboBox;
@@ -23,6 +22,7 @@ public class MainForm implements DeviceListener, ActionListener {
     private JTextField accText;
     private JLabel accLabel;
     private JLabel degreesLabel;
+    private JPanel wheelPanel;
 
     public MainForm() {
         centerButton.addActionListener(this);
@@ -53,10 +53,8 @@ public class MainForm implements DeviceListener, ActionListener {
 
         if (report != null) {
             if (report.getReportType() == DataReport.DATA_REPORT_ID) {
-                List<Short> values = report.getValues();
                 if (report instanceof WheelDataReport) {
                     WheelDataReport wheelData = (WheelDataReport) report;
-                    //System.out.println(report);
                     String newRange = String.valueOf(wheelData.getRange());
                     String oldRange = (String) rangeComboBox.getSelectedItem();
                     if (!newRange.equals(oldRange)) {
@@ -67,8 +65,9 @@ public class MainForm implements DeviceListener, ActionListener {
                     wheelSlider.setToolTipText(String.valueOf(wheelData.getValue()));
                     velocityText.setText(String.valueOf(wheelData.getVelocity()));
                     accText.setText(String.valueOf(wheelData.getAcceleration()));
-                    degreesLabel.setText(Math.round(wheelData.getAngle()) + "°");
+                    degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
                 }
+                //System.out.println(report);
             }
         }
     }
@@ -95,7 +94,8 @@ public class MainForm implements DeviceListener, ActionListener {
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setPreferredSize(new Dimension(1024, 768));
-        tabbedPane = new JTabbedPane();
+        Inputs = new JTabbedPane();
+        Inputs.setPreferredSize(new Dimension(1024, 600));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -103,20 +103,26 @@ public class MainForm implements DeviceListener, ActionListener {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        mainPanel.add(tabbedPane, gbc);
-        inputsPanel = new JPanel();
-        inputsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        tabbedPane.addTab("Inputs", inputsPanel);
-        rangeComboBox = new JComboBox();
-        inputsPanel.add(rangeComboBox);
+        mainPanel.add(Inputs, gbc);
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new BorderLayout(0, 0));
+        panel1.setMinimumSize(new Dimension(1024, 600));
+        Inputs.addTab("Inputs", panel1);
+        wheelPanel = new JPanel();
+        wheelPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        wheelPanel.setPreferredSize(new Dimension(1000, 75));
+        panel1.add(wheelPanel, BorderLayout.NORTH);
+        wheelPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 0 (X - Steering)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         rangeLabel = new JLabel();
         rangeLabel.setText("Range");
-        inputsPanel.add(rangeLabel);
+        wheelPanel.add(rangeLabel);
+        rangeComboBox = new JComboBox();
+        wheelPanel.add(rangeComboBox);
         centerButton = new JButton();
         centerButton.setLabel("Set Center");
         centerButton.setPreferredSize(new Dimension(100, 30));
         centerButton.setText("Set Center");
-        inputsPanel.add(centerButton);
+        wheelPanel.add(centerButton);
         wheelSlider = new JSlider();
         wheelSlider.setEnabled(false);
         wheelSlider.setMajorTickSpacing(8192);
@@ -129,37 +135,28 @@ public class MainForm implements DeviceListener, ActionListener {
         wheelSlider.setSnapToTicks(false);
         wheelSlider.setValue(0);
         wheelSlider.setValueIsAdjusting(false);
-        inputsPanel.add(wheelSlider);
+        wheelPanel.add(wheelSlider);
         degreesLabel = new JLabel();
         degreesLabel.setHorizontalTextPosition(2);
-        degreesLabel.setPreferredSize(new Dimension(54, 17));
-        degreesLabel.setText("");
-        inputsPanel.add(degreesLabel);
+        degreesLabel.setPreferredSize(new Dimension(50, 31));
+        degreesLabel.setText("00.00°");
+        wheelPanel.add(degreesLabel);
         final JLabel label1 = new JLabel();
         label1.setText("Velocity:");
-        inputsPanel.add(label1);
+        wheelPanel.add(label1);
         velocityText = new JTextField();
-        velocityText.setPreferredSize(new Dimension(100, 30));
-        inputsPanel.add(velocityText);
+        velocityText.setMinimumSize(new Dimension(25, 30));
+        velocityText.setPreferredSize(new Dimension(75, 30));
+        wheelPanel.add(velocityText);
         accLabel = new JLabel();
         accLabel.setText("Acceleration:");
-        inputsPanel.add(accLabel);
+        wheelPanel.add(accLabel);
         accText = new JTextField();
-        accText.setPreferredSize(new Dimension(100, 30));
-        inputsPanel.add(accText);
-        ffbPanel = new JPanel();
-        ffbPanel.setLayout(new GridBagLayout());
-        tabbedPane.addTab("Force Feedback", ffbPanel);
+        accText.setPreferredSize(new Dimension(75, 30));
+        wheelPanel.add(accText);
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.SOUTH;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        mainPanel.add(bottomPanel, gbc);
+        panel1.add(bottomPanel, BorderLayout.SOUTH);
         deviceComboBox = new JComboBox();
         deviceComboBox.setMinimumSize(new Dimension(200, 30));
         deviceComboBox.setPreferredSize(new Dimension(200, 30));
@@ -167,6 +164,21 @@ public class MainForm implements DeviceListener, ActionListener {
         firmwareLabel = new JLabel();
         firmwareLabel.setText("Version 1.2");
         bottomPanel.add(firmwareLabel);
+        ffbPanel = new JPanel();
+        ffbPanel.setLayout(new GridBagLayout());
+        Inputs.addTab("Force Feedback", ffbPanel);
+        final JPanel spacer1 = new JPanel();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        ffbPanel.add(spacer1, gbc);
+        final JPanel spacer2 = new JPanel();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        ffbPanel.add(spacer2, gbc);
         label1.setLabelFor(velocityText);
         accLabel.setLabelFor(accText);
     }
