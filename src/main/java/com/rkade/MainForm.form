@@ -36,6 +36,22 @@
                   <text value="Range"/>
                 </properties>
               </component>
+              <component id="62547" class="javax.swing.JSlider" binding="wheelSlider">
+                <constraints/>
+                <properties>
+                  <enabled value="false"/>
+                  <majorTickSpacing value="8192"/>
+                  <maximum value="32768"/>
+                  <minimum value="-32768"/>
+                  <paintLabels value="true"/>
+                  <paintTicks value="true"/>
+                  <paintTrack value="true"/>
+                  <preferredSize width="400" height="40"/>
+                  <snapToTicks value="false"/>
+                  <value value="0"/>
+                  <valueIsAdjusting value="false"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="7fec8" binding="ffbPanel" layout-manager="GridBagLayout">

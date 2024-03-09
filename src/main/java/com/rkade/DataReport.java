@@ -59,7 +59,7 @@ public class DataReport implements Serializable {
         } else {
             this.section = 0;
         }
-        System.out.println(this);
+        //System.out.println(this);
     }
 
     public static short toShort(byte hi, byte lo) {

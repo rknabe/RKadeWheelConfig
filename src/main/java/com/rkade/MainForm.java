@@ -13,6 +13,7 @@ public class MainForm implements DeviceListener {
     private JLabel firmwareLabel;
     private JComboBox<String> rangeComboBox;
     private JLabel rangeLabel;
+    private JSlider wheelSlider;
 
     @Override
     public void deviceAttached(Device device) {
@@ -26,18 +27,26 @@ public class MainForm implements DeviceListener {
 
     @Override
     public void deviceUpdated(Device device, String status, DataReport report) {
-        firmwareLabel.setText(status);
+        if (status != null) {
+            firmwareLabel.setText(status);
+        }
 
         if (report != null) {
             if (report.getReportType() == DataReport.DATA_REPORT_ID) {
-                if (report.getReportIndex() == DataReport.CMD_GET_STEER) {
-                    String newRange = String.valueOf(report.getValues().get(3));
-                    String oldRange = (String) rangeComboBox.getSelectedItem();
-                    if (!newRange.equals(oldRange)) {
-                        rangeComboBox.removeAllItems();
-                        rangeComboBox.addItem(newRange);
-                    }
+                switch (report.getReportIndex()) {
+                    case DataReport.CMD_GET_STEER:
+                        String newRange = String.valueOf(report.getValues().get(3));
+                        String oldRange = (String) rangeComboBox.getSelectedItem();
+                        if (!newRange.equals(oldRange)) {
+                            rangeComboBox.removeAllItems();
+                            rangeComboBox.addItem(newRange);
+                        }
+                        wheelSlider.setValue(report.getValues().get(2));
+                        break;
+                    case DataReport.CMD_GET_ANALOG:
+                        break;
                 }
+
             }
         }
     }
@@ -81,6 +90,19 @@ public class MainForm implements DeviceListener {
         rangeLabel = new JLabel();
         rangeLabel.setText("Range");
         inputsPanel.add(rangeLabel);
+        wheelSlider = new JSlider();
+        wheelSlider.setEnabled(false);
+        wheelSlider.setMajorTickSpacing(8192);
+        wheelSlider.setMaximum(32768);
+        wheelSlider.setMinimum(-32768);
+        wheelSlider.setPaintLabels(true);
+        wheelSlider.setPaintTicks(true);
+        wheelSlider.setPaintTrack(true);
+        wheelSlider.setPreferredSize(new Dimension(400, 40));
+        wheelSlider.setSnapToTicks(false);
+        wheelSlider.setValue(0);
+        wheelSlider.setValueIsAdjusting(false);
+        inputsPanel.add(wheelSlider);
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
         tabbedPane.addTab("Force Feedback", ffbPanel);

@@ -7,19 +7,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceManager implements InputReportListener, DeviceRemovalListener {
+public final class DeviceManager implements InputReportListener, DeviceRemovalListener {
     private final static int LEONARDO_VENDOR_ID = 0x2341;
     private final static int LEONARDO_PRODUCT_ID = 0x8036;
-    volatile static boolean deviceAttached = false;
+    private final static int OUTPUT_REPORT_DATA_LENGTH = 7;
+    private final static List<DeviceListener> deviceListeners = new ArrayList<>();
+    private static boolean deviceAttached = false;
     private static byte currentDataType = DataReport.CMD_GET_VER;
     private static byte currentDataIndex = 0;
     private static HidDeviceInfo deviceInfo = null;
     private static HidDevice openedDevice = null;
-    private final List<DeviceListener> deviceListeners = new ArrayList<>();
 
     public DeviceManager() {
-        new Thread(new ConnectionThread()).start();
-        new Thread(new OutputReportThread()).start();
+        new Thread(new ConnectionRunner()).start();
+        new Thread(new OutputReportRunner()).start();
     }
 
     public void addDeviceListener(DeviceListener deviceListener) {
@@ -64,7 +65,7 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
     public void onInputReport(HidDevice hidDevice, byte id, byte[] data, int len) {
         if (id == 16) {
             DataReport report = new DataReport(id, data);
-            notifyListenersDeviceUpdated(new Device(hidDevice), "Updating...", report);
+            notifyListenersDeviceUpdated(new Device(hidDevice), null, report);
         }
     }
 
@@ -76,7 +77,13 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
         }
     }
 
-    private class ConnectionThread implements Runnable {
+    private int getOutputReport(byte dataType, byte dataIndex, byte[] data) {
+        data[0] = dataType;
+        data[1] = dataIndex;
+        return openedDevice.setOutputReport(DataReport.CMD_REPORT_ID, data, OUTPUT_REPORT_DATA_LENGTH);
+    }
+
+    private final class ConnectionRunner implements Runnable {
         @Override
         public void run() {
             while (true) {
@@ -126,18 +133,21 @@ public class DeviceManager implements InputReportListener, DeviceRemovalListener
         }
     }
 
-    private class OutputReportThread implements Runnable {
+    private final class OutputReportRunner implements Runnable {
 
         @Override
         public void run() {
             int failCount = 0;
+            byte[] data = new byte[OUTPUT_REPORT_DATA_LENGTH];
             while (true) {
                 if (openedDevice != null) {
-                    byte[] data = new byte[7];
                     data[0] = currentDataType;
                     data[1] = currentDataIndex;
-                    int ret = openedDevice.setOutputReport(DataReport.CMD_REPORT_ID, data, 7);
+                    int ret = getOutputReport(currentDataType, currentDataIndex, data);
                     if (ret > 0) {
+                        data[0] = DataReport.CMD_GET_STEER;
+                        data[1] = 0;
+                        getOutputReport((byte) DataReport.CMD_GET_STEER, (byte) 0, data);
                         failCount = 0;
                         switch (currentDataType) {
                             case DataReport.CMD_GET_VER:
