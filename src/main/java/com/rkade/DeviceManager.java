@@ -15,11 +15,10 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     private final static int OUTPUT_REPORT_DATA_LENGTH = 7;
     private final static byte AXIS_COUNT = 7;
     private final static List<DeviceListener> deviceListeners = new ArrayList<>();
-    private static boolean deviceAttached = false;
-    private static byte currentDataType = DataReport.CMD_GET_VER;
-    private static byte currentDataIndex = 0;
-    private static HidDeviceInfo deviceInfo = null;
-    private static HidDevice openedDevice = null;
+    private static volatile boolean deviceAttached = false;
+    private static volatile boolean versionReported = false;
+    private static volatile HidDeviceInfo deviceInfo = null;
+    private static volatile HidDevice openedDevice = null;
 
     public DeviceManager() {
         new Thread(new ConnectionRunner()).start();
@@ -34,10 +33,9 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     public void onDeviceRemoval(HidDevice hidDevice) {
         System.out.println("device removed");
         deviceAttached = false;
+        versionReported = false;
         deviceInfo = null;
         openedDevice = null;
-        currentDataType = DataReport.CMD_GET_VER;
-        currentDataIndex = 0;
         Device device = getDevice(hidDevice);
         notifyListenersDeviceDetached(device);
     }
@@ -69,6 +67,10 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         if (id == DATA_REPORT_ID) {
             DataReport report = DataReportFactory.create(id, data);
             notifyListenersDeviceUpdated(new Device(hidDevice), null, report);
+            if (report instanceof VersionDataReport) {
+                versionReported = true;
+            }
+
         }
     }
 
@@ -85,7 +87,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         data[1] = dataIndex;
         int ret = openedDevice.setOutputReport(DataReport.CMD_REPORT_ID, data, OUTPUT_REPORT_DATA_LENGTH);
         if (ret <= 0) {
-            throw new IOException("Device returned error");
+            throw new IOException("Device returned error for dataType:" + dataType + " dataIndex:" + dataIndex);
         }
     }
 
@@ -145,12 +147,12 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         public void run() {
             int failCount = 0;
             byte[] data = new byte[OUTPUT_REPORT_DATA_LENGTH];
-            int loopCount = 0;
             while (true) {
                 if (openedDevice != null) {
                     try {
-                        if (loopCount == 0) {
-                            //only need to do 1 time
+                        if (!versionReported) {
+                            //only need to do this once
+                            System.out.println("getv");
                             getOutputReport(DataReport.CMD_GET_VER, (byte) 0, data);
                         }
                         getOutputReport(DataReport.CMD_GET_STEER, (byte) 0, data);
@@ -160,10 +162,8 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                         getOutputReport(DataReport.CMD_GET_BUTTONS, (byte) 0, data);
                         getOutputReport(DataReport.CMD_GET_GAINS, (byte) 0, data);
                         getOutputReport(DataReport.CMD_GET_MISC, (byte) 0, data);
-                        ++loopCount;
                         failCount = 0;
-                        //sleep(1);
-                    } catch (IOException ex) {
+                     } catch (IOException ex) {
                         System.out.println("Error sending OutputReport");
                         ++failCount;
                         if (failCount > 3) {

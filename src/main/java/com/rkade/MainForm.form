@@ -45,10 +45,18 @@
                       <preferredSize width="200" height="30"/>
                     </properties>
                   </component>
-                  <component id="ea116" class="javax.swing.JLabel" binding="firmwareLabel">
+                  <component id="bcaa2" class="javax.swing.JLabel" binding="versionLabel">
                     <constraints/>
                     <properties>
-                      <text value="Version 1.2"/>
+                      <preferredSize width="80" height="17"/>
+                      <text value="Version"/>
+                    </properties>
+                  </component>
+                  <component id="ea116" class="javax.swing.JLabel" binding="statusLabel">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="120" height="17"/>
+                      <text value="Device Not Found"/>
                     </properties>
                   </component>
                 </children>
@@ -86,26 +94,11 @@
                           <text value="Set Center"/>
                         </properties>
                       </component>
-                      <component id="62547" class="javax.swing.JSlider" binding="wheelSlider">
-                        <constraints/>
-                        <properties>
-                          <enabled value="false"/>
-                          <majorTickSpacing value="8192"/>
-                          <maximum value="32768"/>
-                          <minimum value="-32768"/>
-                          <paintLabels value="true"/>
-                          <paintTicks value="true"/>
-                          <paintTrack value="true"/>
-                          <preferredSize width="410" height="40"/>
-                          <snapToTicks value="false"/>
-                          <value value="0"/>
-                          <valueIsAdjusting value="false"/>
-                        </properties>
-                      </component>
                       <component id="223ed" class="javax.swing.JLabel" binding="wheelIconLabel">
                         <constraints/>
                         <properties>
-                          <preferredSize width="40" height="40"/>
+                          <preferredSize width="45" height="45"/>
+                          <requestFocusEnabled value="false"/>
                           <text value=""/>
                           <verticalAlignment value="1"/>
                         </properties>
@@ -118,7 +111,35 @@
                           <text value="00.00°"/>
                         </properties>
                       </component>
-                      <component id="6952" class="javax.swing.JLabel">
+                      <component id="6952" class="javax.swing.JLabel" binding="wheelRawLabel">
+                        <constraints/>
+                        <properties>
+                          <labelFor value="d7455"/>
+                          <text value="Raw:"/>
+                        </properties>
+                      </component>
+                      <component id="c52d5" class="javax.swing.JTextField" binding="wheelRawTextField">
+                        <constraints/>
+                        <properties>
+                          <minimumSize width="25" height="30"/>
+                          <preferredSize width="65" height="30"/>
+                        </properties>
+                      </component>
+                      <component id="caa55" class="javax.swing.JLabel" binding="wheelValueLabel">
+                        <constraints/>
+                        <properties>
+                          <labelFor value="d7455"/>
+                          <text value="Value:"/>
+                        </properties>
+                      </component>
+                      <component id="5880e" class="javax.swing.JTextField" binding="wheelValueTextField">
+                        <constraints/>
+                        <properties>
+                          <minimumSize width="25" height="30"/>
+                          <preferredSize width="65" height="30"/>
+                        </properties>
+                      </component>
+                      <component id="f0703" class="javax.swing.JLabel">
                         <constraints/>
                         <properties>
                           <labelFor value="d7455"/>

@@ -1,5 +1,7 @@
 package com.rkade;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 public class DataReport {
@@ -38,12 +40,22 @@ public class DataReport {
     protected final short reportIndex;
     protected final short section;
     protected final List<Short> values;
+    protected final byte[] data;
 
     public DataReport(byte reportType, byte reportIndex, short section, List<Short> values) {
         this.reportType = reportType;
         this.reportIndex = reportIndex;
         this.section = section;
         this.values = values;
+        this.data = null;
+    }
+
+    public DataReport(byte reportType, byte reportIndex, short section, byte[] data) {
+        this.reportType = reportType;
+        this.reportIndex = reportIndex;
+        this.section = section;
+        this.values = null;
+        this.data = data;
     }
 
     protected boolean getBooleanByIndex(int index) {
@@ -64,6 +76,16 @@ public class DataReport {
 
     protected int intFromShorts(short low, short high) {
         return (high << 16) | (low & 0xFFFF);
+    }
+
+    protected String substring(byte[] array, int start, int end) {
+        if (end <= start)
+            return null;
+        int length = (end - start);
+
+        byte[] newArray = new byte[length];
+        System.arraycopy(array, start, newArray, 0, length);
+        return new String(newArray, StandardCharsets.ISO_8859_1);
     }
 
     public short getSection() {

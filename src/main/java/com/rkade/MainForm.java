@@ -15,10 +15,9 @@ public class MainForm implements DeviceListener, ActionListener {
     private JPanel ffbPanel;
     private JPanel bottomPanel;
     private JComboBox<String> deviceComboBox;
-    private JLabel firmwareLabel;
+    private JLabel statusLabel;
     private JComboBox<String> rangeComboBox;
     private JLabel rangeLabel;
-    private JSlider wheelSlider;
     private JButton centerButton;
     private JTextField velocityText;
     private JTextField accText;
@@ -36,6 +35,11 @@ public class MainForm implements DeviceListener, ActionListener {
     private JLabel yCenterLabel;
     private JTextField yCenterText;
     private JLabel yMaxLabel;
+    private JLabel wheelRawLabel;
+    private JTextField wheelRawTextField;
+    private JTextField wheelValueTextField;
+    private JLabel wheelValueLabel;
+    private JLabel versionLabel;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
 
@@ -110,7 +114,7 @@ public class MainForm implements DeviceListener, ActionListener {
     @Override
     public void deviceUpdated(Device device, String status, DataReport report) {
         if (status != null) {
-            firmwareLabel.setText(status);
+            statusLabel.setText(status);
         }
 
         if (report != null) {
@@ -123,14 +127,14 @@ public class MainForm implements DeviceListener, ActionListener {
                         rangeComboBox.removeAllItems();
                         rangeComboBox.addItem(newRange);
                     }
-                    wheelSlider.setValue(wheelData.getValue());
-                    wheelSlider.setToolTipText(String.valueOf(wheelData.getValue()));
+                    wheelRawTextField.setText(String.valueOf(wheelData.getRawValue()));
+                    wheelValueTextField.setText(String.valueOf(wheelData.getValue()));
                     velocityText.setText(String.valueOf(wheelData.getVelocity()));
                     accText.setText(String.valueOf(wheelData.getAcceleration()));
-                    degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
                     if (Math.abs(wheelData.getAngle() - prevWheelRotation) > 1.0) {
                         wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
                     }
+                    degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
                     prevWheelRotation = wheelData.getAngle();
                 } else if (report instanceof AxisDataReport) {
                     AxisDataReport axisData = (AxisDataReport) report;
@@ -139,8 +143,10 @@ public class MainForm implements DeviceListener, ActionListener {
                             ySlider.setValue(axisData.getRawValue());
                             break;
                     }
+                } else if (report instanceof VersionDataReport) {
+                    VersionDataReport versionData = (VersionDataReport) report;
+                    versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
                 }
-                //System.out.println(report);
             }
         }
     }
@@ -191,9 +197,14 @@ public class MainForm implements DeviceListener, ActionListener {
         deviceComboBox.setMinimumSize(new Dimension(200, 30));
         deviceComboBox.setPreferredSize(new Dimension(200, 30));
         bottomPanel.add(deviceComboBox);
-        firmwareLabel = new JLabel();
-        firmwareLabel.setText("Version 1.2");
-        bottomPanel.add(firmwareLabel);
+        versionLabel = new JLabel();
+        versionLabel.setPreferredSize(new Dimension(80, 17));
+        versionLabel.setText("Version");
+        bottomPanel.add(versionLabel);
+        statusLabel = new JLabel();
+        statusLabel.setPreferredSize(new Dimension(120, 17));
+        statusLabel.setText("Device Not Found");
+        bottomPanel.add(statusLabel);
         axisPanel = new JPanel();
         axisPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         axisPanel.setPreferredSize(new Dimension(1000, 700));
@@ -214,21 +225,9 @@ public class MainForm implements DeviceListener, ActionListener {
         centerButton.setPreferredSize(new Dimension(100, 30));
         centerButton.setText("Set Center");
         wheelPanel.add(centerButton);
-        wheelSlider = new JSlider();
-        wheelSlider.setEnabled(false);
-        wheelSlider.setMajorTickSpacing(8192);
-        wheelSlider.setMaximum(32768);
-        wheelSlider.setMinimum(-32768);
-        wheelSlider.setPaintLabels(true);
-        wheelSlider.setPaintTicks(true);
-        wheelSlider.setPaintTrack(true);
-        wheelSlider.setPreferredSize(new Dimension(410, 40));
-        wheelSlider.setSnapToTicks(false);
-        wheelSlider.setValue(0);
-        wheelSlider.setValueIsAdjusting(false);
-        wheelPanel.add(wheelSlider);
         wheelIconLabel = new JLabel();
-        wheelIconLabel.setPreferredSize(new Dimension(40, 40));
+        wheelIconLabel.setPreferredSize(new Dimension(45, 45));
+        wheelIconLabel.setRequestFocusEnabled(false);
         wheelIconLabel.setText("");
         wheelIconLabel.setVerticalAlignment(1);
         wheelPanel.add(wheelIconLabel);
@@ -237,6 +236,20 @@ public class MainForm implements DeviceListener, ActionListener {
         degreesLabel.setPreferredSize(new Dimension(50, 31));
         degreesLabel.setText("00.00°");
         wheelPanel.add(degreesLabel);
+        wheelRawLabel = new JLabel();
+        wheelRawLabel.setText("Raw:");
+        wheelPanel.add(wheelRawLabel);
+        wheelRawTextField = new JTextField();
+        wheelRawTextField.setMinimumSize(new Dimension(25, 30));
+        wheelRawTextField.setPreferredSize(new Dimension(65, 30));
+        wheelPanel.add(wheelRawTextField);
+        wheelValueLabel = new JLabel();
+        wheelValueLabel.setText("Value:");
+        wheelPanel.add(wheelValueLabel);
+        wheelValueTextField = new JTextField();
+        wheelValueTextField.setMinimumSize(new Dimension(25, 30));
+        wheelValueTextField.setPreferredSize(new Dimension(65, 30));
+        wheelPanel.add(wheelValueTextField);
         final JLabel label1 = new JLabel();
         label1.setText("Velocity:");
         wheelPanel.add(label1);
@@ -337,6 +350,8 @@ public class MainForm implements DeviceListener, ActionListener {
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.VERTICAL;
         ffbPanel.add(spacer2, gbc);
+        wheelRawLabel.setLabelFor(velocityText);
+        wheelValueLabel.setLabelFor(velocityText);
         label1.setLabelFor(velocityText);
         accLabel.setLabelFor(accText);
         yMinText.setLabelFor(minTextField);
