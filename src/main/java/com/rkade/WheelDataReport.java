@@ -3,18 +3,25 @@ package com.rkade;
 import java.util.List;
 
 public final class WheelDataReport extends DataReport {
-    private final short range;
+    private final int rawValue;
     private final short value;
-    private final short rawValue;
+    private final short range;
     private final short velocity;
     private final short acceleration;
     private final double angle;
 
     public WheelDataReport(byte reportType, byte reportIndex, short section, List<Short> data) {
         super(reportType, reportIndex, section, data);
-        range = values.get(3);
+
+        //rawValue: Integer;
+        //value: SmallInt;
+        //range: SmallInt;
+        //velocity: SmallInt;
+        //acceleration: SmallInt;
+
+        rawValue = intFromShorts(values.get(0), values.get(1));
         value = values.get(2);
-        rawValue = value;
+        range = values.get(3);
         velocity = values.get(4);
         acceleration = values.get(5);
         if (range == 0) {
@@ -24,16 +31,28 @@ public final class WheelDataReport extends DataReport {
         }
     }
 
-    public short getRange() {
-        return range;
+    @Override
+    public String toString() {
+        return "WheelDataReport{" +
+                "rawValue=" + rawValue +
+                ", value=" + value +
+                ", range=" + range +
+                ", velocity=" + velocity +
+                ", acceleration=" + acceleration +
+                ", angle=" + angle +
+                '}';
+    }
+
+    public int getRawValue() {
+        return rawValue;
     }
 
     public short getValue() {
         return value;
     }
 
-    public short getRawValue() {
-        return rawValue;
+    public short getRange() {
+        return range;
     }
 
     public short getVelocity() {

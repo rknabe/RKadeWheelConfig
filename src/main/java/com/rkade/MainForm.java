@@ -30,6 +30,12 @@ public class MainForm implements DeviceListener, ActionListener {
     private JPanel clutchPanel;
     private JPanel axisPanel;
     private JLabel wheelIconLabel;
+    private JTextField minTextField;
+    private JLabel yMinText;
+    private JSlider ySlider;
+    private JLabel yCenterLabel;
+    private JTextField yCenterText;
+    private JLabel yMaxLabel;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
 
@@ -126,6 +132,13 @@ public class MainForm implements DeviceListener, ActionListener {
                         wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
                     }
                     prevWheelRotation = wheelData.getAngle();
+                } else if (report instanceof AxisDataReport) {
+                    AxisDataReport axisData = (AxisDataReport) report;
+                    switch (axisData.getAxis()) {
+                        case 1:
+                            ySlider.setValue(axisData.getRawValue());
+                            break;
+                    }
                 }
                 //System.out.println(report);
             }
@@ -209,7 +222,7 @@ public class MainForm implements DeviceListener, ActionListener {
         wheelSlider.setPaintLabels(true);
         wheelSlider.setPaintTicks(true);
         wheelSlider.setPaintTrack(true);
-        wheelSlider.setPreferredSize(new Dimension(400, 40));
+        wheelSlider.setPreferredSize(new Dimension(410, 40));
         wheelSlider.setSnapToTicks(false);
         wheelSlider.setValue(0);
         wheelSlider.setValueIsAdjusting(false);
@@ -238,20 +251,74 @@ public class MainForm implements DeviceListener, ActionListener {
         accText.setPreferredSize(new Dimension(65, 30));
         wheelPanel.add(accText);
         accPanel = new JPanel();
-        accPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        accPanel.setPreferredSize(new Dimension(1000, 75));
+        accPanel.setLayout(new GridBagLayout());
+        accPanel.setPreferredSize(new Dimension(1020, 100));
         accPanel.setRequestFocusEnabled(true);
         axisPanel.add(accPanel);
         accPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 1 (Y - Accelorator)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        yMinText = new JLabel();
+        yMinText.setText("Min");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        accPanel.add(yMinText, gbc);
+        minTextField = new JTextField();
+        minTextField.setPreferredSize(new Dimension(65, 30));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        accPanel.add(minTextField, gbc);
+        yCenterLabel = new JLabel();
+        yCenterLabel.setText("Center");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        accPanel.add(yCenterLabel, gbc);
+        yCenterText = new JTextField();
+        yCenterText.setPreferredSize(new Dimension(65, 30));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        accPanel.add(yCenterText, gbc);
+        ySlider = new JSlider();
+        ySlider.setEnabled(false);
+        ySlider.setMajorTickSpacing(512);
+        ySlider.setMaximum(1023);
+        ySlider.setMinimum(0);
+        ySlider.setMinorTickSpacing(64);
+        ySlider.setPaintLabels(true);
+        ySlider.setPaintTicks(true);
+        ySlider.setPaintTrack(true);
+        ySlider.setPreferredSize(new Dimension(760, 40));
+        ySlider.setSnapToTicks(false);
+        ySlider.setValue(0);
+        ySlider.setValueIsAdjusting(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        accPanel.add(ySlider, gbc);
+        yMaxLabel = new JLabel();
+        yMaxLabel.setHorizontalAlignment(2);
+        yMaxLabel.setText("Max:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        accPanel.add(yMaxLabel, gbc);
         brakePanel = new JPanel();
         brakePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        brakePanel.setPreferredSize(new Dimension(1000, 75));
+        brakePanel.setPreferredSize(new Dimension(1020, 75));
         brakePanel.setRequestFocusEnabled(true);
         axisPanel.add(brakePanel);
         brakePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 2 (Z - Brake)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         clutchPanel = new JPanel();
         clutchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        clutchPanel.setPreferredSize(new Dimension(1000, 75));
+        clutchPanel.setPreferredSize(new Dimension(1020, 75));
         clutchPanel.setRequestFocusEnabled(true);
         axisPanel.add(clutchPanel);
         clutchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 3 (rX - Clutch)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
@@ -272,6 +339,7 @@ public class MainForm implements DeviceListener, ActionListener {
         ffbPanel.add(spacer2, gbc);
         label1.setLabelFor(velocityText);
         accLabel.setLabelFor(accText);
+        yMinText.setLabelFor(minTextField);
     }
 
     /**

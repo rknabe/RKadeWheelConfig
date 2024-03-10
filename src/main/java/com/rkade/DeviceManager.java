@@ -13,6 +13,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     private final static int LEONARDO_VENDOR_ID = 0x2341;
     private final static int LEONARDO_PRODUCT_ID = 0x8036;
     private final static int OUTPUT_REPORT_DATA_LENGTH = 7;
+    private final static byte AXIS_COUNT = 7;
     private final static List<DeviceListener> deviceListeners = new ArrayList<>();
     private static boolean deviceAttached = false;
     private static byte currentDataType = DataReport.CMD_GET_VER;
@@ -79,10 +80,13 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         }
     }
 
-    private int getOutputReport(byte dataType, byte dataIndex, byte[] data) {
+    private void getOutputReport(byte dataType, byte dataIndex, byte[] data) throws IOException {
         data[0] = dataType;
         data[1] = dataIndex;
-        return openedDevice.setOutputReport(DataReport.CMD_REPORT_ID, data, OUTPUT_REPORT_DATA_LENGTH);
+        int ret = openedDevice.setOutputReport(DataReport.CMD_REPORT_ID, data, OUTPUT_REPORT_DATA_LENGTH);
+        if (ret <= 0) {
+            throw new IOException("Device returned error");
+        }
     }
 
     private final class ConnectionRunner implements Runnable {
@@ -141,54 +145,33 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         public void run() {
             int failCount = 0;
             byte[] data = new byte[OUTPUT_REPORT_DATA_LENGTH];
+            int loopCount = 0;
             while (true) {
                 if (openedDevice != null) {
-                    data[0] = currentDataType;
-                    data[1] = currentDataIndex;
-                    int ret = getOutputReport(currentDataType, currentDataIndex, data);
-                    if (ret > 0) {
-                        data[0] = DataReport.CMD_GET_STEER;
-                        data[1] = 0;
-                        getOutputReport((byte) DataReport.CMD_GET_STEER, (byte) 0, data);
-                        failCount = 0;
-                        switch (currentDataType) {
-                            case DataReport.CMD_GET_VER:
-                                currentDataIndex = 0;
-                                currentDataType = DataReport.CMD_GET_STEER;
-                                break;
-                            case DataReport.CMD_GET_STEER:
-                                currentDataIndex = 0;
-                                currentDataType = DataReport.CMD_GET_ANALOG;
-                                break;
-                            case DataReport.CMD_GET_ANALOG:
-                                ++currentDataIndex;
-                                if (currentDataIndex > 6) {
-                                    currentDataIndex = 0;
-                                    currentDataType = DataReport.CMD_GET_BUTTONS;
-                                }
-                                break;
-                            case DataReport.CMD_GET_BUTTONS:
-                                currentDataIndex = 0;
-                                currentDataType = DataReport.CMD_GET_GAINS;
-                                break;
-                            case DataReport.CMD_GET_GAINS:
-                                currentDataIndex = 0;
-                                currentDataType = DataReport.CMD_GET_MISC;
-                                break;
-                            default:
-                                currentDataIndex = 0;
-                                currentDataType = DataReport.CMD_GET_VER;
-                                break;
+                    try {
+                        if (loopCount == 0) {
+                            //only need to do 1 time
+                            getOutputReport(DataReport.CMD_GET_VER, (byte) 0, data);
                         }
-                    } else {
+                        getOutputReport(DataReport.CMD_GET_STEER, (byte) 0, data);
+                        for (byte i = 0; i < AXIS_COUNT; i++) {
+                            getOutputReport(DataReport.CMD_GET_ANALOG, i, data);
+                        }
+                        getOutputReport(DataReport.CMD_GET_BUTTONS, (byte) 0, data);
+                        getOutputReport(DataReport.CMD_GET_GAINS, (byte) 0, data);
+                        getOutputReport(DataReport.CMD_GET_MISC, (byte) 0, data);
+                        ++loopCount;
+                        failCount = 0;
+                        //sleep(1);
+                    } catch (IOException ex) {
                         System.out.println("Error sending OutputReport");
                         ++failCount;
                         if (failCount > 3) {
                             onDeviceRemoval(openedDevice);
                         }
                         sleep(1000);
+                        ex.printStackTrace();
                     }
-                    sleep(1);
                 } else {
                     sleep(1000);
                 }
