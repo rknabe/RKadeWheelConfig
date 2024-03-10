@@ -30,13 +30,13 @@ public class MainForm implements DeviceListener, ActionListener {
     private JPanel clutchPanel;
     private JPanel axisPanel;
     private JLabel wheelIconLabel;
-    private Image icon = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("wheel40.png"));
     private BufferedImage wheelImage;
+    private double prevWheelRotation = 0.0;
 
     public MainForm() {
         centerButton.addActionListener(this);
         try {
-            ImageIcon imageIcon = new ImageIcon(icon);
+            ImageIcon imageIcon = new ImageIcon(ClassLoader.getSystemResource("wheel40.png"));
             wheelImage = toBufferedImage(imageIcon.getImage());
             wheelIconLabel.setIcon(imageIcon);
         } catch (Exception ex) {
@@ -64,10 +64,8 @@ public class MainForm implements DeviceListener, ActionListener {
     private BufferedImage rotate(BufferedImage image, Double degrees) {
         // Calculate the new size of the image based on the angle of rotation
         double radians = Math.toRadians(degrees);
-        //double sin = Math.abs(Math.sin(radians));
-        //double cos = Math.abs(Math.cos(radians));
-        int newWidth = image.getWidth();//(int) Math.round(image.getWidth() * cos + image.getHeight() * sin);
-        int newHeight = image.getHeight(); //int) Math.round(image.getWidth() * sin + image.getHeight() * cos);
+        int newWidth = image.getWidth();
+        int newHeight = image.getHeight();
 
         // Create a new image
         BufferedImage rotate = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
@@ -80,7 +78,7 @@ public class MainForm implements DeviceListener, ActionListener {
         at.setToRotation(radians, x + (image.getWidth() / 2.0), y + (image.getHeight() / 2.0));
         at.translate(x, y);
         g2d.setTransform(at);
-        // Paint the originl image
+        // Paint the original image
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
         return rotate;
@@ -124,7 +122,10 @@ public class MainForm implements DeviceListener, ActionListener {
                     velocityText.setText(String.valueOf(wheelData.getVelocity()));
                     accText.setText(String.valueOf(wheelData.getAcceleration()));
                     degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
-                    wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
+                    if (Math.abs(wheelData.getAngle() - prevWheelRotation) > 1.0) {
+                        wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
+                    }
+                    prevWheelRotation = wheelData.getAngle();
                 }
                 //System.out.println(report);
             }
