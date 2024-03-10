@@ -9,15 +9,17 @@ public class App {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
-                com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProIJTheme.setup();
+                //com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProIJTheme.setup();
                 //com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme.setup();
-                //FlatDarculaLaf.setup();
+                com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme.setup();
                 JFrame frame = new JFrame("Wheel Config");
                 MainForm mainForm = new MainForm();
                 frame.setContentPane(mainForm.getRootComponent());
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("wheel.png")));
+                Image icon = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("wheel.png"));
+                frame.setIconImage(icon);
                 frame.pack();
+                frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
 
                 deviceManager = new DeviceManager();

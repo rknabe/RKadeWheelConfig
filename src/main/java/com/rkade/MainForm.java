@@ -5,6 +5,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 public class MainForm implements DeviceListener, ActionListener {
     private final static String CENTER_BUTTON = "Set Center";
@@ -23,9 +25,65 @@ public class MainForm implements DeviceListener, ActionListener {
     private JLabel accLabel;
     private JLabel degreesLabel;
     private JPanel wheelPanel;
+    private JPanel accPanel;
+    private JPanel brakePanel;
+    private JPanel clutchPanel;
+    private JPanel axisPanel;
+    private JLabel wheelIconLabel;
+    private Image icon = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("wheel40.png"));
+    private BufferedImage wheelImage;
 
     public MainForm() {
         centerButton.addActionListener(this);
+        try {
+            ImageIcon imageIcon = new ImageIcon(icon);
+            wheelImage = toBufferedImage(imageIcon.getImage());
+            wheelIconLabel.setIcon(imageIcon);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
+    }
+
+    private BufferedImage rotate(BufferedImage image, Double degrees) {
+        // Calculate the new size of the image based on the angle of rotation
+        double radians = Math.toRadians(degrees);
+        //double sin = Math.abs(Math.sin(radians));
+        //double cos = Math.abs(Math.cos(radians));
+        int newWidth = image.getWidth();//(int) Math.round(image.getWidth() * cos + image.getHeight() * sin);
+        int newHeight = image.getHeight(); //int) Math.round(image.getWidth() * sin + image.getHeight() * cos);
+
+        // Create a new image
+        BufferedImage rotate = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = rotate.createGraphics();
+        // Calculate the "anchor" point around which the image will be rotated
+        int x = (newWidth - image.getWidth()) / 2;
+        int y = (newHeight - image.getHeight()) / 2;
+        // Transform the origin point around the anchor point
+        AffineTransform at = new AffineTransform();
+        at.setToRotation(radians, x + (image.getWidth() / 2.0), y + (image.getHeight() / 2.0));
+        at.translate(x, y);
+        g2d.setTransform(at);
+        // Paint the originl image
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        return rotate;
     }
 
     @Override
@@ -66,6 +124,7 @@ public class MainForm implements DeviceListener, ActionListener {
                     velocityText.setText(String.valueOf(wheelData.getVelocity()));
                     accText.setText(String.valueOf(wheelData.getAcceleration()));
                     degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
+                    wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
                 }
                 //System.out.println(report);
             }
@@ -107,11 +166,29 @@ public class MainForm implements DeviceListener, ActionListener {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new BorderLayout(0, 0));
         panel1.setMinimumSize(new Dimension(1024, 600));
+        panel1.setPreferredSize(new Dimension(1000, 700));
         Inputs.addTab("Inputs", panel1);
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        bottomPanel.setPreferredSize(new Dimension(1000, 75));
+        panel1.add(bottomPanel, BorderLayout.SOUTH);
+        bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        deviceComboBox = new JComboBox();
+        deviceComboBox.setMinimumSize(new Dimension(200, 30));
+        deviceComboBox.setPreferredSize(new Dimension(200, 30));
+        bottomPanel.add(deviceComboBox);
+        firmwareLabel = new JLabel();
+        firmwareLabel.setText("Version 1.2");
+        bottomPanel.add(firmwareLabel);
+        axisPanel = new JPanel();
+        axisPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        axisPanel.setPreferredSize(new Dimension(1000, 700));
+        panel1.add(axisPanel, BorderLayout.NORTH);
         wheelPanel = new JPanel();
         wheelPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        wheelPanel.setPreferredSize(new Dimension(1000, 75));
-        panel1.add(wheelPanel, BorderLayout.NORTH);
+        wheelPanel.setMinimumSize(new Dimension(800, 82));
+        wheelPanel.setPreferredSize(new Dimension(1020, 75));
+        axisPanel.add(wheelPanel);
         wheelPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 0 (X - Steering)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         rangeLabel = new JLabel();
         rangeLabel.setText("Range");
@@ -136,6 +213,11 @@ public class MainForm implements DeviceListener, ActionListener {
         wheelSlider.setValue(0);
         wheelSlider.setValueIsAdjusting(false);
         wheelPanel.add(wheelSlider);
+        wheelIconLabel = new JLabel();
+        wheelIconLabel.setPreferredSize(new Dimension(40, 40));
+        wheelIconLabel.setText("");
+        wheelIconLabel.setVerticalAlignment(1);
+        wheelPanel.add(wheelIconLabel);
         degreesLabel = new JLabel();
         degreesLabel.setHorizontalTextPosition(2);
         degreesLabel.setPreferredSize(new Dimension(50, 31));
@@ -146,24 +228,32 @@ public class MainForm implements DeviceListener, ActionListener {
         wheelPanel.add(label1);
         velocityText = new JTextField();
         velocityText.setMinimumSize(new Dimension(25, 30));
-        velocityText.setPreferredSize(new Dimension(75, 30));
+        velocityText.setPreferredSize(new Dimension(65, 30));
         wheelPanel.add(velocityText);
         accLabel = new JLabel();
-        accLabel.setText("Acceleration:");
+        accLabel.setText("Acc:");
         wheelPanel.add(accLabel);
         accText = new JTextField();
-        accText.setPreferredSize(new Dimension(75, 30));
+        accText.setPreferredSize(new Dimension(65, 30));
         wheelPanel.add(accText);
-        bottomPanel = new JPanel();
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        panel1.add(bottomPanel, BorderLayout.SOUTH);
-        deviceComboBox = new JComboBox();
-        deviceComboBox.setMinimumSize(new Dimension(200, 30));
-        deviceComboBox.setPreferredSize(new Dimension(200, 30));
-        bottomPanel.add(deviceComboBox);
-        firmwareLabel = new JLabel();
-        firmwareLabel.setText("Version 1.2");
-        bottomPanel.add(firmwareLabel);
+        accPanel = new JPanel();
+        accPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        accPanel.setPreferredSize(new Dimension(1000, 75));
+        accPanel.setRequestFocusEnabled(true);
+        axisPanel.add(accPanel);
+        accPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 1 (Y - Accelorator)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        brakePanel = new JPanel();
+        brakePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        brakePanel.setPreferredSize(new Dimension(1000, 75));
+        brakePanel.setRequestFocusEnabled(true);
+        axisPanel.add(brakePanel);
+        brakePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 2 (Z - Brake)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        clutchPanel = new JPanel();
+        clutchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        clutchPanel.setPreferredSize(new Dimension(1000, 75));
+        clutchPanel.setRequestFocusEnabled(true);
+        axisPanel.add(clutchPanel);
+        clutchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 3 (rX - Clutch)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
         Inputs.addTab("Force Feedback", ffbPanel);

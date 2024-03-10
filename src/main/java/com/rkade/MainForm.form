@@ -27,91 +27,16 @@
             </constraints>
             <properties>
               <minimumSize width="1024" height="600"/>
+              <preferredSize width="1000" height="700"/>
             </properties>
             <border type="none"/>
             <children>
-              <grid id="c33f3" binding="wheelPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
-                <constraints border-constraint="North"/>
+              <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                <constraints border-constraint="South"/>
                 <properties>
                   <preferredSize width="1000" height="75"/>
                 </properties>
-                <border type="etched" title="Axis 0 (X - Steering)"/>
-                <children>
-                  <component id="22fd5" class="javax.swing.JLabel" binding="rangeLabel">
-                    <constraints/>
-                    <properties>
-                      <text value="Range"/>
-                    </properties>
-                  </component>
-                  <component id="19d08" class="javax.swing.JComboBox" binding="rangeComboBox">
-                    <constraints/>
-                    <properties/>
-                  </component>
-                  <component id="54358" class="javax.swing.JButton" binding="centerButton">
-                    <constraints/>
-                    <properties>
-                      <label value="Set Center"/>
-                      <preferredSize width="100" height="30"/>
-                      <text value="Set Center"/>
-                    </properties>
-                  </component>
-                  <component id="62547" class="javax.swing.JSlider" binding="wheelSlider">
-                    <constraints/>
-                    <properties>
-                      <enabled value="false"/>
-                      <majorTickSpacing value="8192"/>
-                      <maximum value="32768"/>
-                      <minimum value="-32768"/>
-                      <paintLabels value="true"/>
-                      <paintTicks value="true"/>
-                      <paintTrack value="true"/>
-                      <preferredSize width="400" height="40"/>
-                      <snapToTicks value="false"/>
-                      <value value="0"/>
-                      <valueIsAdjusting value="false"/>
-                    </properties>
-                  </component>
-                  <component id="a28a" class="javax.swing.JLabel" binding="degreesLabel">
-                    <constraints/>
-                    <properties>
-                      <horizontalTextPosition value="2"/>
-                      <preferredSize width="50" height="31"/>
-                      <text value="00.00°"/>
-                    </properties>
-                  </component>
-                  <component id="6952" class="javax.swing.JLabel">
-                    <constraints/>
-                    <properties>
-                      <labelFor value="d7455"/>
-                      <text value="Velocity:"/>
-                    </properties>
-                  </component>
-                  <component id="d7455" class="javax.swing.JTextField" binding="velocityText">
-                    <constraints/>
-                    <properties>
-                      <minimumSize width="25" height="30"/>
-                      <preferredSize width="75" height="30"/>
-                    </properties>
-                  </component>
-                  <component id="292c" class="javax.swing.JLabel" binding="accLabel">
-                    <constraints/>
-                    <properties>
-                      <labelFor value="179c5"/>
-                      <text value="Acceleration:"/>
-                    </properties>
-                  </component>
-                  <component id="179c5" class="javax.swing.JTextField" binding="accText">
-                    <constraints/>
-                    <properties>
-                      <preferredSize width="75" height="30"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-              <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
-                <constraints border-constraint="South"/>
-                <properties/>
-                <border type="none"/>
+                <border type="bevel-raised"/>
                 <children>
                   <component id="763d7" class="javax.swing.JComboBox" binding="deviceComboBox">
                     <constraints/>
@@ -126,6 +51,129 @@
                       <text value="Version 1.2"/>
                     </properties>
                   </component>
+                </children>
+              </grid>
+              <grid id="2743d" binding="axisPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <preferredSize width="1000" height="700"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <grid id="c33f3" binding="wheelPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                    <constraints/>
+                    <properties>
+                      <minimumSize width="800" height="82"/>
+                      <preferredSize width="1020" height="75"/>
+                    </properties>
+                    <border type="etched" title="Axis 0 (X - Steering)"/>
+                    <children>
+                      <component id="22fd5" class="javax.swing.JLabel" binding="rangeLabel">
+                        <constraints/>
+                        <properties>
+                          <text value="Range"/>
+                        </properties>
+                      </component>
+                      <component id="19d08" class="javax.swing.JComboBox" binding="rangeComboBox">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                      <component id="54358" class="javax.swing.JButton" binding="centerButton">
+                        <constraints/>
+                        <properties>
+                          <label value="Set Center"/>
+                          <preferredSize width="100" height="30"/>
+                          <text value="Set Center"/>
+                        </properties>
+                      </component>
+                      <component id="62547" class="javax.swing.JSlider" binding="wheelSlider">
+                        <constraints/>
+                        <properties>
+                          <enabled value="false"/>
+                          <majorTickSpacing value="8192"/>
+                          <maximum value="32768"/>
+                          <minimum value="-32768"/>
+                          <paintLabels value="true"/>
+                          <paintTicks value="true"/>
+                          <paintTrack value="true"/>
+                          <preferredSize width="400" height="40"/>
+                          <snapToTicks value="false"/>
+                          <value value="0"/>
+                          <valueIsAdjusting value="false"/>
+                        </properties>
+                      </component>
+                      <component id="223ed" class="javax.swing.JLabel" binding="wheelIconLabel">
+                        <constraints/>
+                        <properties>
+                          <preferredSize width="40" height="40"/>
+                          <text value=""/>
+                          <verticalAlignment value="1"/>
+                        </properties>
+                      </component>
+                      <component id="a28a" class="javax.swing.JLabel" binding="degreesLabel">
+                        <constraints/>
+                        <properties>
+                          <horizontalTextPosition value="2"/>
+                          <preferredSize width="50" height="31"/>
+                          <text value="00.00°"/>
+                        </properties>
+                      </component>
+                      <component id="6952" class="javax.swing.JLabel">
+                        <constraints/>
+                        <properties>
+                          <labelFor value="d7455"/>
+                          <text value="Velocity:"/>
+                        </properties>
+                      </component>
+                      <component id="d7455" class="javax.swing.JTextField" binding="velocityText">
+                        <constraints/>
+                        <properties>
+                          <minimumSize width="25" height="30"/>
+                          <preferredSize width="65" height="30"/>
+                        </properties>
+                      </component>
+                      <component id="292c" class="javax.swing.JLabel" binding="accLabel">
+                        <constraints/>
+                        <properties>
+                          <labelFor value="179c5"/>
+                          <text value="Acc:"/>
+                        </properties>
+                      </component>
+                      <component id="179c5" class="javax.swing.JTextField" binding="accText">
+                        <constraints/>
+                        <properties>
+                          <preferredSize width="65" height="30"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <grid id="6c200" binding="accPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="1000" height="75"/>
+                      <requestFocusEnabled value="true"/>
+                    </properties>
+                    <border type="etched" title="Axis 1 (Y - Accelorator)"/>
+                    <children/>
+                  </grid>
+                  <grid id="4c6dc" binding="brakePanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="1000" height="75"/>
+                      <requestFocusEnabled value="true"/>
+                    </properties>
+                    <border type="etched" title="Axis 2 (Z - Brake)"/>
+                    <children/>
+                  </grid>
+                  <grid id="ae4b8" binding="clutchPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="1000" height="75"/>
+                      <requestFocusEnabled value="true"/>
+                    </properties>
+                    <border type="etched" title="Axis 3 (rX - Clutch)"/>
+                    <children/>
+                  </grid>
                 </children>
               </grid>
             </children>
