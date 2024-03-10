@@ -1,18 +1,17 @@
 package com.rkade;
 
-import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DataReportFactory implements Serializable {
+public abstract class DataReportFactory {
 
     public static DataReport create(byte reportType, byte[] data) {
-        ByteBuffer buffer = ByteBuffer.allocate(data.length).order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(data);
-        buffer.rewind();
         if (reportType == DataReport.DATA_REPORT_ID) {
+            ByteBuffer buffer = ByteBuffer.allocate(data.length).order(ByteOrder.LITTLE_ENDIAN);
+            buffer.put(data);
+            buffer.rewind();
             byte reportIndex = buffer.get();
             short section = buffer.getShort();
             List<Short> values = new ArrayList<>(DataReport.DATA_REPORT_VALUE_COUNT);
@@ -22,7 +21,8 @@ public abstract class DataReportFactory implements Serializable {
             switch (reportIndex) {
                 case DataReport.CMD_GET_STEER:
                     return new WheelDataReport(reportType, reportIndex, section, values);
-
+                case DataReport.CMD_GET_ANALOG:
+                    return new AxisDataReport(reportType, reportIndex, section, values);
             }
         }
 

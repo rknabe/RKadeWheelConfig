@@ -5,7 +5,7 @@ import java.util.List;
 public class DataReport {
     public final static byte CMD_REPORT_ID = 15;
     public final static byte DATA_REPORT_ID = 16;
-    public final static byte DATA_REPORT_VALUE_COUNT = 14;
+    public final static byte DATA_REPORT_VALUE_COUNT = 31;
     public final static int CMD_GET_VER = 1;
     public final static int CMD_GET_STEER = 2;
     public final static int CMD_GET_ANALOG = 3;
@@ -46,6 +46,22 @@ public class DataReport {
         this.values = values;
     }
 
+    protected boolean getBooleanByIndex(int index) {
+        return values.get(index) == 1;
+    }
+
+    protected boolean getBoolean(int value) {
+        return value == 1;
+    }
+
+    protected byte getFirstByte(short value) {
+        return (byte) (value & 0xff);
+    }
+
+    protected byte getSecondByte(short value) {
+        return (byte) ((value >> 8) & 0xff);
+    }
+
     public short getSection() {
         return section;
     }
@@ -60,15 +76,5 @@ public class DataReport {
 
     public short getReportIndex() {
         return reportIndex;
-    }
-
-
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder(String.format("DataReport{reportType=%d, reportIndex=%d, section=%d, ", reportType, reportIndex, section));
-        for (short value : values) {
-            s.append(String.format("%6d ", value));
-        }
-        return s.toString();
     }
 }

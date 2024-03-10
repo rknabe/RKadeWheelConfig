@@ -19,8 +19,7 @@ public final class WheelDataReport extends DataReport {
         acceleration = values.get(5);
         if (range == 0) {
             angle = 0;
-        }
-        else {
+        } else {
             angle = value / ((double) Short.MAX_VALUE / (range / 2.0));
         }
     }
