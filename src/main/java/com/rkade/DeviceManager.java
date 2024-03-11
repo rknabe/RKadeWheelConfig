@@ -159,6 +159,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                         for (byte i = 0; i < AXIS_COUNT; i++) {
                             getOutputReport(DataReport.CMD_GET_ANALOG, i, data);
                         }
+                        getOutputReport(DataReport.CMD_GET_STEER, (byte) 0, data);
                         getOutputReport(DataReport.CMD_GET_BUTTONS, (byte) 0, data);
                         getOutputReport(DataReport.CMD_GET_GAINS, (byte) 0, data);
                         getOutputReport(DataReport.CMD_GET_MISC, (byte) 0, data);
