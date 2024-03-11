@@ -1,6 +1,7 @@
 package com.rkade;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,26 +26,14 @@ public class MainForm implements DeviceListener, ActionListener {
     private JLabel accLabel;
     private JLabel degreesLabel;
     private JPanel wheelPanel;
-    private JPanel accPanel;
     private JPanel axisPanel;
     private JLabel wheelIconLabel;
-    private JTextField yMinText;
-    private JLabel yMinLabel;
-    private JProgressBar ySlider;
-    private JLabel yCenterLabel;
-    private JTextField yCenterText;
-    private JLabel yMaxLabel;
     private JLabel wheelRawLabel;
     private JTextField wheelRawTextField;
     private JTextField wheelValueTextField;
     private JLabel wheelValueLabel;
     private JLabel versionLabel;
-    private JTextField yMaxText;
-    private JTextField yDzText;
-    private JLabel yValueLabel;
-    private JTextField yValueText;
-    private JLabel yRawLabel;
-    private JTextField yRawText;
+    private AxisPanel xAxisPanel;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
 
@@ -57,20 +46,18 @@ public class MainForm implements DeviceListener, ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        JPanel c = clone(accPanel);
-        TitledBorder tb = (TitledBorder) c.getBorder();
-        tb.setTitle("Axis 2");
-        axisPanel.add(c);
+        TitledBorder border = (TitledBorder) xAxisPanel.getMainPanel().getBorder();
+        border.setTitle("Axis 1 (Y - Accelerator)");
     }
 
-    private JPanel clone(JPanel c) {
+    private Serializable clone(Serializable c) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(c);
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             ObjectInputStream ois = new ObjectInputStream(bais);
-            return (JPanel) ois.readObject();
+            return (Serializable) ois.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
             return null;
@@ -163,13 +150,13 @@ public class MainForm implements DeviceListener, ActionListener {
                     AxisDataReport axisData = (AxisDataReport) report;
                     switch (axisData.getAxis()) {
                         case 1:
-                            ySlider.setValue(axisData.getRawValue());
-                            yValueText.setText(String.valueOf(axisData.getValue()));
-                            yRawText.setText(String.valueOf(axisData.getRawValue()));
-                            yMinText.setText(String.valueOf(axisData.getMin()));
-                            yMaxText.setText(String.valueOf(axisData.getMax()));
-                            yCenterText.setText(String.valueOf(axisData.getCenter()));
-                            yDzText.setText(String.valueOf(axisData.getDeadZone()));
+                            xAxisPanel.getProgress().setValue(axisData.getRawValue());
+                            xAxisPanel.getValueText().setText(String.valueOf(axisData.getValue()));
+                            xAxisPanel.getRawText().setText(String.valueOf(axisData.getRawValue()));
+                            xAxisPanel.getMinText().setText(String.valueOf(axisData.getMin()));
+                            xAxisPanel.getMaxText().setText(String.valueOf(axisData.getMax()));
+                            xAxisPanel.getCenterText().setText(String.valueOf(axisData.getCenter()));
+                            xAxisPanel.getDzText().setText(String.valueOf(axisData.getDeadZone()));
                             break;
                     }
                 } else if (report instanceof VersionDataReport) {
@@ -292,116 +279,8 @@ public class MainForm implements DeviceListener, ActionListener {
         accText = new JTextField();
         accText.setPreferredSize(new Dimension(65, 30));
         wheelPanel.add(accText);
-        accPanel = new JPanel();
-        accPanel.setLayout(new GridBagLayout());
-        accPanel.setEnabled(true);
-        accPanel.setPreferredSize(new Dimension(1020, 100));
-        accPanel.setRequestFocusEnabled(true);
-        axisPanel.add(accPanel);
-        accPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 1 (Y - Accelerator)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        yMinLabel = new JLabel();
-        yMinLabel.setText("Min");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yMinLabel, gbc);
-        yMinText = new JTextField();
-        yMinText.setPreferredSize(new Dimension(65, 30));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yMinText, gbc);
-        yCenterLabel = new JLabel();
-        yCenterLabel.setText("Center");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yCenterLabel, gbc);
-        yCenterText = new JTextField();
-        yCenterText.setPreferredSize(new Dimension(65, 30));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yCenterText, gbc);
-        ySlider = new JProgressBar();
-        ySlider.setEnabled(false);
-        ySlider.setFocusable(false);
-        ySlider.setMaximum(1023);
-        ySlider.setMinimum(0);
-        ySlider.setName("Y Axis");
-        ySlider.setPreferredSize(new Dimension(760, 29));
-        ySlider.setValue(0);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 0;
-        gbc.gridwidth = 4;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(ySlider, gbc);
-        yMaxLabel = new JLabel();
-        yMaxLabel.setHorizontalAlignment(2);
-        yMaxLabel.setText("Max");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yMaxLabel, gbc);
-        yMaxText = new JTextField();
-        yMaxText.setPreferredSize(new Dimension(65, 30));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yMaxText, gbc);
-        final JLabel label2 = new JLabel();
-        label2.setText("Deadzone");
-        label2.setVerifyInputWhenFocusTarget(false);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(label2, gbc);
-        yDzText = new JTextField();
-        yDzText.setPreferredSize(new Dimension(65, 30));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        accPanel.add(yDzText, gbc);
-        yValueLabel = new JLabel();
-        yValueLabel.setPreferredSize(new Dimension(62, 17));
-        yValueLabel.setText("Value");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yValueLabel, gbc);
-        yValueText = new JTextField();
-        yValueText.setPreferredSize(new Dimension(65, 30));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 5;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yValueText, gbc);
-        yRawLabel = new JLabel();
-        yRawLabel.setPreferredSize(new Dimension(62, 17));
-        yRawLabel.setText("Raw");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 6;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yRawLabel, gbc);
-        yRawText = new JTextField();
-        yRawText.setPreferredSize(new Dimension(65, 30));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 7;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        accPanel.add(yRawText, gbc);
+        xAxisPanel = new AxisPanel();
+        axisPanel.add(xAxisPanel.$$$getRootComponent$$$());
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
         Inputs.addTab("Force Feedback", ffbPanel);
@@ -421,7 +300,6 @@ public class MainForm implements DeviceListener, ActionListener {
         wheelValueLabel.setLabelFor(velocityText);
         label1.setLabelFor(velocityText);
         accLabel.setLabelFor(accText);
-        yMinLabel.setLabelFor(yMinText);
     }
 
     /**
