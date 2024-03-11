@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.*;
 
 public class MainForm implements DeviceListener, ActionListener {
     private final static String CENTER_BUTTON = "Set Center";
@@ -25,8 +26,6 @@ public class MainForm implements DeviceListener, ActionListener {
     private JLabel degreesLabel;
     private JPanel wheelPanel;
     private JPanel accPanel;
-    private JPanel brakePanel;
-    private JPanel clutchPanel;
     private JPanel axisPanel;
     private JLabel wheelIconLabel;
     private JTextField yMinText;
@@ -57,6 +56,24 @@ public class MainForm implements DeviceListener, ActionListener {
             wheelIconLabel.setIcon(imageIcon);
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+        JPanel c = clone(accPanel);
+        TitledBorder tb = (TitledBorder) c.getBorder();
+        tb.setTitle("Axis 2");
+        axisPanel.add(c);
+    }
+
+    private JPanel clone(JPanel c) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(c);
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (JPanel) ois.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
 
@@ -186,7 +203,7 @@ public class MainForm implements DeviceListener, ActionListener {
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setPreferredSize(new Dimension(1024, 768));
         Inputs = new JTabbedPane();
-        Inputs.setPreferredSize(new Dimension(1024, 600));
+        Inputs.setPreferredSize(new Dimension(900, 600));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -219,7 +236,7 @@ public class MainForm implements DeviceListener, ActionListener {
         bottomPanel.add(statusLabel);
         axisPanel = new JPanel();
         axisPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        axisPanel.setPreferredSize(new Dimension(1000, 700));
+        axisPanel.setPreferredSize(new Dimension(900, 700));
         panel1.add(axisPanel, BorderLayout.NORTH);
         wheelPanel = new JPanel();
         wheelPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
@@ -277,6 +294,7 @@ public class MainForm implements DeviceListener, ActionListener {
         wheelPanel.add(accText);
         accPanel = new JPanel();
         accPanel.setLayout(new GridBagLayout());
+        accPanel.setEnabled(true);
         accPanel.setPreferredSize(new Dimension(1020, 100));
         accPanel.setRequestFocusEnabled(true);
         axisPanel.add(accPanel);
@@ -384,18 +402,6 @@ public class MainForm implements DeviceListener, ActionListener {
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
         accPanel.add(yRawText, gbc);
-        brakePanel = new JPanel();
-        brakePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        brakePanel.setPreferredSize(new Dimension(1020, 75));
-        brakePanel.setRequestFocusEnabled(true);
-        axisPanel.add(brakePanel);
-        brakePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 2 (Z - Brake)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        clutchPanel = new JPanel();
-        clutchPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        clutchPanel.setPreferredSize(new Dimension(1020, 75));
-        clutchPanel.setRequestFocusEnabled(true);
-        axisPanel.add(clutchPanel);
-        clutchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 3 (rX - Clutch)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
         Inputs.addTab("Force Feedback", ffbPanel);

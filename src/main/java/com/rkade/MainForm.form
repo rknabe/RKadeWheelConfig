@@ -17,7 +17,7 @@
           <gridbag weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <preferredSize width="1024" height="600"/>
+          <preferredSize width="900" height="600"/>
         </properties>
         <border type="none"/>
         <children>
@@ -64,7 +64,7 @@
               <grid id="2743d" binding="axisPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <preferredSize width="1000" height="700"/>
+                  <preferredSize width="900" height="700"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -171,6 +171,7 @@
                   <grid id="6c200" binding="accPanel" layout-manager="GridBagLayout">
                     <constraints/>
                     <properties>
+                      <enabled value="true"/>
                       <preferredSize width="1020" height="100"/>
                       <requestFocusEnabled value="true"/>
                     </properties>
@@ -317,24 +318,6 @@
                         </properties>
                       </component>
                     </children>
-                  </grid>
-                  <grid id="4c6dc" binding="brakePanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-                    <constraints/>
-                    <properties>
-                      <preferredSize width="1020" height="75"/>
-                      <requestFocusEnabled value="true"/>
-                    </properties>
-                    <border type="etched" title="Axis 2 (Z - Brake)"/>
-                    <children/>
-                  </grid>
-                  <grid id="ae4b8" binding="clutchPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-                    <constraints/>
-                    <properties>
-                      <preferredSize width="1020" height="75"/>
-                      <requestFocusEnabled value="true"/>
-                    </properties>
-                    <border type="etched" title="Axis 3 (rX - Clutch)"/>
-                    <children/>
                   </grid>
                 </children>
               </grid>
