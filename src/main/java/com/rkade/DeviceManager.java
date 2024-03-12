@@ -16,7 +16,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     private final static int LEONARDO_VENDOR_ID = 0x2341;
     private final static int LEONARDO_PRODUCT_ID = 0x8036;
     private final static int OUTPUT_REPORT_DATA_LENGTH = 7;
-    private final static int SLEEP_BETWEEN_OUTPUT_REPORT = 1;
+    private final static int SLEEP_BETWEEN_OUTPUT_REPORT = 2;
     private final static byte AXIS_COUNT = 7;
     private final static List<DeviceListener> deviceListeners = new ArrayList<>();
     private static volatile boolean deviceAttached = false;
@@ -106,7 +106,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                     notifyListenersDeviceUpdated(null, "Scanning...", null);
                     List<HidDeviceInfo> devList = PureJavaHidApi.enumerateDevices();
                     for (HidDeviceInfo info : devList) {
-                        if (info.getVendorId() == (short) LEONARDO_VENDOR_ID && info.getProductId() == (short) LEONARDO_PRODUCT_ID) {
+                        if (info.getVendorId() == LEONARDO_VENDOR_ID && info.getProductId() == LEONARDO_PRODUCT_ID) {
                             deviceInfo = info;
                             break;
                         }
@@ -123,6 +123,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                             try {
                                 openedDevice = PureJavaHidApi.openDevice(deviceInfo);
                                 if (openedDevice != null) {
+                                    openedDevice.open();
                                     Device device = getDevice(openedDevice);
                                     notifyListenersDeviceUpdated(device, "Opened", null);
                                     SerialPort[] ports = SerialPort.getCommPorts();
