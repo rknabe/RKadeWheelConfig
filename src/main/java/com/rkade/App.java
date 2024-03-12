@@ -1,9 +1,13 @@
 package com.rkade;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class App {
+    private final static Logger logger = LogManager.getLogger(App.class);
     private static DeviceManager deviceManager;
 
     public static void main(String[] args) {
@@ -25,7 +29,7 @@ public class App {
                 deviceManager = new DeviceManager();
                 deviceManager.addDeviceListener(mainForm);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
         });
     }

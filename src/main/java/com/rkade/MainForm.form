@@ -89,7 +89,6 @@
                       <component id="54358" class="javax.swing.JButton" binding="centerButton">
                         <constraints/>
                         <properties>
-                          <label value="Set Center"/>
                           <preferredSize width="100" height="30"/>
                           <text value="Set Center"/>
                         </properties>
@@ -168,7 +167,10 @@
                       </component>
                     </children>
                   </grid>
-                  <nested-form id="63a69" form-file="com/rkade/AxisPanel.form" binding="xAxisPanel">
+                  <nested-form id="63a69" form-file="com/rkade/AxisPanel.form" binding="yAxisPanel">
+                    <constraints/>
+                  </nested-form>
+                  <nested-form id="1b52d" form-file="com/rkade/AxisPanel.form" binding="zAxisPanel">
                     <constraints/>
                   </nested-form>
                 </children>

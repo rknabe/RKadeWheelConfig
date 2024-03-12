@@ -1,6 +1,8 @@
 package com.rkade;
 
 import com.fazecast.jSerialComm.SerialPort;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import purejavahidapi.*;
 
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.util.List;
 import static com.rkade.DataReport.DATA_REPORT_ID;
 
 public final class DeviceManager implements InputReportListener, DeviceRemovalListener {
+    private final static Logger logger = LogManager.getLogger(DeviceManager.class);
     private final static int LEONARDO_VENDOR_ID = 0x2341;
     private final static int LEONARDO_PRODUCT_ID = 0x8036;
     private final static int OUTPUT_REPORT_DATA_LENGTH = 7;
@@ -31,7 +34,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
 
     @Override
     public void onDeviceRemoval(HidDevice hidDevice) {
-        System.out.println("device removed");
+        logger.info("device removed");
         deviceAttached = false;
         versionReported = false;
         deviceInfo = null;
@@ -78,7 +81,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         try {
             Thread.sleep(millis);
         } catch (Exception ex) {
-            ex.printStackTrace();
+           logger.error(ex);
         }
     }
 
@@ -97,7 +100,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
             while (true) {
                 if (!deviceAttached) {
                     deviceInfo = null;
-                    System.out.println("scanning");
+                    logger.info("scanning");
                     notifyListenersDeviceUpdated(null, "Scanning...", null);
                     List<HidDeviceInfo> devList = PureJavaHidApi.enumerateDevices();
                     for (HidDeviceInfo info : devList) {
@@ -107,11 +110,11 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                         }
                     }
                     if (deviceInfo == null) {
-                        System.out.println("device not found");
+                        logger.info("device not found");
                         notifyListenersDeviceUpdated(null, "Device Not Found...", null);
                         sleep(1000);
                     } else {
-                        System.out.println("device found");
+                        logger.info("device found");
                         notifyListenersDeviceUpdated(null, "Attached...", null);
                         deviceAttached = true;
                         if (deviceAttached) {
@@ -131,7 +134,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                                     openedDevice.setInputReportListener(DeviceManager.this);
                                 }
                             } catch (IOException ex) {
-                                ex.printStackTrace();
+                                logger.error(ex);;
                             }
                         }
                     }
@@ -152,7 +155,6 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                     try {
                         if (!versionReported) {
                             //only need to do this once
-                            System.out.println("getv");
                             getOutputReport(DataReport.CMD_GET_VER, (byte) 0, data);
                         }
                         getOutputReport(DataReport.CMD_GET_STEER, (byte) 0, data);
@@ -165,13 +167,12 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                         getOutputReport(DataReport.CMD_GET_MISC, (byte) 0, data);
                         failCount = 0;
                      } catch (IOException ex) {
-                        System.out.println("Error sending OutputReport");
                         ++failCount;
                         if (failCount > 3) {
                             onDeviceRemoval(openedDevice);
                         }
                         sleep(1000);
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 } else {
                     sleep(1000);

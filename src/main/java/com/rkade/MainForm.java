@@ -1,17 +1,31 @@
 package com.rkade;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainForm implements DeviceListener, ActionListener {
+    private final static Logger logger = LogManager.getLogger(MainForm.class);
     private final static String CENTER_BUTTON = "Set Center";
+    private final List<AxisPanel> axisPanels = new ArrayList<>(7);
+    private final List<String> axisLabels = List.of(
+            "Axis 1 (Y - Accelerator)",
+            "Axis 2 (Z - Brake)",
+            "Axis 3 (rX - Clutch)",
+            "Axis 4 (rY - Aux 1)",
+            "Axis 5 (rZ - Aux 2)",
+            "Axis 6 (Slider - Aux 3)",
+            "Axis 7 (Dial - Aux 4)");
     private JPanel mainPanel;
     private JTabbedPane Inputs;
     private JPanel ffbPanel;
@@ -33,7 +47,8 @@ public class MainForm implements DeviceListener, ActionListener {
     private JTextField wheelValueTextField;
     private JLabel wheelValueLabel;
     private JLabel versionLabel;
-    private AxisPanel xAxisPanel;
+    private AxisPanel yAxisPanel;
+    private AxisPanel zAxisPanel;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
 
@@ -44,23 +59,26 @@ public class MainForm implements DeviceListener, ActionListener {
             wheelImage = toBufferedImage(imageIcon.getImage());
             wheelIconLabel.setIcon(imageIcon);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
-        TitledBorder border = (TitledBorder) xAxisPanel.getMainPanel().getBorder();
-        border.setTitle("Axis 1 (Y - Accelerator)");
+        axisPanels.add(yAxisPanel);
+        axisPanels.add(zAxisPanel);
+        axisPanels.add(null);
+        axisPanels.add(null);
+        axisPanels.add(null);
+        axisPanels.add(null);
+        axisPanels.add(null);
+
+        setAxisTitles();
     }
 
-    private Serializable clone(Serializable c) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(c);
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            return (Serializable) ois.readObject();
-        } catch (IOException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-            return null;
+    private void setAxisTitles() {
+        for (int i = 0; i < axisPanels.size(); i++) {
+            AxisPanel panel = axisPanels.get(i);
+            if (panel != null) {
+                TitledBorder border = (TitledBorder) panel.getMainPanel().getBorder();
+                border.setTitle(axisLabels.get(i));
+            }
         }
     }
 
@@ -129,41 +147,45 @@ public class MainForm implements DeviceListener, ActionListener {
 
         if (report != null) {
             if (report.getReportType() == DataReport.DATA_REPORT_ID) {
-                if (report instanceof WheelDataReport) {
-                    WheelDataReport wheelData = (WheelDataReport) report;
-                    String newRange = String.valueOf(wheelData.getRange());
-                    String oldRange = (String) rangeComboBox.getSelectedItem();
-                    if (!newRange.equals(oldRange)) {
-                        rangeComboBox.removeAllItems();
-                        rangeComboBox.addItem(newRange);
+                switch (report) {
+                    case WheelDataReport wheelData -> updateWheelPanel(wheelData);
+                    case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), axisData);
+                    case VersionDataReport versionData ->
+                            versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
+                    default -> {
                     }
-                    wheelRawTextField.setText(String.valueOf(wheelData.getRawValue()));
-                    wheelValueTextField.setText(String.valueOf(wheelData.getValue()));
-                    velocityText.setText(String.valueOf(wheelData.getVelocity()));
-                    accText.setText(String.valueOf(wheelData.getAcceleration()));
-                    if (Math.abs(wheelData.getAngle() - prevWheelRotation) > 0.5) {
-                        wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
-                    }
-                    degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
-                    prevWheelRotation = wheelData.getAngle();
-                } else if (report instanceof AxisDataReport) {
-                    AxisDataReport axisData = (AxisDataReport) report;
-                    switch (axisData.getAxis()) {
-                        case 1:
-                            xAxisPanel.getProgress().setValue(axisData.getRawValue());
-                            xAxisPanel.getValueText().setText(String.valueOf(axisData.getValue()));
-                            xAxisPanel.getRawText().setText(String.valueOf(axisData.getRawValue()));
-                            xAxisPanel.getMinText().setText(String.valueOf(axisData.getMin()));
-                            xAxisPanel.getMaxText().setText(String.valueOf(axisData.getMax()));
-                            xAxisPanel.getCenterText().setText(String.valueOf(axisData.getCenter()));
-                            xAxisPanel.getDzText().setText(String.valueOf(axisData.getDeadZone()));
-                            break;
-                    }
-                } else if (report instanceof VersionDataReport) {
-                    VersionDataReport versionData = (VersionDataReport) report;
-                    versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
                 }
             }
+        }
+    }
+
+    private void updateWheelPanel(WheelDataReport wheelData) {
+        String newRange = String.valueOf(wheelData.getRange());
+        String oldRange = (String) rangeComboBox.getSelectedItem();
+        if (!newRange.equals(oldRange)) {
+            rangeComboBox.removeAllItems();
+            rangeComboBox.addItem(newRange);
+        }
+        wheelRawTextField.setText(String.valueOf(wheelData.getRawValue()));
+        wheelValueTextField.setText(String.valueOf(wheelData.getValue()));
+        velocityText.setText(String.valueOf(wheelData.getVelocity()));
+        accText.setText(String.valueOf(wheelData.getAcceleration()));
+        if (Math.abs(wheelData.getAngle() - prevWheelRotation) > 0.5) {
+            wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
+        }
+        degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
+        prevWheelRotation = wheelData.getAngle();
+    }
+
+    private void updateAxisPanel(AxisPanel axisPanel, AxisDataReport axisData) {
+        if (axisPanel != null) {
+            axisPanel.getProgress().setValue(axisData.getRawValue());
+            axisPanel.getValueText().setText(String.valueOf(axisData.getValue()));
+            axisPanel.getRawText().setText(String.valueOf(axisData.getRawValue()));
+            axisPanel.getMinText().setText(String.valueOf(axisData.getMin()));
+            axisPanel.getMaxText().setText(String.valueOf(axisData.getMax()));
+            axisPanel.getCenterText().setText(String.valueOf(axisData.getCenter()));
+            axisPanel.getDzText().setText(String.valueOf(axisData.getDeadZone()));
         }
     }
 
@@ -237,7 +259,6 @@ public class MainForm implements DeviceListener, ActionListener {
         rangeComboBox = new JComboBox();
         wheelPanel.add(rangeComboBox);
         centerButton = new JButton();
-        centerButton.setLabel("Set Center");
         centerButton.setPreferredSize(new Dimension(100, 30));
         centerButton.setText("Set Center");
         wheelPanel.add(centerButton);
@@ -279,8 +300,10 @@ public class MainForm implements DeviceListener, ActionListener {
         accText = new JTextField();
         accText.setPreferredSize(new Dimension(65, 30));
         wheelPanel.add(accText);
-        xAxisPanel = new AxisPanel();
-        axisPanel.add(xAxisPanel.$$$getRootComponent$$$());
+        yAxisPanel = new AxisPanel();
+        axisPanel.add(yAxisPanel.$$$getRootComponent$$$());
+        zAxisPanel = new AxisPanel();
+        axisPanel.add(zAxisPanel.$$$getRootComponent$$$());
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
         Inputs.addTab("Force Feedback", ffbPanel);

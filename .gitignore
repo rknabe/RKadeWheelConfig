@@ -42,3 +42,5 @@ build/
 /.idea/
 /.idea/
 /dependency-reduced-pom.xml
+/FfbWheelConfig.log
+/app.log
