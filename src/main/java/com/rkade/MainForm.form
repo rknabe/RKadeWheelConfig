@@ -80,15 +80,15 @@
                     <properties>
                       <maximumSize width="32767" height="32767"/>
                       <minimumSize width="1040" height="600"/>
-                      <preferredSize width="1040" height="900"/>
+                      <preferredSize width="1040" height="890"/>
                     </properties>
                     <border type="none"/>
                     <children>
-                      <grid id="c33f3" binding="wheelPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                      <grid id="c33f3" binding="wheelPanel" layout-manager="FlowLayout" hgap="5" vgap="0" flow-align="0">
                         <constraints/>
                         <properties>
                           <minimumSize width="1024" height="82"/>
-                          <preferredSize width="1024" height="75"/>
+                          <preferredSize width="1024" height="82"/>
                         </properties>
                         <border type="etched" title="Axis 0 (X - Steering)"/>
                         <children>
@@ -112,7 +112,10 @@
                           <component id="223ed" class="javax.swing.JLabel" binding="wheelIconLabel">
                             <constraints/>
                             <properties>
-                              <preferredSize width="45" height="45"/>
+                              <alignmentY value="0.0"/>
+                              <doubleBuffered value="true"/>
+                              <preferredSize width="55" height="55"/>
+                              <requestFocusEnabled value="false"/>
                               <text value=""/>
                               <verticalAlignment value="1"/>
                             </properties>

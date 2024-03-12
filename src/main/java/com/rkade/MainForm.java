@@ -60,7 +60,7 @@ public class MainForm implements DeviceListener, ActionListener {
     public MainForm() {
         centerButton.addActionListener(this);
         try {
-            ImageIcon imageIcon = new ImageIcon(ClassLoader.getSystemResource("wheel40.png"));
+            ImageIcon imageIcon = new ImageIcon(ClassLoader.getSystemResource("wheel55.png"));
             wheelImage = toBufferedImage(imageIcon.getImage());
             wheelIconLabel.setIcon(imageIcon);
         } catch (Exception ex) {
@@ -93,7 +93,7 @@ public class MainForm implements DeviceListener, ActionListener {
         }
 
         // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(40, 40, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bimage = new BufferedImage(55, 55, BufferedImage.TYPE_INT_ARGB);
 
         // Draw the image on to the buffered image
         Graphics2D bGr = bimage.createGraphics();
@@ -165,6 +165,11 @@ public class MainForm implements DeviceListener, ActionListener {
     }
 
     private void updateWheelPanel(WheelDataReport wheelData) {
+        if (Math.abs(wheelData.getAngle() - prevWheelRotation) > 0.5) {
+            wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
+        }
+        degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
+        prevWheelRotation = wheelData.getAngle();
         String newRange = String.valueOf(wheelData.getRange());
         String oldRange = (String) rangeComboBox.getSelectedItem();
         if (!newRange.equals(oldRange)) {
@@ -175,11 +180,6 @@ public class MainForm implements DeviceListener, ActionListener {
         wheelValueTextField.setText(String.valueOf(wheelData.getValue()));
         velocityText.setText(String.valueOf(wheelData.getVelocity()));
         accText.setText(String.valueOf(wheelData.getAcceleration()));
-        if (Math.abs(wheelData.getAngle() - prevWheelRotation) > 0.5) {
-            wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
-        }
-        degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
-        prevWheelRotation = wheelData.getAngle();
     }
 
     private void updateAxisPanel(AxisPanel axisPanel, AxisDataReport axisData) {
@@ -269,12 +269,12 @@ public class MainForm implements DeviceListener, ActionListener {
         axisPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         axisPanel.setMaximumSize(new Dimension(32767, 32767));
         axisPanel.setMinimumSize(new Dimension(1040, 600));
-        axisPanel.setPreferredSize(new Dimension(1040, 900));
+        axisPanel.setPreferredSize(new Dimension(1040, 890));
         scrollPane1.setViewportView(axisPanel);
         wheelPanel = new JPanel();
-        wheelPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        wheelPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         wheelPanel.setMinimumSize(new Dimension(1024, 82));
-        wheelPanel.setPreferredSize(new Dimension(1024, 75));
+        wheelPanel.setPreferredSize(new Dimension(1024, 82));
         axisPanel.add(wheelPanel);
         wheelPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 0 (X - Steering)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         rangeLabel = new JLabel();
@@ -287,7 +287,10 @@ public class MainForm implements DeviceListener, ActionListener {
         centerButton.setText("Set Center");
         wheelPanel.add(centerButton);
         wheelIconLabel = new JLabel();
-        wheelIconLabel.setPreferredSize(new Dimension(45, 45));
+        wheelIconLabel.setAlignmentY(0.0f);
+        wheelIconLabel.setDoubleBuffered(true);
+        wheelIconLabel.setPreferredSize(new Dimension(55, 55));
+        wheelIconLabel.setRequestFocusEnabled(false);
         wheelIconLabel.setText("");
         wheelIconLabel.setVerticalAlignment(1);
         wheelPanel.add(wheelIconLabel);
