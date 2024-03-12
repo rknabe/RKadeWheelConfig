@@ -47,8 +47,13 @@ public class MainForm implements DeviceListener, ActionListener {
     private JTextField wheelValueTextField;
     private JLabel wheelValueLabel;
     private JLabel versionLabel;
-    private AxisPanel yAxisPanel;
-    private AxisPanel zAxisPanel;
+    private AxisPanel axis1Panel;
+    private AxisPanel axis2Panel;
+    private AxisPanel axis3Panel;
+    private AxisPanel axis4Panel;
+    private AxisPanel axis5Panel;
+    private AxisPanel axis6Panel;
+    private AxisPanel axis7Panel;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
 
@@ -61,13 +66,13 @@ public class MainForm implements DeviceListener, ActionListener {
         } catch (Exception ex) {
             logger.error(ex);
         }
-        axisPanels.add(yAxisPanel);
-        axisPanels.add(zAxisPanel);
-        axisPanels.add(null);
-        axisPanels.add(null);
-        axisPanels.add(null);
-        axisPanels.add(null);
-        axisPanels.add(null);
+        axisPanels.add(axis1Panel);
+        axisPanels.add(axis2Panel);
+        axisPanels.add(axis3Panel);
+        axisPanels.add(axis4Panel);
+        axisPanels.add(axis5Panel);
+        axisPanels.add(axis6Panel);
+        axisPanels.add(axis7Panel);
 
         setAxisTitles();
     }
@@ -179,7 +184,14 @@ public class MainForm implements DeviceListener, ActionListener {
 
     private void updateAxisPanel(AxisPanel axisPanel, AxisDataReport axisData) {
         if (axisPanel != null) {
-            axisPanel.getProgress().setValue(axisData.getRawValue());
+            short progress = axisData.getRawValue();
+            short min = axisData.getMin();
+            //if (progress < min) {
+            //    progress = 0;
+            // }
+            axisPanel.getProgress().setValue(progress);
+            axisPanel.getProgress().setMaximum(axisData.getMax());
+            axisPanel.getProgress().setMinimum(axisData.getMin());
             axisPanel.getValueText().setText(String.valueOf(axisData.getValue()));
             axisPanel.getRawText().setText(String.valueOf(axisData.getRawValue()));
             axisPanel.getMinText().setText(String.valueOf(axisData.getMin()));
@@ -212,7 +224,8 @@ public class MainForm implements DeviceListener, ActionListener {
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setPreferredSize(new Dimension(1024, 768));
         Inputs = new JTabbedPane();
-        Inputs.setPreferredSize(new Dimension(900, 600));
+        Inputs.setMinimumSize(new Dimension(1024, 1030));
+        Inputs.setPreferredSize(new Dimension(900, 1030));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -223,8 +236,8 @@ public class MainForm implements DeviceListener, ActionListener {
         mainPanel.add(Inputs, gbc);
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new BorderLayout(0, 0));
-        panel1.setMinimumSize(new Dimension(1024, 600));
-        panel1.setPreferredSize(new Dimension(1000, 700));
+        panel1.setMinimumSize(new Dimension(1024, 550));
+        panel1.setPreferredSize(new Dimension(1000, 550));
         Inputs.addTab("Inputs", panel1);
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
@@ -245,7 +258,8 @@ public class MainForm implements DeviceListener, ActionListener {
         bottomPanel.add(statusLabel);
         axisPanel = new JPanel();
         axisPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        axisPanel.setPreferredSize(new Dimension(900, 700));
+        axisPanel.setAutoscrolls(true);
+        axisPanel.setPreferredSize(new Dimension(900, 900));
         panel1.add(axisPanel, BorderLayout.NORTH);
         wheelPanel = new JPanel();
         wheelPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
@@ -300,10 +314,20 @@ public class MainForm implements DeviceListener, ActionListener {
         accText = new JTextField();
         accText.setPreferredSize(new Dimension(65, 30));
         wheelPanel.add(accText);
-        yAxisPanel = new AxisPanel();
-        axisPanel.add(yAxisPanel.$$$getRootComponent$$$());
-        zAxisPanel = new AxisPanel();
-        axisPanel.add(zAxisPanel.$$$getRootComponent$$$());
+        axis1Panel = new AxisPanel();
+        axisPanel.add(axis1Panel.$$$getRootComponent$$$());
+        axis2Panel = new AxisPanel();
+        axisPanel.add(axis2Panel.$$$getRootComponent$$$());
+        axis3Panel = new AxisPanel();
+        axisPanel.add(axis3Panel.$$$getRootComponent$$$());
+        axis4Panel = new AxisPanel();
+        axisPanel.add(axis4Panel.$$$getRootComponent$$$());
+        axis5Panel = new AxisPanel();
+        axisPanel.add(axis5Panel.$$$getRootComponent$$$());
+        axis6Panel = new AxisPanel();
+        axisPanel.add(axis6Panel.$$$getRootComponent$$$());
+        axis7Panel = new AxisPanel();
+        axisPanel.add(axis7Panel.$$$getRootComponent$$$());
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
         Inputs.addTab("Force Feedback", ffbPanel);
