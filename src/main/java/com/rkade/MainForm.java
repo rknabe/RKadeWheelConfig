@@ -184,20 +184,20 @@ public class MainForm implements DeviceListener, ActionListener {
 
     private void updateAxisPanel(AxisPanel axisPanel, AxisDataReport axisData) {
         if (axisPanel != null) {
-            short progress = axisData.getRawValue();
-            short min = axisData.getMin();
-            //if (progress < min) {
-            //    progress = 0;
-            // }
-            axisPanel.getProgress().setValue(progress);
-            axisPanel.getProgress().setMaximum(axisData.getMax());
-            axisPanel.getProgress().setMinimum(axisData.getMin());
-            axisPanel.getValueText().setText(String.valueOf(axisData.getValue()));
-            axisPanel.getRawText().setText(String.valueOf(axisData.getRawValue()));
-            axisPanel.getMinText().setText(String.valueOf(axisData.getMin()));
-            axisPanel.getMaxText().setText(String.valueOf(axisData.getMax()));
-            axisPanel.getCenterText().setText(String.valueOf(axisData.getCenter()));
-            axisPanel.getDzText().setText(String.valueOf(axisData.getDeadZone()));
+            axisPanel.getEnabledCheckBox().setSelected(axisData.isEnabled());
+            axisPanel.getHasCenterCheckBox().setSelected(axisData.isHasCenter());
+            axisPanel.getAutoLimitCheckBox().setSelected(axisData.isAutoLimit());
+            if (axisData.isEnabled()) {
+                axisPanel.getProgress().setValue(axisData.getRawValue());
+                axisPanel.getProgress().setMaximum(axisData.getMax());
+                axisPanel.getProgress().setMinimum(axisData.getMin());
+                axisPanel.getValueText().setText(String.valueOf(axisData.getValue()));
+                axisPanel.getRawText().setText(String.valueOf(axisData.getRawValue()));
+                axisPanel.getMinText().setText(String.valueOf(axisData.getMin()));
+                axisPanel.getMaxText().setText(String.valueOf(axisData.getMax()));
+                axisPanel.getCenterText().setText(String.valueOf(axisData.getCenter()));
+                axisPanel.getDzText().setText(String.valueOf(axisData.getDeadZone()));
+            }
         }
     }
 
@@ -222,10 +222,11 @@ public class MainForm implements DeviceListener, ActionListener {
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setPreferredSize(new Dimension(1024, 768));
+        mainPanel.setMinimumSize(new Dimension(1060, 400));
+        mainPanel.setPreferredSize(new Dimension(1060, 700));
         Inputs = new JTabbedPane();
-        Inputs.setMinimumSize(new Dimension(1024, 1030));
-        Inputs.setPreferredSize(new Dimension(900, 1030));
+        Inputs.setMinimumSize(new Dimension(10601040, 400));
+        Inputs.setPreferredSize(new Dimension(1060, 700));
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -236,15 +237,18 @@ public class MainForm implements DeviceListener, ActionListener {
         mainPanel.add(Inputs, gbc);
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new BorderLayout(0, 0));
-        panel1.setMinimumSize(new Dimension(1024, 550));
-        panel1.setPreferredSize(new Dimension(1000, 550));
+        panel1.setMinimumSize(new Dimension(1060, 400));
+        panel1.setPreferredSize(new Dimension(1060, 700));
         Inputs.addTab("Inputs", panel1);
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        bottomPanel.setPreferredSize(new Dimension(1000, 75));
+        bottomPanel.setDoubleBuffered(false);
+        bottomPanel.setMinimumSize(new Dimension(1060, 75));
+        bottomPanel.setPreferredSize(new Dimension(1060, 75));
         panel1.add(bottomPanel, BorderLayout.SOUTH);
         bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         deviceComboBox = new JComboBox();
+        deviceComboBox.setEditable(false);
         deviceComboBox.setMinimumSize(new Dimension(200, 30));
         deviceComboBox.setPreferredSize(new Dimension(200, 30));
         bottomPanel.add(deviceComboBox);
@@ -256,15 +260,21 @@ public class MainForm implements DeviceListener, ActionListener {
         statusLabel.setPreferredSize(new Dimension(120, 17));
         statusLabel.setText("Device Not Found");
         bottomPanel.add(statusLabel);
+        final JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane1.setMaximumSize(new Dimension(32767, 32767));
+        scrollPane1.setMinimumSize(new Dimension(1060, 600));
+        scrollPane1.setPreferredSize(new Dimension(1060, 600));
+        panel1.add(scrollPane1, BorderLayout.NORTH);
         axisPanel = new JPanel();
         axisPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        axisPanel.setAutoscrolls(true);
-        axisPanel.setPreferredSize(new Dimension(900, 900));
-        panel1.add(axisPanel, BorderLayout.NORTH);
+        axisPanel.setMaximumSize(new Dimension(32767, 32767));
+        axisPanel.setMinimumSize(new Dimension(1040, 600));
+        axisPanel.setPreferredSize(new Dimension(1040, 900));
+        scrollPane1.setViewportView(axisPanel);
         wheelPanel = new JPanel();
         wheelPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        wheelPanel.setMinimumSize(new Dimension(800, 82));
-        wheelPanel.setPreferredSize(new Dimension(1020, 75));
+        wheelPanel.setMinimumSize(new Dimension(1024, 82));
+        wheelPanel.setPreferredSize(new Dimension(1024, 75));
         axisPanel.add(wheelPanel);
         wheelPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis 0 (X - Steering)", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         rangeLabel = new JLabel();
@@ -278,7 +288,6 @@ public class MainForm implements DeviceListener, ActionListener {
         wheelPanel.add(centerButton);
         wheelIconLabel = new JLabel();
         wheelIconLabel.setPreferredSize(new Dimension(45, 45));
-        wheelIconLabel.setRequestFocusEnabled(false);
         wheelIconLabel.setText("");
         wheelIconLabel.setVerticalAlignment(1);
         wheelPanel.add(wheelIconLabel);
@@ -330,6 +339,8 @@ public class MainForm implements DeviceListener, ActionListener {
         axisPanel.add(axis7Panel.$$$getRootComponent$$$());
         ffbPanel = new JPanel();
         ffbPanel.setLayout(new GridBagLayout());
+        ffbPanel.setMinimumSize(new Dimension(1024, 768));
+        ffbPanel.setPreferredSize(new Dimension(1024, 768));
         Inputs.addTab("Force Feedback", ffbPanel);
         final JPanel spacer1 = new JPanel();
         gbc = new GridBagConstraints();

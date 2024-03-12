@@ -82,7 +82,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         try {
             Thread.sleep(millis);
         } catch (Exception ex) {
-           logger.error(ex);
+            logger.error(ex);
         }
     }
 
@@ -136,7 +136,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                                     openedDevice.setInputReportListener(DeviceManager.this);
                                 }
                             } catch (IOException ex) {
-                                logger.error(ex);;
+                                logger.error(ex);
                             }
                         }
                     }
@@ -168,7 +168,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                         getOutputReport(DataReport.CMD_GET_GAINS, (byte) 0, data);
                         getOutputReport(DataReport.CMD_GET_MISC, (byte) 0, data);
                         failCount = 0;
-                     } catch (IOException ex) {
+                    } catch (IOException ex) {
                         ++failCount;
                         if (failCount > 3) {
                             onDeviceRemoval(openedDevice);

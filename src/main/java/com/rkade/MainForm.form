@@ -2,10 +2,11 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.rkade.MainForm">
   <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="1206" height="1050"/>
+      <xy x="20" y="20" width="1206" height="1010"/>
     </constraints>
     <properties>
-      <preferredSize width="1024" height="768"/>
+      <minimumSize width="1060" height="400"/>
+      <preferredSize width="1060" height="700"/>
     </properties>
     <border type="none"/>
     <children>
@@ -17,8 +18,8 @@
           <gridbag weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <minimumSize width="1024" height="1030"/>
-          <preferredSize width="900" height="1030"/>
+          <minimumSize width="10601040" height="400"/>
+          <preferredSize width="1060" height="700"/>
         </properties>
         <border type="none"/>
         <children>
@@ -27,21 +28,24 @@
               <tabbedpane title="Inputs"/>
             </constraints>
             <properties>
-              <minimumSize width="1024" height="550"/>
-              <preferredSize width="1000" height="550"/>
+              <minimumSize width="1060" height="400"/>
+              <preferredSize width="1060" height="700"/>
             </properties>
             <border type="none"/>
             <children>
               <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
                 <constraints border-constraint="South"/>
                 <properties>
-                  <preferredSize width="1000" height="75"/>
+                  <doubleBuffered value="false"/>
+                  <minimumSize width="1060" height="75"/>
+                  <preferredSize width="1060" height="75"/>
                 </properties>
                 <border type="bevel-raised"/>
                 <children>
                   <component id="763d7" class="javax.swing.JComboBox" binding="deviceComboBox">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
                       <minimumSize width="200" height="30"/>
                       <preferredSize width="200" height="30"/>
                     </properties>
@@ -62,143 +66,157 @@
                   </component>
                 </children>
               </grid>
-              <grid id="2743d" binding="axisPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+              <scrollpane id="12710">
                 <constraints border-constraint="North"/>
                 <properties>
-                  <autoscrolls value="true"/>
-                  <preferredSize width="900" height="900"/>
+                  <maximumSize width="32767" height="32767"/>
+                  <minimumSize width="1060" height="600"/>
+                  <preferredSize width="1060" height="600"/>
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="c33f3" binding="wheelPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+                  <grid id="2743d" binding="axisPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                     <constraints/>
                     <properties>
-                      <minimumSize width="800" height="82"/>
-                      <preferredSize width="1020" height="75"/>
+                      <maximumSize width="32767" height="32767"/>
+                      <minimumSize width="1040" height="600"/>
+                      <preferredSize width="1040" height="900"/>
                     </properties>
-                    <border type="etched" title="Axis 0 (X - Steering)"/>
+                    <border type="none"/>
                     <children>
-                      <component id="22fd5" class="javax.swing.JLabel" binding="rangeLabel">
+                      <grid id="c33f3" binding="wheelPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
                         <constraints/>
                         <properties>
-                          <text value="Range"/>
+                          <minimumSize width="1024" height="82"/>
+                          <preferredSize width="1024" height="75"/>
                         </properties>
-                      </component>
-                      <component id="19d08" class="javax.swing.JComboBox" binding="rangeComboBox">
+                        <border type="etched" title="Axis 0 (X - Steering)"/>
+                        <children>
+                          <component id="22fd5" class="javax.swing.JLabel" binding="rangeLabel">
+                            <constraints/>
+                            <properties>
+                              <text value="Range"/>
+                            </properties>
+                          </component>
+                          <component id="19d08" class="javax.swing.JComboBox" binding="rangeComboBox">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                          <component id="54358" class="javax.swing.JButton" binding="centerButton">
+                            <constraints/>
+                            <properties>
+                              <preferredSize width="100" height="30"/>
+                              <text value="Set Center"/>
+                            </properties>
+                          </component>
+                          <component id="223ed" class="javax.swing.JLabel" binding="wheelIconLabel">
+                            <constraints/>
+                            <properties>
+                              <preferredSize width="45" height="45"/>
+                              <text value=""/>
+                              <verticalAlignment value="1"/>
+                            </properties>
+                          </component>
+                          <component id="a28a" class="javax.swing.JLabel" binding="degreesLabel">
+                            <constraints/>
+                            <properties>
+                              <horizontalTextPosition value="2"/>
+                              <preferredSize width="50" height="31"/>
+                              <text value="00.00°"/>
+                            </properties>
+                          </component>
+                          <component id="6952" class="javax.swing.JLabel" binding="wheelRawLabel">
+                            <constraints/>
+                            <properties>
+                              <labelFor value="d7455"/>
+                              <text value="Raw"/>
+                            </properties>
+                          </component>
+                          <component id="c52d5" class="javax.swing.JTextField" binding="wheelRawTextField">
+                            <constraints/>
+                            <properties>
+                              <minimumSize width="25" height="30"/>
+                              <preferredSize width="65" height="30"/>
+                            </properties>
+                          </component>
+                          <component id="caa55" class="javax.swing.JLabel" binding="wheelValueLabel">
+                            <constraints/>
+                            <properties>
+                              <labelFor value="d7455"/>
+                              <text value="Value"/>
+                            </properties>
+                          </component>
+                          <component id="5880e" class="javax.swing.JTextField" binding="wheelValueTextField">
+                            <constraints/>
+                            <properties>
+                              <minimumSize width="25" height="30"/>
+                              <preferredSize width="65" height="30"/>
+                            </properties>
+                          </component>
+                          <component id="f0703" class="javax.swing.JLabel">
+                            <constraints/>
+                            <properties>
+                              <labelFor value="d7455"/>
+                              <text value="Velocity"/>
+                            </properties>
+                          </component>
+                          <component id="d7455" class="javax.swing.JTextField" binding="velocityText">
+                            <constraints/>
+                            <properties>
+                              <minimumSize width="25" height="30"/>
+                              <preferredSize width="65" height="30"/>
+                            </properties>
+                          </component>
+                          <component id="292c" class="javax.swing.JLabel" binding="accLabel">
+                            <constraints/>
+                            <properties>
+                              <labelFor value="179c5"/>
+                              <text value="Acc"/>
+                            </properties>
+                          </component>
+                          <component id="179c5" class="javax.swing.JTextField" binding="accText">
+                            <constraints/>
+                            <properties>
+                              <preferredSize width="65" height="30"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <nested-form id="63a69" form-file="com/rkade/AxisPanel.form" binding="axis1Panel">
                         <constraints/>
-                        <properties/>
-                      </component>
-                      <component id="54358" class="javax.swing.JButton" binding="centerButton">
+                      </nested-form>
+                      <nested-form id="1b52d" form-file="com/rkade/AxisPanel.form" binding="axis2Panel">
                         <constraints/>
-                        <properties>
-                          <preferredSize width="100" height="30"/>
-                          <text value="Set Center"/>
-                        </properties>
-                      </component>
-                      <component id="223ed" class="javax.swing.JLabel" binding="wheelIconLabel">
+                      </nested-form>
+                      <nested-form id="6447b" form-file="com/rkade/AxisPanel.form" binding="axis3Panel">
                         <constraints/>
-                        <properties>
-                          <preferredSize width="45" height="45"/>
-                          <requestFocusEnabled value="false"/>
-                          <text value=""/>
-                          <verticalAlignment value="1"/>
-                        </properties>
-                      </component>
-                      <component id="a28a" class="javax.swing.JLabel" binding="degreesLabel">
+                      </nested-form>
+                      <nested-form id="fffa5" form-file="com/rkade/AxisPanel.form" binding="axis4Panel">
                         <constraints/>
-                        <properties>
-                          <horizontalTextPosition value="2"/>
-                          <preferredSize width="50" height="31"/>
-                          <text value="00.00°"/>
-                        </properties>
-                      </component>
-                      <component id="6952" class="javax.swing.JLabel" binding="wheelRawLabel">
+                      </nested-form>
+                      <nested-form id="e6f0" form-file="com/rkade/AxisPanel.form" binding="axis5Panel">
                         <constraints/>
-                        <properties>
-                          <labelFor value="d7455"/>
-                          <text value="Raw"/>
-                        </properties>
-                      </component>
-                      <component id="c52d5" class="javax.swing.JTextField" binding="wheelRawTextField">
+                      </nested-form>
+                      <nested-form id="75b87" form-file="com/rkade/AxisPanel.form" binding="axis6Panel">
                         <constraints/>
-                        <properties>
-                          <minimumSize width="25" height="30"/>
-                          <preferredSize width="65" height="30"/>
-                        </properties>
-                      </component>
-                      <component id="caa55" class="javax.swing.JLabel" binding="wheelValueLabel">
+                      </nested-form>
+                      <nested-form id="a7d4b" form-file="com/rkade/AxisPanel.form" binding="axis7Panel">
                         <constraints/>
-                        <properties>
-                          <labelFor value="d7455"/>
-                          <text value="Value"/>
-                        </properties>
-                      </component>
-                      <component id="5880e" class="javax.swing.JTextField" binding="wheelValueTextField">
-                        <constraints/>
-                        <properties>
-                          <minimumSize width="25" height="30"/>
-                          <preferredSize width="65" height="30"/>
-                        </properties>
-                      </component>
-                      <component id="f0703" class="javax.swing.JLabel">
-                        <constraints/>
-                        <properties>
-                          <labelFor value="d7455"/>
-                          <text value="Velocity"/>
-                        </properties>
-                      </component>
-                      <component id="d7455" class="javax.swing.JTextField" binding="velocityText">
-                        <constraints/>
-                        <properties>
-                          <minimumSize width="25" height="30"/>
-                          <preferredSize width="65" height="30"/>
-                        </properties>
-                      </component>
-                      <component id="292c" class="javax.swing.JLabel" binding="accLabel">
-                        <constraints/>
-                        <properties>
-                          <labelFor value="179c5"/>
-                          <text value="Acc"/>
-                        </properties>
-                      </component>
-                      <component id="179c5" class="javax.swing.JTextField" binding="accText">
-                        <constraints/>
-                        <properties>
-                          <preferredSize width="65" height="30"/>
-                        </properties>
-                      </component>
+                      </nested-form>
                     </children>
                   </grid>
-                  <nested-form id="63a69" form-file="com/rkade/AxisPanel.form" binding="axis1Panel">
-                    <constraints/>
-                  </nested-form>
-                  <nested-form id="1b52d" form-file="com/rkade/AxisPanel.form" binding="axis2Panel">
-                    <constraints/>
-                  </nested-form>
-                  <nested-form id="6447b" form-file="com/rkade/AxisPanel.form" binding="axis3Panel">
-                    <constraints/>
-                  </nested-form>
-                  <nested-form id="fffa5" form-file="com/rkade/AxisPanel.form" binding="axis4Panel">
-                    <constraints/>
-                  </nested-form>
-                  <nested-form id="e6f0" form-file="com/rkade/AxisPanel.form" binding="axis5Panel">
-                    <constraints/>
-                  </nested-form>
-                  <nested-form id="75b87" form-file="com/rkade/AxisPanel.form" binding="axis6Panel">
-                    <constraints/>
-                  </nested-form>
-                  <nested-form id="a7d4b" form-file="com/rkade/AxisPanel.form" binding="axis7Panel">
-                    <constraints/>
-                  </nested-form>
                 </children>
-              </grid>
+              </scrollpane>
             </children>
           </grid>
           <grid id="7fec8" binding="ffbPanel" layout-manager="GridBagLayout">
             <constraints>
               <tabbedpane title="Force Feedback"/>
             </constraints>
-            <properties/>
+            <properties>
+              <minimumSize width="1024" height="768"/>
+              <preferredSize width="1024" height="768"/>
+            </properties>
             <border type="none"/>
             <children>
               <hspacer id="82bd">
