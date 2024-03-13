@@ -1,16 +1,26 @@
 package com.rkade;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import javax.swing.*;
 import java.awt.*;
 
 public class App {
-    private final static Logger logger = LogManager.getLogger(App.class);
+    private final static Logger logger = Logger.getLogger(App.class.getName());
     private static DeviceManager deviceManager;
 
     public static void main(String[] args) {
+
+        try {
+            InputStream is = App.class.getResourceAsStream("/logging.properties");
+            LogManager.getLogManager().readConfiguration(is);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         SwingUtilities.invokeLater(() -> {
             try {
                 //com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProIJTheme.setup();
@@ -29,7 +39,7 @@ public class App {
                 deviceManager = new DeviceManager();
                 deviceManager.addDeviceListener(mainForm);
             } catch (Exception ex) {
-                logger.error(ex);
+                logger.warning(ex.getMessage());
             }
         });
         /*

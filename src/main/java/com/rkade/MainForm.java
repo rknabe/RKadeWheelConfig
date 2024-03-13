@@ -1,7 +1,6 @@
 package com.rkade;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -15,7 +14,7 @@ import java.util.List;
 
 
 public class MainForm implements DeviceListener, ActionListener {
-    private final static Logger logger = LogManager.getLogger(MainForm.class);
+    private final static Logger logger = Logger.getLogger(MainForm.class.getName());
     private final static String CENTER_BUTTON = "Set Center";
     private final List<AxisPanel> axisPanels = new ArrayList<>(7);
     private final List<String> axisLabels = List.of(
@@ -66,7 +65,7 @@ public class MainForm implements DeviceListener, ActionListener {
             wheelImage = toBufferedImage(imageIcon.getImage());
             wheelIconLabel.setIcon(imageIcon);
         } catch (Exception ex) {
-            logger.error(ex);
+            logger.warning(ex.getMessage());
         }
         axisPanels.add(axis1Panel);
         axisPanels.add(axis2Panel);

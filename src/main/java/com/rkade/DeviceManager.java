@@ -1,8 +1,7 @@
 package com.rkade;
 
 import com.fazecast.jSerialComm.SerialPort;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.logging.Logger;
 import purejavahidapi.*;
 
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.util.List;
 import static com.rkade.DataReport.DATA_REPORT_ID;
 
 public final class DeviceManager implements InputReportListener, DeviceRemovalListener {
-    private final static Logger logger = LogManager.getLogger(DeviceManager.class);
+    private final static Logger logger = Logger.getLogger(DeviceManager.class.getName());
     private final static int LEONARDO_VENDOR_ID = 0x2341;
     private final static int LEONARDO_PRODUCT_ID = 0x8036;
     private final static int OUTPUT_REPORT_DATA_LENGTH = 7;
@@ -82,7 +81,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         try {
             Thread.sleep(millis);
         } catch (Exception ex) {
-            logger.error(ex);
+            logger.warning(ex.getMessage());
         }
     }
 
@@ -137,7 +136,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                                     openedDevice.setInputReportListener(DeviceManager.this);
                                 }
                             } catch (IOException ex) {
-                                logger.error(ex);
+                                logger.warning(ex.getMessage());
                             }
                         }
                     }
@@ -175,7 +174,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                             onDeviceRemoval(openedDevice);
                         }
                         sleep(1000);
-                        logger.error(ex);
+                        logger.warning(ex.getMessage());
                     }
                 } else {
                     sleep(1000);
