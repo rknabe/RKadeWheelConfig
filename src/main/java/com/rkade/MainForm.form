@@ -18,14 +18,13 @@
           <gridbag weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <doubleBuffered value="true"/>
           <minimumSize width="1060" height="400"/>
           <preferredSize width="1060" height="700"/>
           <tabLayoutPolicy value="0"/>
         </properties>
         <border type="none"/>
         <children>
-          <grid id="b8e5d" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b8e5d" binding="inputsPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Inputs"/>
             </constraints>
@@ -39,7 +38,6 @@
                 <constraints border-constraint="West"/>
                 <properties>
                   <autoscrolls value="true"/>
-                  <doubleBuffered value="true"/>
                   <maximumSize width="32767" height="32767"/>
                   <minimumSize width="1060" height="60"/>
                   <preferredSize width="1060" height="590"/>
@@ -67,20 +65,16 @@
                           <component id="22fd5" class="javax.swing.JLabel" binding="rangeLabel">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <text value="Range"/>
                             </properties>
                           </component>
                           <component id="19d08" class="javax.swing.JComboBox" binding="rangeComboBox">
                             <constraints/>
-                            <properties>
-                              <doubleBuffered value="true"/>
-                            </properties>
+                            <properties/>
                           </component>
                           <component id="54358" class="javax.swing.JButton" binding="centerButton">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <preferredSize width="100" height="30"/>
                               <text value="Set Center"/>
                             </properties>
@@ -89,7 +83,6 @@
                             <constraints/>
                             <properties>
                               <alignmentY value="0.0"/>
-                              <doubleBuffered value="true"/>
                               <preferredSize width="55" height="55"/>
                               <requestFocusEnabled value="false"/>
                               <text value=""/>
@@ -99,7 +92,6 @@
                           <component id="a28a" class="javax.swing.JLabel" binding="degreesLabel">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <horizontalTextPosition value="2"/>
                               <preferredSize width="50" height="31"/>
                               <text value="00.00°"/>
@@ -108,7 +100,6 @@
                           <component id="6952" class="javax.swing.JLabel" binding="wheelRawLabel">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <labelFor value="d7455"/>
                               <text value="Raw"/>
                             </properties>
@@ -116,7 +107,6 @@
                           <component id="c52d5" class="javax.swing.JTextField" binding="wheelRawTextField">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <minimumSize width="25" height="30"/>
                               <preferredSize width="65" height="30"/>
                             </properties>
@@ -124,7 +114,6 @@
                           <component id="caa55" class="javax.swing.JLabel" binding="wheelValueLabel">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <labelFor value="d7455"/>
                               <text value="Value"/>
                             </properties>
@@ -132,7 +121,6 @@
                           <component id="5880e" class="javax.swing.JTextField" binding="wheelValueTextField">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <minimumSize width="25" height="30"/>
                               <preferredSize width="65" height="30"/>
                             </properties>
@@ -140,7 +128,6 @@
                           <component id="f0703" class="javax.swing.JLabel">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <labelFor value="d7455"/>
                               <text value="Velocity"/>
                             </properties>
@@ -148,7 +135,6 @@
                           <component id="d7455" class="javax.swing.JTextField" binding="velocityText">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <minimumSize width="25" height="30"/>
                               <preferredSize width="65" height="30"/>
                             </properties>
@@ -156,7 +142,6 @@
                           <component id="292c" class="javax.swing.JLabel" binding="accLabel">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <labelFor value="179c5"/>
                               <text value="Acc"/>
                             </properties>
@@ -164,7 +149,6 @@
                           <component id="179c5" class="javax.swing.JTextField" binding="accText">
                             <constraints/>
                             <properties>
-                              <doubleBuffered value="true"/>
                               <preferredSize width="65" height="30"/>
                             </properties>
                           </component>
@@ -231,7 +215,6 @@
         </constraints>
         <properties>
           <autoscrolls value="true"/>
-          <doubleBuffered value="true"/>
           <minimumSize width="1060" height="75"/>
           <preferredSize width="1060" height="75"/>
         </properties>
@@ -240,7 +223,6 @@
           <component id="763d7" class="javax.swing.JComboBox" binding="deviceComboBox">
             <constraints/>
             <properties>
-              <doubleBuffered value="true"/>
               <editable value="false"/>
               <minimumSize width="200" height="30"/>
               <preferredSize width="200" height="30"/>
@@ -249,7 +231,6 @@
           <component id="bcaa2" class="javax.swing.JLabel" binding="versionLabel">
             <constraints/>
             <properties>
-              <doubleBuffered value="true"/>
               <preferredSize width="80" height="17"/>
               <text value="Version"/>
             </properties>
@@ -257,7 +238,6 @@
           <component id="ea116" class="javax.swing.JLabel" binding="statusLabel">
             <constraints/>
             <properties>
-              <doubleBuffered value="true"/>
               <preferredSize width="120" height="17"/>
               <text value="Device Not Found"/>
             </properties>
