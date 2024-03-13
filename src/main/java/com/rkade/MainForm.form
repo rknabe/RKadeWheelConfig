@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.rkade.MainForm">
   <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="1206" height="1010"/>
+      <xy x="20" y="20" width="1120" height="1010"/>
     </constraints>
     <properties>
       <minimumSize width="1060" height="400"/>
@@ -19,8 +19,9 @@
         </constraints>
         <properties>
           <doubleBuffered value="true"/>
-          <minimumSize width="10601040" height="400"/>
+          <minimumSize width="1060" height="400"/>
           <preferredSize width="1060" height="700"/>
+          <tabLayoutPolicy value="0"/>
         </properties>
         <border type="none"/>
         <children>
@@ -34,50 +35,14 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
-                <constraints border-constraint="South"/>
-                <properties>
-                  <doubleBuffered value="true"/>
-                  <minimumSize width="1060" height="75"/>
-                  <preferredSize width="1060" height="75"/>
-                </properties>
-                <border type="bevel-raised"/>
-                <children>
-                  <component id="763d7" class="javax.swing.JComboBox" binding="deviceComboBox">
-                    <constraints/>
-                    <properties>
-                      <doubleBuffered value="true"/>
-                      <editable value="false"/>
-                      <minimumSize width="200" height="30"/>
-                      <preferredSize width="200" height="30"/>
-                    </properties>
-                  </component>
-                  <component id="bcaa2" class="javax.swing.JLabel" binding="versionLabel">
-                    <constraints/>
-                    <properties>
-                      <doubleBuffered value="true"/>
-                      <preferredSize width="80" height="17"/>
-                      <text value="Version"/>
-                    </properties>
-                  </component>
-                  <component id="ea116" class="javax.swing.JLabel" binding="statusLabel">
-                    <constraints/>
-                    <properties>
-                      <doubleBuffered value="true"/>
-                      <preferredSize width="120" height="17"/>
-                      <text value="Device Not Found"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-              <scrollpane id="12710">
-                <constraints border-constraint="North"/>
+              <scrollpane id="12710" binding="axisScroll">
+                <constraints border-constraint="West"/>
                 <properties>
                   <autoscrolls value="true"/>
                   <doubleBuffered value="true"/>
                   <maximumSize width="32767" height="32767"/>
                   <minimumSize width="1060" height="60"/>
-                  <preferredSize width="1060" height="600"/>
+                  <preferredSize width="1060" height="590"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -89,7 +54,7 @@
                       <minimumSize width="1040" height="60"/>
                       <preferredSize width="1040" height="890"/>
                     </properties>
-                    <border type="none"/>
+                    <border type="bevel-lowered"/>
                     <children>
                       <grid id="c33f3" binding="wheelPanel" layout-manager="FlowLayout" hgap="5" vgap="0" flow-align="0">
                         <constraints/>
@@ -237,6 +202,7 @@
               <tabbedpane title="Force Feedback"/>
             </constraints>
             <properties>
+              <autoscrolls value="true"/>
               <minimumSize width="1024" height="768"/>
               <preferredSize width="1024" height="768"/>
             </properties>
@@ -258,6 +224,46 @@
           </grid>
         </children>
       </tabbedpane>
+      <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <autoscrolls value="true"/>
+          <doubleBuffered value="true"/>
+          <minimumSize width="1060" height="75"/>
+          <preferredSize width="1060" height="75"/>
+        </properties>
+        <border type="bevel-raised"/>
+        <children>
+          <component id="763d7" class="javax.swing.JComboBox" binding="deviceComboBox">
+            <constraints/>
+            <properties>
+              <doubleBuffered value="true"/>
+              <editable value="false"/>
+              <minimumSize width="200" height="30"/>
+              <preferredSize width="200" height="30"/>
+            </properties>
+          </component>
+          <component id="bcaa2" class="javax.swing.JLabel" binding="versionLabel">
+            <constraints/>
+            <properties>
+              <doubleBuffered value="true"/>
+              <preferredSize width="80" height="17"/>
+              <text value="Version"/>
+            </properties>
+          </component>
+          <component id="ea116" class="javax.swing.JLabel" binding="statusLabel">
+            <constraints/>
+            <properties>
+              <doubleBuffered value="true"/>
+              <preferredSize width="120" height="17"/>
+              <text value="Device Not Found"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>
