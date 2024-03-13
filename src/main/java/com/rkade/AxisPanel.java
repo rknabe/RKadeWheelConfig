@@ -140,6 +140,7 @@ public class AxisPanel implements Serializable {
         mainPanel.setPreferredSize(new Dimension(1024, 110));
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Axis", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         minLabel = new JLabel();
+        minLabel.setDoubleBuffered(true);
         minLabel.setHorizontalAlignment(4);
         minLabel.setMinimumSize(new Dimension(26, 17));
         minLabel.setPreferredSize(new Dimension(26, 17));
@@ -151,6 +152,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(minLabel, gbc);
         centerLabel = new JLabel();
+        centerLabel.setDoubleBuffered(true);
         centerLabel.setHorizontalAlignment(4);
         centerLabel.setHorizontalTextPosition(2);
         centerLabel.setMinimumSize(new Dimension(63, 17));
@@ -162,6 +164,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(centerLabel, gbc);
         centerText = new JTextField();
+        centerText.setDoubleBuffered(true);
         centerText.setHorizontalAlignment(2);
         centerText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
@@ -170,6 +173,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(centerText, gbc);
         maxLabel = new JLabel();
+        maxLabel.setDoubleBuffered(true);
         maxLabel.setHorizontalAlignment(4);
         maxLabel.setText("Max");
         gbc = new GridBagConstraints();
@@ -178,6 +182,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(maxLabel, gbc);
         minText = new JTextField();
+        minText.setDoubleBuffered(true);
         minText.setHorizontalAlignment(2);
         minText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
@@ -186,6 +191,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(minText, gbc);
         maxText = new JTextField();
+        maxText.setDoubleBuffered(true);
         maxText.setHorizontalAlignment(2);
         maxText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
@@ -204,6 +210,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(deadZoneLabel, gbc);
         dzText = new JTextField();
+        dzText.setDoubleBuffered(true);
         dzText.setHorizontalAlignment(2);
         dzText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
@@ -212,6 +219,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(dzText, gbc);
         valueLabel = new JLabel();
+        valueLabel.setDoubleBuffered(true);
         valueLabel.setHorizontalAlignment(4);
         valueLabel.setPreferredSize(new Dimension(35, 17));
         valueLabel.setText("Value");
@@ -221,6 +229,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(valueLabel, gbc);
         valueText = new JTextField();
+        valueText.setDoubleBuffered(true);
         valueText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
         gbc.gridx = 5;
@@ -228,6 +237,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(valueText, gbc);
         rawLabel = new JLabel();
+        rawLabel.setDoubleBuffered(true);
         rawLabel.setHorizontalAlignment(4);
         rawLabel.setMinimumSize(new Dimension(32, 17));
         rawLabel.setPreferredSize(new Dimension(32, 17));
@@ -238,6 +248,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(rawLabel, gbc);
         rawText = new JTextField();
+        rawText.setDoubleBuffered(true);
         rawText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
         gbc.gridx = 7;
@@ -245,6 +256,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(rawText, gbc);
         trimComboBox = new JComboBox();
+        trimComboBox.setDoubleBuffered(true);
         trimComboBox.setMaximumSize(new Dimension(100, 30));
         trimComboBox.setMinimumSize(new Dimension(100, 30));
         trimComboBox.setPreferredSize(new Dimension(100, 30));
@@ -254,6 +266,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(trimComboBox, gbc);
         progress = new JProgressBar();
+        progress.setDoubleBuffered(true);
         progress.setEnabled(false);
         progress.setFocusable(false);
         progress.setMaximum(1023);
@@ -271,6 +284,7 @@ public class AxisPanel implements Serializable {
         gbc.insets = new Insets(0, 2, 0, 0);
         mainPanel.add(progress, gbc);
         setMinButton = new JButton();
+        setMinButton.setDoubleBuffered(true);
         setMinButton.setMaximumSize(new Dimension(90, 30));
         setMinButton.setMinimumSize(new Dimension(90, 30));
         setMinButton.setPreferredSize(new Dimension(90, 30));
@@ -282,6 +296,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(setMinButton, gbc);
         setCenterButton = new JButton();
+        setCenterButton.setDoubleBuffered(true);
         setCenterButton.setHorizontalAlignment(0);
         setCenterButton.setHorizontalTextPosition(0);
         setCenterButton.setMaximumSize(new Dimension(90, 30));
@@ -295,6 +310,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(setCenterButton, gbc);
         setMaxButton = new JButton();
+        setMaxButton.setDoubleBuffered(true);
         setMaxButton.setHorizontalAlignment(0);
         setMaxButton.setHorizontalTextPosition(0);
         setMaxButton.setMaximumSize(new Dimension(90, 30));
@@ -307,6 +323,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(setMaxButton, gbc);
         hasCenterCheckBox = new JCheckBox();
+        hasCenterCheckBox.setDoubleBuffered(true);
         hasCenterCheckBox.setHorizontalAlignment(4);
         hasCenterCheckBox.setMaximumSize(new Dimension(100, 22));
         hasCenterCheckBox.setMinimumSize(new Dimension(100, 22));
@@ -318,6 +335,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(hasCenterCheckBox, gbc);
         autoLimitCheckBox = new JCheckBox();
+        autoLimitCheckBox.setDoubleBuffered(true);
         autoLimitCheckBox.setHorizontalAlignment(4);
         autoLimitCheckBox.setMaximumSize(new Dimension(100, 22));
         autoLimitCheckBox.setMinimumSize(new Dimension(100, 22));
@@ -336,6 +354,7 @@ public class AxisPanel implements Serializable {
         gbc.insets = new Insets(0, 180, 0, 0);
         mainPanel.add(spacer1, gbc);
         final JLabel label1 = new JLabel();
+        label1.setDoubleBuffered(true);
         label1.setHorizontalAlignment(4);
         label1.setMaximumSize(new Dimension(40, 17));
         label1.setMinimumSize(new Dimension(40, 17));
@@ -347,6 +366,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(label1, gbc);
         enabledCheckBox = new JCheckBox();
+        enabledCheckBox.setDoubleBuffered(true);
         enabledCheckBox.setHorizontalAlignment(4);
         enabledCheckBox.setMaximumSize(new Dimension(100, 22));
         enabledCheckBox.setMinimumSize(new Dimension(100, 22));

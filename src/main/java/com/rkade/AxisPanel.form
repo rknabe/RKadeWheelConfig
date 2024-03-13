@@ -19,6 +19,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <labelFor value="d84e9"/>
           <minimumSize width="26" height="17"/>
@@ -32,6 +33,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <horizontalTextPosition value="2"/>
           <labelFor value="1380f"/>
@@ -48,6 +50,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="2"/>
           <preferredSize width="65" height="30"/>
         </properties>
@@ -58,6 +61,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <labelFor value="ac607"/>
           <text value="Max"/>
@@ -71,6 +75,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="2"/>
           <preferredSize width="65" height="30"/>
         </properties>
@@ -83,6 +88,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="2"/>
           <preferredSize width="65" height="30"/>
         </properties>
@@ -108,6 +114,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="2"/>
           <preferredSize width="65" height="30"/>
         </properties>
@@ -118,6 +125,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <preferredSize width="35" height="17"/>
           <text value="Value"/>
@@ -131,6 +139,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <preferredSize width="65" height="30"/>
         </properties>
       </component>
@@ -140,6 +149,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <minimumSize width="32" height="17"/>
           <preferredSize width="32" height="17"/>
@@ -154,6 +164,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <preferredSize width="65" height="30"/>
         </properties>
       </component>
@@ -163,6 +174,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <maximumSize width="100" height="30"/>
           <minimumSize width="100" height="30"/>
           <preferredSize width="100" height="30"/>
@@ -174,6 +186,7 @@
           <gridbag top="0" left="2" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <enabled value="false"/>
           <focusable value="false"/>
           <maximum value="1023"/>
@@ -191,6 +204,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <maximumSize width="90" height="30"/>
           <minimumSize width="90" height="30"/>
           <preferredSize width="90" height="30"/>
@@ -204,6 +218,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="0"/>
           <horizontalTextPosition value="0"/>
           <maximumSize width="90" height="30"/>
@@ -219,6 +234,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="0"/>
           <horizontalTextPosition value="0"/>
           <maximumSize width="90" height="30"/>
@@ -233,6 +249,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <maximumSize width="100" height="22"/>
           <minimumSize width="100" height="22"/>
@@ -246,6 +263,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <maximumSize width="100" height="22"/>
           <minimumSize width="100" height="22"/>
@@ -265,6 +283,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <labelFor value="e0a82"/>
           <maximumSize width="40" height="17"/>
@@ -279,6 +298,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <doubleBuffered value="true"/>
           <horizontalAlignment value="4"/>
           <maximumSize width="100" height="22"/>
           <minimumSize width="100" height="22"/>
