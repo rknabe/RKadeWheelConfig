@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 public class MainForm implements DeviceListener, ActionListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
     private final static String CENTER_BUTTON = "Set Center";
     private final static String SINE_FFB_BUTTON = "doSineFfb";
     private final static String PULL_LEFT_FFB_BUTTON = "doPullLeftFfb";
+    private final static String SPRING_FFB_BUTTON = "doSpringFfb";
     private final List<AxisPanel> axisPanels = new ArrayList<>(7);
     private final List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
@@ -58,6 +58,7 @@ public class MainForm implements DeviceListener, ActionListener {
     private JPanel inputsPanel;
     private JButton sineFfbButton;
     private JButton pullLeftFfbButton;
+    private JButton springFfbButton;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
@@ -81,6 +82,7 @@ public class MainForm implements DeviceListener, ActionListener {
 
         sineFfbButton.addActionListener(this);
         pullLeftFfbButton.addActionListener(this);
+        springFfbButton.addActionListener(this);
 
         setAxisTitles();
     }
@@ -137,12 +139,19 @@ public class MainForm implements DeviceListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (CENTER_BUTTON.equals(e.getActionCommand())) {
-
-        } else if (SINE_FFB_BUTTON.equalsIgnoreCase(e.getActionCommand())) {
-            boolean status = device.doFfbSine();
-        } else if (PULL_LEFT_FFB_BUTTON.equalsIgnoreCase(e.getActionCommand())) {
-            boolean status = device.doFfbPullLeft();
+        boolean status = false;
+        switch (e.getActionCommand()) {
+            case CENTER_BUTTON:
+                break;
+            case SINE_FFB_BUTTON:
+                status = device.doFfbSine();
+                break;
+            case PULL_LEFT_FFB_BUTTON:
+                status = device.doFfbPullLeft();
+                break;
+            case SPRING_FFB_BUTTON:
+                status = device.doFfbSpring();
+                break;
         }
     }
 
@@ -379,6 +388,15 @@ public class MainForm implements DeviceListener, ActionListener {
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         ffbPanel.add(pullLeftFfbButton, gbc);
+        springFfbButton = new JButton();
+        springFfbButton.setActionCommand("doSpringFfb");
+        springFfbButton.setInheritsPopupMenu(true);
+        springFfbButton.setText("Spring");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        ffbPanel.add(springFfbButton, gbc);
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         bottomPanel.setAutoscrolls(true);

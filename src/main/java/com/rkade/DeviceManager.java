@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import static com.rkade.DataReport.DATA_REPORT_ID;
 
-
 public final class DeviceManager implements InputReportListener, DeviceRemovalListener {
     private final static Logger logger = Logger.getLogger(DeviceManager.class.getName());
     private final static int LEONARDO_VENDOR_ID = 0x2341;
@@ -76,15 +75,6 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
             if (report instanceof VersionDataReport) {
                 versionReported = true;
             }
-
-        }
-    }
-
-    private void sleep(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (Exception ex) {
-            logger.warning(ex.getMessage());
         }
     }
 
@@ -96,6 +86,14 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
             throw new IOException("Device returned error for dataType:" + dataType + " dataIndex:" + dataIndex);
         }
         sleep(SLEEP_BETWEEN_OUTPUT_REPORT);
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (Exception ex) {
+            logger.warning(ex.getMessage());
+        }
     }
 
     private final class ConnectionRunner implements Runnable {
