@@ -1,7 +1,5 @@
 package com.rkade;
 
-import java.util.logging.Logger;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -11,11 +9,13 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public class MainForm implements DeviceListener, ActionListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
     private final static String CENTER_BUTTON = "Set Center";
+    private final static String SINE_FFB_BUTTON = "doSineFfb";
     private final List<AxisPanel> axisPanels = new ArrayList<>(7);
     private final List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
@@ -55,8 +55,10 @@ public class MainForm implements DeviceListener, ActionListener {
     private AxisPanel axis7Panel;
     private JScrollPane axisScroll;
     private JPanel inputsPanel;
+    private JButton sineFfbButton;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
+    private Device device = null;
 
     public MainForm() {
         centerButton.addActionListener(this);
@@ -74,6 +76,8 @@ public class MainForm implements DeviceListener, ActionListener {
         axisPanels.add(axis5Panel);
         axisPanels.add(axis6Panel);
         axisPanels.add(axis7Panel);
+
+        sineFfbButton.addActionListener(this);
 
         setAxisTitles();
     }
@@ -132,17 +136,21 @@ public class MainForm implements DeviceListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (CENTER_BUTTON.equals(e.getActionCommand())) {
 
+        } else if (SINE_FFB_BUTTON.equalsIgnoreCase(e.getActionCommand())) {
+            boolean status = device.doFfbSine();
         }
     }
 
     @Override
     public void deviceAttached(Device device) {
+        this.device = device;
         deviceComboBox.addItem(device.getName());
     }
 
     @Override
     public void deviceDetached(Device device) {
         deviceComboBox.removeItem(device.getName());
+        this.device = null;
     }
 
     @Override
@@ -204,6 +212,14 @@ public class MainForm implements DeviceListener, ActionListener {
 
     public JComponent getRootComponent() {
         return mainPanel;
+    }
+
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (Exception ex) {
+            logger.warning(ex.getMessage());
+        }
     }
 
     {
@@ -342,6 +358,14 @@ public class MainForm implements DeviceListener, ActionListener {
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.VERTICAL;
         ffbPanel.add(spacer2, gbc);
+        sineFfbButton = new JButton();
+        sineFfbButton.setActionCommand("doSineFfb");
+        sineFfbButton.setText("Sine");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        ffbPanel.add(sineFfbButton, gbc);
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         bottomPanel.setAutoscrolls(true);

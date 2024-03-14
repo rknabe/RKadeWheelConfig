@@ -4,8 +4,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import purejavahidapi.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static com.rkade.DataReport.DATA_REPORT_ID;
@@ -18,7 +17,8 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     private final static int OUTPUT_REPORT_DATA_LENGTH = 7;
     private final static int SLEEP_BETWEEN_OUTPUT_REPORT = 2;
     private final static byte AXIS_COUNT = 7;
-    private final static List<DeviceListener> deviceListeners = new ArrayList<>();
+    private final static List<DeviceListener> deviceListeners = Collections.synchronizedList(new ArrayList<>());
+    private final static Map<String, Device> deviceMap = Collections.synchronizedMap(new HashMap<>());
     private static volatile boolean deviceAttached = false;
     private static volatile boolean versionReported = false;
     private static volatile HidDeviceInfo deviceInfo = null;
@@ -63,14 +63,16 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     }
 
     private Device getDevice(HidDevice hidDevice) {
-        return new Device(hidDevice);
+        //hidPath is not null terminated, force to it null-term and uppercase to match SDL case
+        String path = hidDevice.getHidDeviceInfo().getPath().trim().toUpperCase();
+        return deviceMap.computeIfAbsent(path, k -> new Device(hidDevice, path));
     }
 
     @Override
     public void onInputReport(HidDevice hidDevice, byte id, byte[] data, int len) {
         if (id == DATA_REPORT_ID) {
             DataReport report = DataReportFactory.create(id, data);
-            notifyListenersDeviceUpdated(new Device(hidDevice), null, report);
+            notifyListenersDeviceUpdated(getDevice(hidDevice), null, report);
             if (report instanceof VersionDataReport) {
                 versionReported = true;
             }
