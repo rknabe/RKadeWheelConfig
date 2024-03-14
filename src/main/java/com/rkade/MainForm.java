@@ -16,6 +16,7 @@ public class MainForm implements DeviceListener, ActionListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
     private final static String CENTER_BUTTON = "Set Center";
     private final static String SINE_FFB_BUTTON = "doSineFfb";
+    private final static String PULL_LEFT_FFB_BUTTON = "doPullLeftFfb";
     private final List<AxisPanel> axisPanels = new ArrayList<>(7);
     private final List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
@@ -56,6 +57,7 @@ public class MainForm implements DeviceListener, ActionListener {
     private JScrollPane axisScroll;
     private JPanel inputsPanel;
     private JButton sineFfbButton;
+    private JButton pullLeftFfbButton;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
@@ -78,6 +80,7 @@ public class MainForm implements DeviceListener, ActionListener {
         axisPanels.add(axis7Panel);
 
         sineFfbButton.addActionListener(this);
+        pullLeftFfbButton.addActionListener(this);
 
         setAxisTitles();
     }
@@ -138,6 +141,8 @@ public class MainForm implements DeviceListener, ActionListener {
 
         } else if (SINE_FFB_BUTTON.equalsIgnoreCase(e.getActionCommand())) {
             boolean status = device.doFfbSine();
+        } else if (PULL_LEFT_FFB_BUTTON.equalsIgnoreCase(e.getActionCommand())) {
+            boolean status = device.doFfbPullLeft();
         }
     }
 
@@ -366,6 +371,14 @@ public class MainForm implements DeviceListener, ActionListener {
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         ffbPanel.add(sineFfbButton, gbc);
+        pullLeftFfbButton = new JButton();
+        pullLeftFfbButton.setActionCommand("doPullLeftFfb");
+        pullLeftFfbButton.setText("Constant Pull Left");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        ffbPanel.add(pullLeftFfbButton, gbc);
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         bottomPanel.setAutoscrolls(true);
