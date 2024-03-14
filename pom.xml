@@ -28,7 +28,6 @@
             <artifactId>purejavahidapi</artifactId>
             <version>0.0.17v</version>
         </dependency>
-        <!--
         <dependency>
             <groupId>io.github.libsdl4j</groupId>
             <artifactId>libsdl4j</artifactId>
@@ -39,7 +38,7 @@
                     <artifactId>jna</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>com.fazecast</groupId>
             <artifactId>jSerialComm</artifactId>

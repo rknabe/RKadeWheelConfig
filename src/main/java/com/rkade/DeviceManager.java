@@ -1,14 +1,15 @@
 package com.rkade;
 
 import com.fazecast.jSerialComm.SerialPort;
-import java.util.logging.Logger;
 import purejavahidapi.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.rkade.DataReport.DATA_REPORT_ID;
+
 
 public final class DeviceManager implements InputReportListener, DeviceRemovalListener {
     private final static Logger logger = Logger.getLogger(DeviceManager.class.getName());
@@ -125,6 +126,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                                     openedDevice.open();
                                     Device device = getDevice(openedDevice);
                                     notifyListenersDeviceUpdated(device, "Opened", null);
+
                                     SerialPort[] ports = SerialPort.getCommPorts();
                                     for (SerialPort port : ports) {
                                         if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
