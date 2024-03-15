@@ -35,6 +35,7 @@ public class DataReport {
     public final static byte CMD_EESAVE = 21;
     public final static byte CMD_DEFAULT = 22;
     public final static byte CMD_CENTER = 23;
+    public final static String CMD_AUTOCENTER_TEXT = "autocenter ";
     protected final byte reportType;
     protected final short reportIndex;
     protected final short section;

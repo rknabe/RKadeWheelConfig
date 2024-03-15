@@ -9,6 +9,7 @@ import purejavahidapi.HidDevice;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
+import static com.rkade.DataReport.*;
 import static io.github.libsdl4j.api.Sdl.SDL_Init;
 import static io.github.libsdl4j.api.SdlSubSystemConst.*;
 import static io.github.libsdl4j.api.haptic.SDL_HapticDirectionEncoding.SDL_HAPTIC_CARTESIAN;
@@ -45,35 +46,33 @@ public class Device {
     }
 
     public synchronized boolean saveSettings() {
-        return sendCommand(DataReport.CMD_EESAVE);
+        return sendCommand(CMD_EESAVE);
     }
 
     public synchronized boolean setWheelCenter() {
-        return sendCommand(DataReport.CMD_CENTER);
+        return sendCommand(CMD_CENTER);
     }
 
-    public synchronized boolean doAutoCenter() {
+    public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {
             port.setBaudRate(9600);
             port.setParity(0);
             port.setNumStopBits(1);
             port.setNumDataBits(8);
-            isOpen = port.openPort(2000);
+            isOpen = port.openPort(500);
         }
         if (isOpen) {
-            byte[] value = "autocenter ".getBytes(StandardCharsets.US_ASCII);
+            byte[] value = text.getBytes(StandardCharsets.US_ASCII);
             int ret = port.writeBytes(value, value.length);
-            if (ret > 0) {
-                sleep(5000);
-                return sendCommand(DataReport.CMD_CENTER);
-            }
+            port.closePort();
+            return (ret > 0);
         }
         return false;
     }
 
-    public SerialPort getPort() {
-        return port;
+    public boolean doAutoCenter() {
+        return writeTextToPort(CMD_AUTOCENTER_TEXT);
     }
 
     public void setPort(SerialPort port) {
@@ -99,7 +98,7 @@ public class Device {
         data[2] = arg2;
         data[3] = arg3;
 
-        int ret = hidDevice.setOutputReport(DataReport.CMD_REPORT_ID, data, CMD_BYTES);
+        int ret = hidDevice.setOutputReport(CMD_REPORT_ID, data, CMD_BYTES);
         if (ret <= 0) {
             logger.severe("Device returned error on Save:" + ret);
             return false;
