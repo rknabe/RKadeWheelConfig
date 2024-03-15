@@ -133,9 +133,9 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                                             device.setName(port.getDescriptivePortName());
                                         }
                                     }
-                                    notifyListenersDeviceAttached(device);
                                     openedDevice.setDeviceRemovalListener(DeviceManager.this);
                                     openedDevice.setInputReportListener(DeviceManager.this);
+                                    notifyListenersDeviceAttached(device);
                                 }
                             } catch (IOException ex) {
                                 logger.warning(ex.getMessage());
@@ -149,7 +149,6 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     }
 
     private final class OutputReportRunner implements Runnable {
-
         @Override
         public void run() {
             int failCount = 0;

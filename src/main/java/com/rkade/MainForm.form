@@ -10,7 +10,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <tabbedpane id="c441e" binding="Inputs">
+      <tabbedpane id="c441e" binding="mainTab">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="2" use-parent-layout="false">
             <preferred-size width="1024" height="768"/>
@@ -19,6 +19,7 @@
         </constraints>
         <properties>
           <minimumSize width="1060" height="400"/>
+          <name value="Inputs"/>
           <preferredSize width="1060" height="700"/>
           <tabLayoutPolicy value="0"/>
         </properties>
@@ -239,13 +240,13 @@
           </grid>
         </children>
       </tabbedpane>
-      <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+      <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <autoscrolls value="true"/>
+          <autoscrolls value="false"/>
           <minimumSize width="1060" height="75"/>
           <preferredSize width="1060" height="75"/>
         </properties>
@@ -269,8 +270,34 @@
           <component id="ea116" class="javax.swing.JLabel" binding="statusLabel">
             <constraints/>
             <properties>
-              <preferredSize width="120" height="17"/>
-              <text value="Device Not Found"/>
+              <minimumSize width="130" height="20"/>
+              <preferredSize width="130" height="20"/>
+              <requestFocusEnabled value="true"/>
+              <text value="Device Not Found..."/>
+            </properties>
+          </component>
+          <component id="21199" class="javax.swing.JButton" binding="defaultsButton">
+            <constraints/>
+            <properties>
+              <minimumSize width="201" height="30"/>
+              <preferredSize width="201" height="30"/>
+              <text value="Reset Settings to Defaults"/>
+            </properties>
+          </component>
+          <component id="6479" class="javax.swing.JButton" binding="loadButton">
+            <constraints/>
+            <properties>
+              <text value="Load Settings From EEPROM"/>
+            </properties>
+          </component>
+          <component id="8a62f" class="javax.swing.JButton" binding="saveButton">
+            <constraints/>
+            <properties>
+              <actionCommand value="saveSettings"/>
+              <horizontalAlignment value="0"/>
+              <minimumSize width="201" height="30"/>
+              <preferredSize width="201" height="30"/>
+              <text value="Save Settings to EEPROM"/>
             </properties>
           </component>
         </children>
