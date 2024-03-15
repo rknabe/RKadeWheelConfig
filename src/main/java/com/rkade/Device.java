@@ -1,10 +1,12 @@
 package com.rkade;
 
+import com.fazecast.jSerialComm.SerialPort;
 import io.github.libsdl4j.api.haptic.SDL_Haptic;
 import io.github.libsdl4j.api.haptic.SDL_HapticEffect;
 import io.github.libsdl4j.api.joystick.SDL_Joystick;
 import purejavahidapi.HidDevice;
 
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 import static io.github.libsdl4j.api.Sdl.SDL_Init;
@@ -22,6 +24,7 @@ public class Device {
     private final HidDevice hidDevice;
     private String name;
     private SDL_Haptic hapticJoystick;
+    private SerialPort port;
     private int sineEffectId = -1;
     private int springEffectId = -1;
     private int pullLeftEffectId = -1;
@@ -43,6 +46,38 @@ public class Device {
 
     public synchronized boolean saveSettings() {
         return sendCommand(DataReport.CMD_EESAVE);
+    }
+
+    public synchronized boolean setWheelCenter() {
+        return sendCommand(DataReport.CMD_CENTER);
+    }
+
+    public synchronized boolean doAutoCenter() {
+        boolean isOpen = port.isOpen();
+        if (!isOpen) {
+            port.setBaudRate(9600);
+            port.setParity(0);
+            port.setNumStopBits(1);
+            port.setNumDataBits(8);
+            isOpen = port.openPort(2000);
+        }
+        if (isOpen) {
+            byte[] value = "autocenter ".getBytes(StandardCharsets.US_ASCII);
+            int ret = port.writeBytes(value, value.length);
+            if (ret > 0) {
+                sleep(5000);
+                return sendCommand(DataReport.CMD_CENTER);
+            }
+        }
+        return false;
+    }
+
+    public SerialPort getPort() {
+        return port;
+    }
+
+    public void setPort(SerialPort port) {
+        this.port = port;
     }
 
     private boolean sendCommand(byte command) {

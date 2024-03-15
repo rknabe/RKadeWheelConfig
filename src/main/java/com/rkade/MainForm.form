@@ -80,6 +80,13 @@
                               <text value="Set Center"/>
                             </properties>
                           </component>
+                          <component id="2e33b" class="javax.swing.JButton" binding="autoCenterButton">
+                            <constraints/>
+                            <properties>
+                              <actionCommand value="autoCenter"/>
+                              <text value="AutoCenter"/>
+                            </properties>
+                          </component>
                           <component id="223ed" class="javax.swing.JLabel" binding="wheelIconLabel">
                             <constraints/>
                             <properties>

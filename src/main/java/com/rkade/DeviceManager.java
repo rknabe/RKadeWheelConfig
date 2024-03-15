@@ -139,6 +139,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                                     for (SerialPort port : ports) {
                                         if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
                                             device.setName(port.getDescriptivePortName());
+                                            device.setPort(port);
                                         }
                                     }
                                     openedDevice.setDeviceRemovalListener(DeviceManager.this);

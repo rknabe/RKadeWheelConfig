@@ -13,10 +13,6 @@ import java.util.logging.Logger;
 
 public class MainForm implements DeviceListener, ActionListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
-    private final static String CENTER_BUTTON = "Set Center";
-    private final static String SINE_FFB_BUTTON = "doSineFfb";
-    private final static String PULL_LEFT_FFB_BUTTON = "doPullLeftFfb";
-    private final static String SPRING_FFB_BUTTON = "doSpringFfb";
     private final List<AxisPanel> axisPanels = new ArrayList<>(7);
     private final List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
@@ -62,6 +58,7 @@ public class MainForm implements DeviceListener, ActionListener {
     private JButton defaultsButton;
     private JButton loadButton;
     private JButton saveButton;
+    private JButton autoCenterButton;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
@@ -141,35 +138,26 @@ public class MainForm implements DeviceListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        boolean status = false;
-        switch (e.getActionCommand()) {
-            case CENTER_BUTTON:
-                break;
-            case SINE_FFB_BUTTON:
-                if (device != null) {
-                    status = device.doFfbSine();
-                }
-                break;
-            case PULL_LEFT_FFB_BUTTON:
-                if (device != null) {
-                    status = device.doFfbPullLeft();
-                }
-                break;
-            case SPRING_FFB_BUTTON:
-                if (device != null) {
-                    status = device.doFfbSpring();
-                }
-                break;
-            case "saveSettings":
-                if (device != null) {
-                    status = device.saveSettings();
-                }
-                break;
-            default:
+        if (device != null && !e.getActionCommand().isEmpty()) {
+            boolean status = true;
+            if (e.getActionCommand().equals(centerButton.getActionCommand())) {
+                status = device.setWheelCenter();
+            } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
+                status = device.doAutoCenter();
+            } else if (e.getActionCommand().equals(sineFfbButton.getActionCommand())) {
+                status = device.doFfbSine();
+            } else if (e.getActionCommand().equals(pullLeftFfbButton.getActionCommand())) {
+                status = device.doFfbPullLeft();
+            } else if (e.getActionCommand().equals(springFfbButton.getActionCommand())) {
+                status = device.doFfbSpring();
+            } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
+                status = device.saveSettings();
+            } else {
                 return;
-        }
-        if (!status) {
-            logger.warning("Action failed for:" + e.getActionCommand());
+            }
+            if (!status) {
+                logger.warning("Action failed for:" + e.getActionCommand());
+            }
         }
     }
 
@@ -340,6 +328,10 @@ public class MainForm implements DeviceListener, ActionListener {
         centerButton.setPreferredSize(new Dimension(100, 30));
         centerButton.setText("Set Center");
         wheelPanel.add(centerButton);
+        autoCenterButton = new JButton();
+        autoCenterButton.setActionCommand("autoCenter");
+        autoCenterButton.setText("AutoCenter");
+        wheelPanel.add(autoCenterButton);
         wheelIconLabel = new JLabel();
         wheelIconLabel.setAlignmentY(0.0f);
         wheelIconLabel.setFocusable(false);
