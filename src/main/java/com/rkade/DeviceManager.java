@@ -40,6 +40,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         deviceInfo = null;
         openedDevice = null;
         Device device = getDevice(hidDevice);
+        deviceMap.remove(getHidPath(hidDevice));
         notifyListenersDeviceDetached(device);
     }
 
@@ -62,9 +63,16 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     }
 
     private Device getDevice(HidDevice hidDevice) {
-        //hidPath is not null terminated, force to it null-term and uppercase to match SDL case
-        String path = hidDevice.getHidDeviceInfo().getPath().trim().toUpperCase();
+        String path = getHidPath(hidDevice);
         return deviceMap.computeIfAbsent(path, k -> new Device(hidDevice, path));
+    }
+
+    private String getHidPath(HidDevice device) {
+        if (device != null) {
+            //hidPath is not null terminated, force to it null-term and uppercase to match SDL case
+            return device.getHidDeviceInfo().getPath().trim().toUpperCase();
+        }
+        return null;
     }
 
     @Override
@@ -174,11 +182,11 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                         if (failCount > 3) {
                             onDeviceRemoval(openedDevice);
                         }
-                        sleep(1000);
+                        sleep(250);
                         logger.warning(ex.getMessage());
                     }
                 } else {
-                    sleep(1000);
+                    sleep(500);
                 }
             }
         }

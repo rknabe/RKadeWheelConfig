@@ -84,6 +84,7 @@
                             <constraints/>
                             <properties>
                               <alignmentY value="0.0"/>
+                              <focusable value="false"/>
                               <preferredSize width="55" height="55"/>
                               <requestFocusEnabled value="false"/>
                               <text value=""/>
@@ -93,6 +94,7 @@
                           <component id="a28a" class="javax.swing.JLabel" binding="degreesLabel">
                             <constraints/>
                             <properties>
+                              <focusable value="false"/>
                               <horizontalTextPosition value="2"/>
                               <preferredSize width="50" height="31"/>
                               <text value="00.00°"/>
@@ -101,6 +103,7 @@
                           <component id="6952" class="javax.swing.JLabel" binding="wheelRawLabel">
                             <constraints/>
                             <properties>
+                              <focusable value="false"/>
                               <labelFor value="d7455"/>
                               <text value="Raw"/>
                             </properties>
@@ -108,6 +111,8 @@
                           <component id="c52d5" class="javax.swing.JTextField" binding="wheelRawTextField">
                             <constraints/>
                             <properties>
+                              <editable value="false"/>
+                              <focusable value="false"/>
                               <minimumSize width="25" height="30"/>
                               <preferredSize width="65" height="30"/>
                             </properties>
@@ -115,6 +120,7 @@
                           <component id="caa55" class="javax.swing.JLabel" binding="wheelValueLabel">
                             <constraints/>
                             <properties>
+                              <focusable value="false"/>
                               <labelFor value="d7455"/>
                               <text value="Value"/>
                             </properties>
@@ -122,6 +128,8 @@
                           <component id="5880e" class="javax.swing.JTextField" binding="wheelValueTextField">
                             <constraints/>
                             <properties>
+                              <editable value="false"/>
+                              <focusable value="false"/>
                               <minimumSize width="25" height="30"/>
                               <preferredSize width="65" height="30"/>
                             </properties>
@@ -129,6 +137,7 @@
                           <component id="f0703" class="javax.swing.JLabel">
                             <constraints/>
                             <properties>
+                              <focusable value="false"/>
                               <labelFor value="d7455"/>
                               <text value="Velocity"/>
                             </properties>
@@ -136,6 +145,8 @@
                           <component id="d7455" class="javax.swing.JTextField" binding="velocityText">
                             <constraints/>
                             <properties>
+                              <editable value="false"/>
+                              <focusable value="false"/>
                               <minimumSize width="25" height="30"/>
                               <preferredSize width="65" height="30"/>
                             </properties>
@@ -143,6 +154,7 @@
                           <component id="292c" class="javax.swing.JLabel" binding="accLabel">
                             <constraints/>
                             <properties>
+                              <focusable value="false"/>
                               <labelFor value="179c5"/>
                               <text value="Acc"/>
                             </properties>
@@ -150,6 +162,8 @@
                           <component id="179c5" class="javax.swing.JTextField" binding="accText">
                             <constraints/>
                             <properties>
+                              <editable value="false"/>
+                              <focusable value="false"/>
                               <preferredSize width="65" height="30"/>
                             </properties>
                           </component>
@@ -263,6 +277,7 @@
           <component id="bcaa2" class="javax.swing.JLabel" binding="versionLabel">
             <constraints/>
             <properties>
+              <focusable value="false"/>
               <preferredSize width="80" height="17"/>
               <text value="Version"/>
             </properties>
@@ -270,6 +285,7 @@
           <component id="ea116" class="javax.swing.JLabel" binding="statusLabel">
             <constraints/>
             <properties>
+              <focusable value="false"/>
               <minimumSize width="130" height="20"/>
               <preferredSize width="130" height="20"/>
               <requestFocusEnabled value="true"/>

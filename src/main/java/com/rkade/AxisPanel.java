@@ -212,6 +212,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(dzText, gbc);
         valueLabel = new JLabel();
+        valueLabel.setFocusable(false);
         valueLabel.setHorizontalAlignment(4);
         valueLabel.setPreferredSize(new Dimension(35, 17));
         valueLabel.setText("Value");
@@ -221,6 +222,8 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(valueLabel, gbc);
         valueText = new JTextField();
+        valueText.setEditable(false);
+        valueText.setFocusable(false);
         valueText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
         gbc.gridx = 5;
@@ -228,6 +231,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(valueText, gbc);
         rawLabel = new JLabel();
+        rawLabel.setFocusable(false);
         rawLabel.setHorizontalAlignment(4);
         rawLabel.setMinimumSize(new Dimension(32, 17));
         rawLabel.setPreferredSize(new Dimension(32, 17));
@@ -238,6 +242,8 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(rawLabel, gbc);
         rawText = new JTextField();
+        rawText.setEditable(false);
+        rawText.setFocusable(false);
         rawText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
         gbc.gridx = 7;
