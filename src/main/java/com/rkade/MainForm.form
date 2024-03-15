@@ -71,7 +71,12 @@
                           </component>
                           <component id="19d08" class="javax.swing.JComboBox" binding="rangeComboBox">
                             <constraints/>
-                            <properties/>
+                            <properties>
+                              <actionCommand value="rangeChanged"/>
+                              <editable value="true"/>
+                              <minimumSize width="100" height="30"/>
+                              <preferredSize width="100" height="30"/>
+                            </properties>
                           </component>
                           <component id="54358" class="javax.swing.JButton" binding="centerButton">
                             <constraints/>

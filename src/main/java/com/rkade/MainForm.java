@@ -9,6 +9,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public class MainForm implements DeviceListener, ActionListener {
@@ -72,6 +73,14 @@ public class MainForm implements DeviceListener, ActionListener {
         } catch (Exception ex) {
             logger.warning(ex.getMessage());
         }
+        rangeComboBox.addItem("180");
+        rangeComboBox.addItem("270");
+        rangeComboBox.addItem("360");
+        rangeComboBox.addItem("540");
+        rangeComboBox.addItem("720");
+        rangeComboBox.addItem("900");
+        rangeComboBox.addItem("1080");
+
         axisPanels.add(axis1Panel);
         axisPanels.add(axis2Panel);
         axisPanels.add(axis3Panel);
@@ -142,6 +151,8 @@ public class MainForm implements DeviceListener, ActionListener {
             boolean status;
             if (e.getActionCommand().equals(centerButton.getActionCommand())) {
                 status = device.setWheelCenter();
+            } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
+                status = device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
             } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
                 status = doWheelAutoCenter();
             } else if (e.getActionCommand().equals(sineFfbButton.getActionCommand())) {
@@ -221,11 +232,12 @@ public class MainForm implements DeviceListener, ActionListener {
         }
         degreesLabel.setText(String.format("%.1f°", wheelData.getAngle()));
         prevWheelRotation = wheelData.getAngle();
-        String newRange = String.valueOf(wheelData.getRange());
-        String oldRange = (String) rangeComboBox.getSelectedItem();
-        if (!newRange.equals(oldRange)) {
-            rangeComboBox.removeAllItems();
-            rangeComboBox.addItem(newRange);
+        if (!rangeComboBox.isFocusOwner()) {
+            String newRange = String.valueOf(wheelData.getRange());
+            String oldRange = (String) rangeComboBox.getSelectedItem();
+            if (!newRange.equals(oldRange)) {
+                rangeComboBox.setSelectedItem(newRange);
+            }
         }
         wheelRawTextField.setText(String.valueOf(wheelData.getRawValue()));
         wheelValueTextField.setText(String.valueOf(wheelData.getValue()));
@@ -344,6 +356,10 @@ public class MainForm implements DeviceListener, ActionListener {
         rangeLabel.setText("Range");
         wheelPanel.add(rangeLabel);
         rangeComboBox = new JComboBox();
+        rangeComboBox.setActionCommand("rangeChanged");
+        rangeComboBox.setEditable(true);
+        rangeComboBox.setMinimumSize(new Dimension(100, 30));
+        rangeComboBox.setPreferredSize(new Dimension(100, 30));
         wheelPanel.add(rangeComboBox);
         centerButton = new JButton();
         centerButton.setPreferredSize(new Dimension(100, 30));

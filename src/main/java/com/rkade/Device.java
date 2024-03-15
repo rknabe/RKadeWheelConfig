@@ -20,7 +20,6 @@ import static io.github.libsdl4j.api.joystick.SdlJoystick.*;
 public class Device {
     private static final Logger logger = Logger.getLogger(Device.class.getName());
     private static final int WAIT_AFTER_EFFECT_UPDATE = 5;
-    private static final int CMD_BYTES = 4;
     private final String hidPath;
     private final HidDevice hidDevice;
     private String name;
@@ -53,6 +52,10 @@ public class Device {
         return sendCommand(CMD_CENTER);
     }
 
+    public synchronized boolean setWheelRange(Short range) {
+        return sendCommand(CMD_SET_RANGE, range);
+    }
+
     public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {
@@ -80,30 +83,43 @@ public class Device {
     }
 
     private boolean sendCommand(byte command) {
-        return sendCommand(command, (byte) 0, (byte) 0, (byte) 0);
+        return sendCommand(command,  (short)0, (short) 0, (short) 0);
     }
 
-    private boolean sendCommand(byte command, byte arg1) {
-        return sendCommand(command, arg1, (byte) 0, (byte) 0);
+    private boolean sendCommand(byte command, short arg1) {
+        return sendCommand(command, arg1, (short) 0, (short) 0);
     }
 
-    private boolean sendCommand(byte command, byte arg1, byte arg2) {
+    private boolean sendCommand(byte command, short arg1, short arg2) {
         return sendCommand(command, arg1, arg2, (byte) 0);
     }
 
-    private boolean sendCommand(byte command, byte arg1, byte arg2, byte arg3) {
-        byte[] data = new byte[CMD_BYTES];
+    private boolean sendCommand(byte command, short arg1, short arg2, short arg3) {
+        byte[] data = new byte[7];
         data[0] = command;
-        data[1] = arg1;
-        data[2] = arg2;
-        data[3] = arg3;
+        data[1] = getFirstByte(arg1);
+        data[2] = getSecondByte(arg1);
 
-        int ret = hidDevice.setOutputReport(CMD_REPORT_ID, data, CMD_BYTES);
+        data[3] = getFirstByte(arg2);
+        data[4] = getSecondByte(arg2);
+
+        data[5] = getFirstByte(arg3);
+        data[6] = getSecondByte(arg3);
+
+        int ret = hidDevice.setOutputReport(CMD_REPORT_ID, data, 7);
         if (ret <= 0) {
             logger.severe("Device returned error on Save:" + ret);
             return false;
         }
         return true;
+    }
+
+    private byte getFirstByte(short value) {
+        return (byte) (value & 0xff);
+    }
+
+    private byte getSecondByte(short value) {
+        return (byte) ((value >> 8) & 0xff);
     }
 
     public String getName() {

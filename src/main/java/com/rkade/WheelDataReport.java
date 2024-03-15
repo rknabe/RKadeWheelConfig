@@ -13,12 +13,6 @@ public final class WheelDataReport extends DataReport {
     public WheelDataReport(byte reportType, byte reportIndex, short section, List<Short> data) {
         super(reportType, reportIndex, section, data);
 
-        //rawValue: Integer;
-        //value: SmallInt;
-        //range: SmallInt;
-        //velocity: SmallInt;
-        //acceleration: SmallInt;
-
         rawValue = intFromShorts(values.get(0), values.get(1));
         value = values.get(2);
         range = values.get(3);
