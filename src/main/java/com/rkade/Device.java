@@ -56,6 +56,10 @@ public class Device {
         return sendCommand(CMD_SET_RANGE, range);
     }
 
+    public boolean setAxisLimits(short axisIndex, Short minValue, short maxValue) {
+        return sendCommand(CMD_SET_AALIMITS, axisIndex, minValue, maxValue);
+    }
+
     public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {

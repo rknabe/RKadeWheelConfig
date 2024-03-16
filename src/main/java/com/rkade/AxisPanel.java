@@ -2,18 +2,21 @@ package com.rkade;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.io.Serializable;
+import java.text.NumberFormat;
 
 public class AxisPanel implements Serializable {
     private JLabel minLabel;
-    private JTextField minText;
+    private JFormattedTextField minText;
     private JLabel centerLabel;
-    private JTextField centerText;
+    private JFormattedTextField centerText;
     private JProgressBar progress;
     private JLabel maxLabel;
-    private JTextField maxText;
-    private JTextField dzText;
+    private JFormattedTextField maxText;
+    private JFormattedTextField dzText;
     private JLabel valueLabel;
     private JTextField valueText;
     private JLabel rawLabel;
@@ -27,6 +30,26 @@ public class AxisPanel implements Serializable {
     private JCheckBox hasCenterCheckBox;
     private JCheckBox enabledCheckBox;
     private JComboBox<String> trimComboBox;
+
+    public AxisPanel() {
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Short.class);
+        formatter.setMinimum(Short.MIN_VALUE);
+        formatter.setMaximum(Short.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+
+        DefaultFormatterFactory formatterFactory = new DefaultFormatterFactory() {
+            @Override
+            public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+                return formatter;
+            }
+        };
+        minText.setFormatterFactory(formatterFactory);
+        maxText.setFormatterFactory(formatterFactory);
+        centerText.setFormatterFactory(formatterFactory);
+        dzText.setFormatterFactory(formatterFactory);
+    }
 
     public JComponent getRootComponent() {
         return mainPanel;
@@ -161,7 +184,7 @@ public class AxisPanel implements Serializable {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(centerLabel, gbc);
-        centerText = new JTextField();
+        centerText = new JFormattedTextField();
         centerText.setHorizontalAlignment(2);
         centerText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
@@ -177,7 +200,8 @@ public class AxisPanel implements Serializable {
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(maxLabel, gbc);
-        minText = new JTextField();
+        minText = new JFormattedTextField();
+        minText.setFocusLostBehavior(0);
         minText.setHorizontalAlignment(2);
         minText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
@@ -185,7 +209,7 @@ public class AxisPanel implements Serializable {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(minText, gbc);
-        maxText = new JTextField();
+        maxText = new JFormattedTextField();
         maxText.setHorizontalAlignment(2);
         maxText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
@@ -203,7 +227,7 @@ public class AxisPanel implements Serializable {
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(deadZoneLabel, gbc);
-        dzText = new JTextField();
+        dzText = new JFormattedTextField();
         dzText.setHorizontalAlignment(2);
         dzText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();

@@ -20,7 +20,7 @@
         </constraints>
         <properties>
           <horizontalAlignment value="4"/>
-          <labelFor value="d84e9"/>
+          <labelFor value="f9f79"/>
           <minimumSize width="26" height="17"/>
           <preferredSize width="26" height="17"/>
           <text value="Min"/>
@@ -34,13 +34,13 @@
         <properties>
           <horizontalAlignment value="4"/>
           <horizontalTextPosition value="2"/>
-          <labelFor value="1380f"/>
+          <labelFor value="e7c9d"/>
           <minimumSize width="63" height="17"/>
           <preferredSize width="63" height="17"/>
           <text value="Center"/>
         </properties>
       </component>
-      <component id="1380f" class="javax.swing.JTextField" binding="centerText">
+      <component id="e7c9d" class="javax.swing.JFormattedTextField" binding="centerText">
         <constraints>
           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -59,11 +59,11 @@
         </constraints>
         <properties>
           <horizontalAlignment value="4"/>
-          <labelFor value="ac607"/>
+          <labelFor value="c231f"/>
           <text value="Max"/>
         </properties>
       </component>
-      <component id="d84e9" class="javax.swing.JTextField" binding="minText">
+      <component id="f9f79" class="javax.swing.JFormattedTextField" binding="minText">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -71,11 +71,12 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <focusLostBehavior value="0"/>
           <horizontalAlignment value="2"/>
           <preferredSize width="65" height="30"/>
         </properties>
       </component>
-      <component id="ac607" class="javax.swing.JTextField" binding="maxText">
+      <component id="c231f" class="javax.swing.JFormattedTextField" binding="maxText">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -95,12 +96,12 @@
         <properties>
           <horizontalAlignment value="4"/>
           <horizontalTextPosition value="2"/>
-          <labelFor value="d7925"/>
+          <labelFor value="c14d7"/>
           <text value="Deadzone"/>
           <verifyInputWhenFocusTarget value="false"/>
         </properties>
       </component>
-      <component id="d7925" class="javax.swing.JTextField" binding="dzText">
+      <component id="c14d7" class="javax.swing.JFormattedTextField" binding="dzText">
         <constraints>
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
