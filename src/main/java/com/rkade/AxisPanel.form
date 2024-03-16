@@ -187,10 +187,10 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <horizontalTextPosition value="0"/>
           <maximumSize width="90" height="30"/>
           <minimumSize width="90" height="30"/>
           <preferredSize width="90" height="30"/>
-          <selected value="false"/>
           <text value="Set MIn"/>
         </properties>
       </component>
@@ -205,7 +205,6 @@
           <maximumSize width="90" height="30"/>
           <minimumSize width="90" height="30"/>
           <preferredSize width="90" height="30"/>
-          <selected value="false"/>
           <text value="Set Center"/>
         </properties>
       </component>

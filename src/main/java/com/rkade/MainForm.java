@@ -155,15 +155,28 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
             }
         } else if (e.getSource() == axisPanel.getCenterText()) {
             return device.setAxisCenter(axisIndex, Short.parseShort(axisPanel.getCenterText().getText()));
+        } else if (e.getSource() == axisPanel.getSetCenterButton()) {
+            axisPanel.getCenterText().setText(axisPanel.getRawText().getText());
+            return device.setAxisCenter(axisIndex, Short.parseShort(axisPanel.getRawText().getText()));
         } else if (e.getSource() == axisPanel.getDzText()) {
             return device.setAxisDeadZone(axisIndex, Short.parseShort(axisPanel.getDzText().getText()));
         } else if (e.getSource() == axisPanel.getHasCenterCheckBox()) {
             if (axisPanel.getHasCenterCheckBox().isSelected()) {
                 axisPanel.getCenterText().setEnabled(true);
+                axisPanel.getDzText().setEnabled(true);
+                axisPanel.getSetCenterButton().setEnabled(true);
                 return device.setAxisCenter(axisIndex, Short.parseShort(axisPanel.getCenterText().getText()));
             } else {
                 axisPanel.getCenterText().setEnabled(false);
+                axisPanel.getDzText().setEnabled(false);
+                axisPanel.getSetCenterButton().setEnabled(false);
                 return device.setAxisCenter(axisIndex, Short.MIN_VALUE);
+            }
+        } else if (e.getSource() == axisPanel.getAutoLimitCheckBox()) {
+            if (axisPanel.getAutoLimitCheckBox().isSelected()) {
+                return device.setAxisAutoLimit(axisIndex, (short) 1);
+            } else {
+                return device.setAxisAutoLimit(axisIndex, (short) 0);
             }
         }
         return true;
@@ -277,10 +290,11 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
                 if (!axisPanel.getHasCenterCheckBox().isFocusOwner()) {
                     axisPanel.getHasCenterCheckBox().setSelected(axisData.isHasCenter());
                     axisPanel.getCenterText().setEnabled(axisData.isHasCenter());
+                    axisPanel.getDzText().setEnabled(axisData.isHasCenter());
+                    axisPanel.getSetCenterButton().setEnabled(axisData.isHasCenter());
                 }
                 if (!axisPanel.getAutoLimitCheckBox().isFocusOwner()) {
                     axisPanel.getAutoLimitCheckBox().setSelected(axisData.isAutoLimit());
-                    axisPanel.getL.setEnabled(axisData.isAutoLimit());
                 }
             }
         }
@@ -608,4 +622,5 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
+
 }

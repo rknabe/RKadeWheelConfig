@@ -37,6 +37,7 @@ public class AxisPanel implements Serializable {
         formatter.setValueClass(Short.class);
         formatter.setMinimum(Short.MIN_VALUE);
         formatter.setMaximum(Short.MAX_VALUE);
+        format.setGroupingUsed(false); //no commas
         formatter.setAllowsInvalid(false);
 
         DefaultFormatterFactory formatterFactory = new DefaultFormatterFactory() {
@@ -292,10 +293,10 @@ public class AxisPanel implements Serializable {
         gbc.insets = new Insets(0, 2, 0, 0);
         mainPanel.add(progress, gbc);
         setMinButton = new JButton();
+        setMinButton.setHorizontalTextPosition(0);
         setMinButton.setMaximumSize(new Dimension(90, 30));
         setMinButton.setMinimumSize(new Dimension(90, 30));
         setMinButton.setPreferredSize(new Dimension(90, 30));
-        setMinButton.setSelected(false);
         setMinButton.setText("Set MIn");
         gbc = new GridBagConstraints();
         gbc.gridx = 11;
@@ -308,7 +309,6 @@ public class AxisPanel implements Serializable {
         setCenterButton.setMaximumSize(new Dimension(90, 30));
         setCenterButton.setMinimumSize(new Dimension(90, 30));
         setCenterButton.setPreferredSize(new Dimension(90, 30));
-        setCenterButton.setSelected(false);
         setCenterButton.setText("Set Center");
         gbc = new GridBagConstraints();
         gbc.gridx = 12;

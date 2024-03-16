@@ -68,6 +68,10 @@ public class Device {
         return sendCommand(CMD_SET_AADZ, axisIndex, deadZone);
     }
 
+    public boolean setAxisAutoLimit(short axisIndex, short flag) {
+        return sendCommand(CMD_SET_AAAUTOLIM, axisIndex, flag);
+    }
+
     public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {
