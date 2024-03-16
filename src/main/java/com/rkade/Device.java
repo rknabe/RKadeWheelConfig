@@ -60,6 +60,14 @@ public class Device {
         return sendCommand(CMD_SET_AALIMITS, axisIndex, minValue, maxValue);
     }
 
+    public boolean setAxisCenter(short axisIndex, short center) {
+        return sendCommand(CMD_SET_AACENTER, axisIndex, center);
+    }
+
+    public boolean setAxisDeadZone(short axisIndex, short deadZone) {
+        return sendCommand(CMD_SET_AADZ, axisIndex, deadZone);
+    }
+
     public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {

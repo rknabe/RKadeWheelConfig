@@ -5,16 +5,17 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-public class MainForm implements DeviceListener, ActionListener {
+public class MainForm implements DeviceListener, ActionListener, FocusListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
-    private final List<AxisPanel> axisPanels = new ArrayList<>(7);
+    private final List<AxisPanel> axisPanels;
     private final List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
             "Axis 2 (Z - Brake)",
@@ -51,7 +52,6 @@ public class MainForm implements DeviceListener, ActionListener {
     private AxisPanel axis5Panel;
     private AxisPanel axis6Panel;
     private AxisPanel axis7Panel;
-    private List<AxisPanel> axisPanelList;
     private JScrollPane axisScroll;
     private JPanel inputsPanel;
     private JButton sineFfbButton;
@@ -82,12 +82,11 @@ public class MainForm implements DeviceListener, ActionListener {
         rangeComboBox.addItem("900");
         rangeComboBox.addItem("1080");
 
-        axisPanelList = List.of(axis1Panel, axis2Panel, axis3Panel, axis4Panel, axis5Panel, axis6Panel, axis7Panel);
-
-        axisPanels.addAll(axisPanelList);
+        axisPanels = List.of(axis1Panel, axis2Panel, axis3Panel, axis4Panel, axis5Panel, axis6Panel, axis7Panel);
         setAxisTitles();
 
-        setupActionListener(mainPanel, this);
+        setupActionListener(mainPanel);
+        setupFocusListener(mainPanel);
         setPanelEnabled(mainPanel, false);
     }
 
@@ -101,50 +100,10 @@ public class MainForm implements DeviceListener, ActionListener {
         }
     }
 
-    private BufferedImage toBufferedImage(Image img) {
-        if (img instanceof BufferedImage) {
-            return (BufferedImage) img;
-        }
-
-        // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(55, 55, BufferedImage.TYPE_INT_ARGB);
-
-        // Draw the image on to the buffered image
-        Graphics2D bGr = bimage.createGraphics();
-        bGr.drawImage(img, 0, 0, null);
-        bGr.dispose();
-
-        // Return the buffered image
-        return bimage;
-    }
-
-    private BufferedImage rotate(BufferedImage image, Double degrees) {
-        // Calculate the new size of the image based on the angle of rotation
-        double radians = Math.toRadians(degrees);
-        int newWidth = image.getWidth();
-        int newHeight = image.getHeight();
-
-        // Create a new image
-        BufferedImage rotate = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = rotate.createGraphics();
-        // Calculate the "anchor" point around which the image will be rotated
-        int x = (newWidth - image.getWidth()) / 2;
-        int y = (newHeight - image.getHeight()) / 2;
-        // Transform the origin point around the anchor point
-        AffineTransform at = new AffineTransform();
-        at.setToRotation(radians, x + (image.getWidth() / 2.0), y + (image.getHeight() / 2.0));
-        at.translate(x, y);
-        g2d.setTransform(at);
-        // Paint the original image
-        g2d.drawImage(image, 0, 0, null);
-        g2d.dispose();
-        return rotate;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (device != null && !e.getActionCommand().isEmpty()) {
-            boolean status = true;
+            boolean status;
             if (e.getActionCommand().equals(centerButton.getActionCommand())) {
                 status = device.setWheelCenter();
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
@@ -170,14 +129,41 @@ public class MainForm implements DeviceListener, ActionListener {
         }
     }
 
-    private boolean handleAxisEvent(ActionEvent e) {
+    @Override
+    public void focusGained(FocusEvent e) {
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        boolean status = true;
+        if (findAncestorAxisPanel(e.getSource()) != null) {
+            status = handleAxisEvent(e);
+        }
+        if (!status) {
+            logger.warning("Focus lost, failed for:" + e.getSource());
+        }
+    }
+
+    private boolean handleAxisEvent(AWTEvent e) {
         AxisPanel axisPanel = findAncestorAxisPanel(e.getSource());
-        short axisIndex = (short) axisPanelList.indexOf(axisPanel);
+        short axisIndex = (short) axisPanels.indexOf(axisPanel);
         if (e.getSource() == axisPanel.getMinText() || e.getSource() == axisPanel.getMaxText()) {
             short min = Short.parseShort(axisPanel.getMinText().getText());
             short max = Short.parseShort(axisPanel.getMaxText().getText());
             if (max > min) {
                 return device.setAxisLimits(axisIndex, min, max);
+            }
+        } else if (e.getSource() == axisPanel.getCenterText()) {
+            return device.setAxisCenter(axisIndex, Short.parseShort(axisPanel.getCenterText().getText()));
+        } else if (e.getSource() == axisPanel.getDzText()) {
+            return device.setAxisDeadZone(axisIndex, Short.parseShort(axisPanel.getDzText().getText()));
+        } else if (e.getSource() == axisPanel.getHasCenterCheckBox()) {
+            if (axisPanel.getHasCenterCheckBox().isSelected()) {
+                axisPanel.getCenterText().setEnabled(true);
+                return device.setAxisCenter(axisIndex, Short.parseShort(axisPanel.getCenterText().getText()));
+            } else {
+                axisPanel.getCenterText().setEnabled(false);
+                return device.setAxisCenter(axisIndex, Short.MIN_VALUE);
             }
         }
         return true;
@@ -269,8 +255,6 @@ public class MainForm implements DeviceListener, ActionListener {
     private void updateAxisPanel(AxisPanel axisPanel, AxisDataReport axisData) {
         if (axisPanel != null) {
             axisPanel.getEnabledCheckBox().setSelected(axisData.isEnabled());
-            axisPanel.getHasCenterCheckBox().setSelected(axisData.isHasCenter());
-            axisPanel.getAutoLimitCheckBox().setSelected(axisData.isAutoLimit());
             if (axisData.isEnabled()) {
                 axisPanel.getProgress().setValue(axisData.getRawValue());
                 axisPanel.getProgress().setMaximum(axisData.getMax());
@@ -290,6 +274,14 @@ public class MainForm implements DeviceListener, ActionListener {
                 if (!axisPanel.getDzText().isFocusOwner()) {
                     axisPanel.getDzText().setText(String.valueOf(axisData.getDeadZone()));
                 }
+                if (!axisPanel.getHasCenterCheckBox().isFocusOwner()) {
+                    axisPanel.getHasCenterCheckBox().setSelected(axisData.isHasCenter());
+                    axisPanel.getCenterText().setEnabled(axisData.isHasCenter());
+                }
+                if (!axisPanel.getAutoLimitCheckBox().isFocusOwner()) {
+                    axisPanel.getAutoLimitCheckBox().setSelected(axisData.isAutoLimit());
+                    axisPanel.getL.setEnabled(axisData.isAutoLimit());
+                }
             }
         }
     }
@@ -298,17 +290,30 @@ public class MainForm implements DeviceListener, ActionListener {
         return mainPanel;
     }
 
-    private void setupActionListener(Container container, ActionListener actionListener) {
+    private void setupActionListener(Container container) {
         Component[] components = container.getComponents();
         for (Component component : components) {
             if (component instanceof AbstractButton) {
-                ((AbstractButton) component).addActionListener(actionListener);
+                ((AbstractButton) component).addActionListener(this);
             } else if (component instanceof JTextField) {
-                ((JTextField) component).addActionListener(actionListener);
+                ((JTextField) component).addActionListener(this);
             } else if (component instanceof JComboBox<?>) {
-                ((JComboBox<?>) component).addActionListener(actionListener);
+                ((JComboBox<?>) component).addActionListener(this);
             } else if (component instanceof Container) {
-                setupActionListener((Container) component, actionListener);
+                setupActionListener((Container) component);
+            }
+        }
+    }
+
+    private void setupFocusListener(Container container) {
+        Component[] components = container.getComponents();
+        for (Component component : components) {
+            if (component instanceof JTextField) {
+                (component).addFocusListener(this);
+            } else if (component instanceof JComboBox<?>) {
+                (component).addFocusListener(this);
+            } else if (component instanceof Container) {
+                setupFocusListener((Container) component);
             }
         }
     }
@@ -322,6 +327,46 @@ public class MainForm implements DeviceListener, ActionListener {
                 setPanelEnabled((Container) component, isEnabled);
             }
         }
+    }
+
+    private BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
+        }
+
+        // Create a buffered image with transparency
+        BufferedImage bimage = new BufferedImage(55, 55, BufferedImage.TYPE_INT_ARGB);
+
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        // Return the buffered image
+        return bimage;
+    }
+
+    private BufferedImage rotate(BufferedImage image, Double degrees) {
+        // Calculate the new size of the image based on the angle of rotation
+        double radians = Math.toRadians(degrees);
+        int newWidth = image.getWidth();
+        int newHeight = image.getHeight();
+
+        // Create a new image
+        BufferedImage rotate = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = rotate.createGraphics();
+        // Calculate the "anchor" point around which the image will be rotated
+        int x = (newWidth - image.getWidth()) / 2;
+        int y = (newHeight - image.getHeight()) / 2;
+        // Transform the origin point around the anchor point
+        AffineTransform at = new AffineTransform();
+        at.setToRotation(radians, x + (image.getWidth() / 2.0), y + (image.getHeight() / 2.0));
+        at.translate(x, y);
+        g2d.setTransform(at);
+        // Paint the original image
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        return rotate;
     }
 
     {
@@ -563,5 +608,4 @@ public class MainForm implements DeviceListener, ActionListener {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
-
 }

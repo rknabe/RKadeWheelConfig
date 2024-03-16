@@ -71,7 +71,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <focusLostBehavior value="0"/>
+          <focusLostBehavior value="1"/>
           <horizontalAlignment value="2"/>
           <preferredSize width="65" height="30"/>
         </properties>
@@ -164,17 +164,6 @@
           <preferredSize width="65" height="30"/>
         </properties>
       </component>
-      <component id="e0a82" class="javax.swing.JComboBox" binding="trimComboBox" default-binding="true">
-        <constraints>
-          <grid row="2" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <maximumSize width="100" height="30"/>
-          <minimumSize width="100" height="30"/>
-          <preferredSize width="100" height="30"/>
-        </properties>
-      </component>
       <component id="953b0" class="javax.swing.JProgressBar" binding="progress">
         <constraints>
           <grid row="0" column="4" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
@@ -234,19 +223,6 @@
           <text value="Set Max"/>
         </properties>
       </component>
-      <component id="8903" class="javax.swing.JCheckBox" binding="hasCenterCheckBox" default-binding="true">
-        <constraints>
-          <grid row="2" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <horizontalAlignment value="4"/>
-          <maximumSize width="100" height="22"/>
-          <minimumSize width="100" height="22"/>
-          <preferredSize width="100" height="22"/>
-          <text value="Has Center"/>
-        </properties>
-      </component>
       <component id="d631" class="javax.swing.JCheckBox" binding="autoLimitCheckBox">
         <constraints>
           <grid row="2" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
@@ -266,20 +242,6 @@
           <gridbag top="0" left="180" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
       </hspacer>
-      <component id="b5699" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="2" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <horizontalAlignment value="4"/>
-          <labelFor value="e0a82"/>
-          <maximumSize width="40" height="17"/>
-          <minimumSize width="40" height="17"/>
-          <preferredSize width="40" height="17"/>
-          <text value="Trim"/>
-        </properties>
-      </component>
       <component id="7570f" class="javax.swing.JCheckBox" binding="enabledCheckBox" default-binding="true">
         <constraints>
           <grid row="2" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
@@ -291,6 +253,19 @@
           <minimumSize width="100" height="22"/>
           <preferredSize width="100" height="22"/>
           <text value="Enabled"/>
+        </properties>
+      </component>
+      <component id="8903" class="javax.swing.JCheckBox" binding="hasCenterCheckBox" default-binding="true">
+        <constraints>
+          <grid row="2" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <horizontalAlignment value="4"/>
+          <maximumSize width="100" height="22"/>
+          <minimumSize width="100" height="22"/>
+          <preferredSize width="100" height="22"/>
+          <text value="Has Center"/>
         </properties>
       </component>
     </children>

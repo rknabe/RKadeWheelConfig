@@ -201,7 +201,7 @@ public class AxisPanel implements Serializable {
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(maxLabel, gbc);
         minText = new JFormattedTextField();
-        minText.setFocusLostBehavior(0);
+        minText.setFocusLostBehavior(1);
         minText.setHorizontalAlignment(2);
         minText.setPreferredSize(new Dimension(65, 30));
         gbc = new GridBagConstraints();
@@ -274,15 +274,6 @@ public class AxisPanel implements Serializable {
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(rawText, gbc);
-        trimComboBox = new JComboBox();
-        trimComboBox.setMaximumSize(new Dimension(100, 30));
-        trimComboBox.setMinimumSize(new Dimension(100, 30));
-        trimComboBox.setPreferredSize(new Dimension(100, 30));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 11;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.EAST;
-        mainPanel.add(trimComboBox, gbc);
         progress = new JProgressBar();
         progress.setEnabled(false);
         progress.setFocusable(false);
@@ -336,17 +327,6 @@ public class AxisPanel implements Serializable {
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(setMaxButton, gbc);
-        hasCenterCheckBox = new JCheckBox();
-        hasCenterCheckBox.setHorizontalAlignment(4);
-        hasCenterCheckBox.setMaximumSize(new Dimension(100, 22));
-        hasCenterCheckBox.setMinimumSize(new Dimension(100, 22));
-        hasCenterCheckBox.setPreferredSize(new Dimension(100, 22));
-        hasCenterCheckBox.setText("Has Center");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 12;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.EAST;
-        mainPanel.add(hasCenterCheckBox, gbc);
         autoLimitCheckBox = new JCheckBox();
         autoLimitCheckBox.setHorizontalAlignment(4);
         autoLimitCheckBox.setMaximumSize(new Dimension(100, 22));
@@ -365,17 +345,6 @@ public class AxisPanel implements Serializable {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 180, 0, 0);
         mainPanel.add(spacer1, gbc);
-        final JLabel label1 = new JLabel();
-        label1.setHorizontalAlignment(4);
-        label1.setMaximumSize(new Dimension(40, 17));
-        label1.setMinimumSize(new Dimension(40, 17));
-        label1.setPreferredSize(new Dimension(40, 17));
-        label1.setText("Trim");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 10;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.EAST;
-        mainPanel.add(label1, gbc);
         enabledCheckBox = new JCheckBox();
         enabledCheckBox.setHorizontalAlignment(4);
         enabledCheckBox.setMaximumSize(new Dimension(100, 22));
@@ -387,11 +356,21 @@ public class AxisPanel implements Serializable {
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(enabledCheckBox, gbc);
+        hasCenterCheckBox = new JCheckBox();
+        hasCenterCheckBox.setHorizontalAlignment(4);
+        hasCenterCheckBox.setMaximumSize(new Dimension(100, 22));
+        hasCenterCheckBox.setMinimumSize(new Dimension(100, 22));
+        hasCenterCheckBox.setPreferredSize(new Dimension(100, 22));
+        hasCenterCheckBox.setText("Has Center");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 12;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        mainPanel.add(hasCenterCheckBox, gbc);
         minLabel.setLabelFor(minText);
         centerLabel.setLabelFor(centerText);
         maxLabel.setLabelFor(maxText);
         deadZoneLabel.setLabelFor(dzText);
-        label1.setLabelFor(trimComboBox);
     }
 
     /**
