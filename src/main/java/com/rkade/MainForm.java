@@ -15,8 +15,7 @@ import java.util.logging.Logger;
 
 public class MainForm implements DeviceListener, ActionListener, FocusListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
-    private final List<AxisPanel> axisPanels;
-    private final List<String> axisLabels = List.of(
+    private final static List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
             "Axis 2 (Z - Brake)",
             "Axis 3 (rX - Clutch)",
@@ -24,6 +23,8 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
             "Axis 5 (rZ - Aux 2)",
             "Axis 6 (Slider - Aux 3)",
             "Axis 7 (Dial - Aux 4)");
+    private final List<AxisPanel> axisPanels;
+    private final List<JComponent> controls;
     private JPanel mainPanel;
     private JTabbedPane mainTab;
     private JPanel ffbPanel;
@@ -83,19 +84,32 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         rangeComboBox.addItem("1080");
 
         axisPanels = List.of(axis1Panel, axis2Panel, axis3Panel, axis4Panel, axis5Panel, axis6Panel, axis7Panel);
-        setAxisTitles();
+        setupAxisPanels();
 
-        setupActionListener(mainPanel);
-        setupFocusListener(mainPanel);
-        setPanelEnabled(mainPanel, false);
+        controls = List.of(deviceComboBox, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton, loadButton);
+        setupControlListener();
+        setPanelEnabled(false);
     }
 
-    private void setAxisTitles() {
-        for (int i = 0; i < axisPanels.size(); i++) {
+    private void setupAxisPanels() {
+        for (short i = 0; i < axisPanels.size(); i++) {
             AxisPanel panel = axisPanels.get(i);
             if (panel != null) {
-                TitledBorder border = (TitledBorder) panel.getMainPanel().getBorder();
-                border.setTitle(axisLabels.get(i));
+                panel.setAxisLabel(axisLabels.get(i));
+                panel.setAxisIndex(i);
+            }
+        }
+    }
+
+    private void setupControlListener() {
+        for (JComponent component : controls) {
+            component.addFocusListener(this);
+            switch (component) {
+                case AbstractButton abstractButton -> abstractButton.addActionListener(this);
+                case JTextField jTextField -> jTextField.addActionListener(this);
+                case JComboBox<?> jComboBox -> jComboBox.addActionListener(this);
+                default -> {
+                }
             }
         }
     }
@@ -118,8 +132,6 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
                 status = device.doFfbSpring();
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
                 status = device.saveSettings();
-            } else if (findAncestorAxisPanel(e.getSource()) != null) {
-                status = handleAxisEvent(e);
             } else {
                 return;
             }
@@ -135,61 +147,6 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
 
     @Override
     public void focusLost(FocusEvent e) {
-        boolean status = true;
-        if (findAncestorAxisPanel(e.getSource()) != null) {
-            status = handleAxisEvent(e);
-        }
-        if (!status) {
-            logger.warning("Focus lost, failed for:" + e.getSource());
-        }
-    }
-
-    private boolean handleAxisEvent(AWTEvent e) {
-        AxisPanel axisPanel = findAncestorAxisPanel(e.getSource());
-        short axisIndex = (short) axisPanels.indexOf(axisPanel);
-        if (e.getSource() == axisPanel.getMinText() || e.getSource() == axisPanel.getMaxText()) {
-            short min = Short.parseShort(axisPanel.getMinText().getText());
-            short max = Short.parseShort(axisPanel.getMaxText().getText());
-            if (max > min) {
-                return device.setAxisLimits(axisIndex, min, max);
-            }
-        } else if (e.getSource() == axisPanel.getCenterText()) {
-            return device.setAxisCenter(axisIndex, Short.parseShort(axisPanel.getCenterText().getText()));
-        } else if (e.getSource() == axisPanel.getSetCenterButton()) {
-            axisPanel.getCenterText().setText(axisPanel.getRawText().getText());
-            return device.setAxisCenter(axisIndex, Short.parseShort(axisPanel.getRawText().getText()));
-        } else if (e.getSource() == axisPanel.getDzText()) {
-            return device.setAxisDeadZone(axisIndex, Short.parseShort(axisPanel.getDzText().getText()));
-        } else if (e.getSource() == axisPanel.getHasCenterCheckBox()) {
-            if (axisPanel.getHasCenterCheckBox().isSelected()) {
-                axisPanel.getCenterText().setEnabled(true);
-                axisPanel.getDzText().setEnabled(true);
-                axisPanel.getSetCenterButton().setEnabled(true);
-                return device.setAxisCenter(axisIndex, Short.parseShort(axisPanel.getCenterText().getText()));
-            } else {
-                axisPanel.getCenterText().setEnabled(false);
-                axisPanel.getDzText().setEnabled(false);
-                axisPanel.getSetCenterButton().setEnabled(false);
-                return device.setAxisCenter(axisIndex, Short.MIN_VALUE);
-            }
-        } else if (e.getSource() == axisPanel.getAutoLimitCheckBox()) {
-            if (axisPanel.getAutoLimitCheckBox().isSelected()) {
-                return device.setAxisAutoLimit(axisIndex, (short) 1);
-            } else {
-                return device.setAxisAutoLimit(axisIndex, (short) 0);
-            }
-        }
-        return true;
-    }
-
-    private AxisPanel findAncestorAxisPanel(Object object) {
-        if (!(object instanceof Component component)) {
-            return null;
-        }
-        if (component == axis1Panel.getMainPanel()) {
-            return axis1Panel;
-        }
-        return findAncestorAxisPanel(component.getParent());
     }
 
     private boolean doWheelAutoCenter() {
@@ -216,14 +173,20 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
     public void deviceAttached(Device device) {
         this.device = device;
         deviceComboBox.addItem(device.getName());
-        setPanelEnabled(mainPanel, true);
+        setPanelEnabled(true);
+        for (AxisPanel axisPanel : axisPanels) {
+            axisPanel.deviceAttached(device);
+        }
     }
 
     @Override
     public void deviceDetached(Device device) {
         deviceComboBox.removeItem(device.getName());
         this.device = null;
-        setPanelEnabled(mainPanel, false);
+        setPanelEnabled(false);
+        for (AxisPanel axisPanel : axisPanels) {
+            axisPanel.deviceDetached(device);
+        }
     }
 
     @Override
@@ -236,7 +199,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
             if (report.getReportType() == DataReport.DATA_REPORT_ID) {
                 switch (report) {
                     case WheelDataReport wheelData -> updateWheelPanel(wheelData);
-                    case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), axisData);
+                    case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
                     case VersionDataReport versionData ->
                             versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
                     default -> {
@@ -265,38 +228,9 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         accText.setText(String.valueOf(wheelData.getAcceleration()));
     }
 
-    private void updateAxisPanel(AxisPanel axisPanel, AxisDataReport axisData) {
+    private void updateAxisPanel(AxisPanel axisPanel, Device device, String status, DataReport report) {
         if (axisPanel != null) {
-            axisPanel.getEnabledCheckBox().setSelected(axisData.isEnabled());
-            if (axisData.isEnabled()) {
-                axisPanel.getProgress().setValue(axisData.getRawValue());
-                axisPanel.getProgress().setMaximum(axisData.getMax());
-                axisPanel.getProgress().setMinimum(axisData.getMin());
-                axisPanel.getValueText().setText(String.valueOf(axisData.getValue()));
-                axisPanel.getRawText().setText(String.valueOf(axisData.getRawValue()));
-
-                if (!axisPanel.getMinText().isFocusOwner()) {
-                    axisPanel.getMinText().setText(String.valueOf(axisData.getMin()));
-                }
-                if (!axisPanel.getMaxText().isFocusOwner()) {
-                    axisPanel.getMaxText().setText(String.valueOf(axisData.getMax()));
-                }
-                if (!axisPanel.getCenterText().isFocusOwner()) {
-                    axisPanel.getCenterText().setText(String.valueOf(axisData.getCenter()));
-                }
-                if (!axisPanel.getDzText().isFocusOwner()) {
-                    axisPanel.getDzText().setText(String.valueOf(axisData.getDeadZone()));
-                }
-                if (!axisPanel.getHasCenterCheckBox().isFocusOwner()) {
-                    axisPanel.getHasCenterCheckBox().setSelected(axisData.isHasCenter());
-                    axisPanel.getCenterText().setEnabled(axisData.isHasCenter());
-                    axisPanel.getDzText().setEnabled(axisData.isHasCenter());
-                    axisPanel.getSetCenterButton().setEnabled(axisData.isHasCenter());
-                }
-                if (!axisPanel.getAutoLimitCheckBox().isFocusOwner()) {
-                    axisPanel.getAutoLimitCheckBox().setSelected(axisData.isAutoLimit());
-                }
-            }
+            axisPanel.deviceUpdated(device, status, report);
         }
     }
 
@@ -304,42 +238,9 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         return mainPanel;
     }
 
-    private void setupActionListener(Container container) {
-        Component[] components = container.getComponents();
-        for (Component component : components) {
-            if (component instanceof AbstractButton) {
-                ((AbstractButton) component).addActionListener(this);
-            } else if (component instanceof JTextField) {
-                ((JTextField) component).addActionListener(this);
-            } else if (component instanceof JComboBox<?>) {
-                ((JComboBox<?>) component).addActionListener(this);
-            } else if (component instanceof Container) {
-                setupActionListener((Container) component);
-            }
-        }
-    }
-
-    private void setupFocusListener(Container container) {
-        Component[] components = container.getComponents();
-        for (Component component : components) {
-            if (component instanceof JTextField) {
-                (component).addFocusListener(this);
-            } else if (component instanceof JComboBox<?>) {
-                (component).addFocusListener(this);
-            } else if (component instanceof Container) {
-                setupFocusListener((Container) component);
-            }
-        }
-    }
-
-    private void setPanelEnabled(Container container, boolean isEnabled) {
-        container.setEnabled(isEnabled);
-        Component[] components = container.getComponents();
-        for (Component component : components) {
+    private void setPanelEnabled(boolean isEnabled) {
+        for (JComponent component : controls) {
             component.setEnabled(isEnabled);
-            if (component instanceof Container) {
-                setPanelEnabled((Container) component, isEnabled);
-            }
         }
     }
 

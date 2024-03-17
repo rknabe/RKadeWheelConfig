@@ -72,6 +72,10 @@ public class Device {
         return sendCommand(CMD_SET_AAAUTOLIM, axisIndex, flag);
     }
 
+    public boolean setAxisEnabledAndTrim(short axisIndex, short enabledFlag, short trimIndex) {
+        return sendCommand(CMD_SET_ODTRIM, axisIndex, enabledFlag, trimIndex);
+    }
+
     public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {
@@ -99,7 +103,7 @@ public class Device {
     }
 
     private boolean sendCommand(byte command) {
-        return sendCommand(command,  (short)0, (short) 0, (short) 0);
+        return sendCommand(command, (short) 0, (short) 0, (short) 0);
     }
 
     private boolean sendCommand(byte command, short arg1) {

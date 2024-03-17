@@ -5,10 +5,17 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
-import java.io.Serializable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.text.NumberFormat;
+import java.util.List;
+import java.util.logging.Logger;
 
-public class AxisPanel implements Serializable {
+public class AxisPanel implements DeviceListener, ActionListener, FocusListener {
+    private final static Logger logger = Logger.getLogger(AxisPanel.class.getName());
+    private final List<JComponent> controls;
     private JLabel minLabel;
     private JFormattedTextField minText;
     private JLabel centerLabel;
@@ -29,7 +36,9 @@ public class AxisPanel implements Serializable {
     private JCheckBox autoLimitCheckBox;
     private JCheckBox hasCenterCheckBox;
     private JCheckBox enabledCheckBox;
-    private JComboBox<String> trimComboBox;
+    private Device device = null;
+    private short axisIndex;
+    private boolean wasEnabled = false;
 
     public AxisPanel() {
         NumberFormat format = NumberFormat.getInstance();
@@ -50,94 +59,181 @@ public class AxisPanel implements Serializable {
         maxText.setFormatterFactory(formatterFactory);
         centerText.setFormatterFactory(formatterFactory);
         dzText.setFormatterFactory(formatterFactory);
+
+        controls = List.of(minText, centerText, maxText, dzText, setMinButton, setCenterButton,
+                setMaxButton, autoLimitCheckBox, hasCenterCheckBox, enabledCheckBox);
+
+        setPanelEnabled(false);
+        setupControlListener();
     }
 
-    public JComponent getRootComponent() {
-        return mainPanel;
+    private void setupControlListener() {
+        for (JComponent component : controls) {
+            component.addFocusListener(this);
+            switch (component) {
+                case AbstractButton abstractButton -> abstractButton.addActionListener(this);
+                case JTextField jTextField -> jTextField.addActionListener(this);
+                case JComboBox<?> jComboBox -> jComboBox.addActionListener(this);
+                default -> {
+                }
+            }
+        }
     }
 
-    public JLabel getMinLabel() {
-        return minLabel;
+    public void setAxisIndex(short axisIndex) {
+        this.axisIndex = axisIndex;
     }
 
-    public JTextField getMinText() {
-        return minText;
+    public void setAxisLabel(String axisLabel) {
+        TitledBorder border = (TitledBorder) mainPanel.getBorder();
+        border.setTitle(axisLabel);
     }
 
-    public JLabel getCenterLabel() {
-        return centerLabel;
+    @Override
+    public void deviceAttached(Device device) {
+        this.device = device;
     }
 
-    public JTextField getCenterText() {
-        return centerText;
+    @Override
+    public void deviceDetached(Device device) {
+        this.device = null;
+        setPanelEnabled(false);
     }
 
-    public JProgressBar getProgress() {
-        return progress;
+    @Override
+    public void deviceUpdated(Device device, String status, DataReport report) {
+        if (report != null) {
+            if (report.getReportType() == DataReport.DATA_REPORT_ID) {
+                if (report instanceof AxisDataReport axisData) {
+                    updateControls(axisData);
+                }
+            }
+        }
     }
 
-    public JLabel getMaxLabel() {
-        return maxLabel;
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        boolean status = handleAxisEvent(e);
+        if (!status) {
+            logger.warning("Action failed for:" + e.getActionCommand());
+        }
     }
 
-    public JTextField getMaxText() {
-        return maxText;
+    @Override
+    public void focusGained(FocusEvent e) {
     }
 
-    public JTextField getDzText() {
-        return dzText;
+    @Override
+    public void focusLost(FocusEvent e) {
+        boolean status = handleAxisEvent(e);
+        if (!status) {
+            logger.warning("Focus lost, failed for:" + e.getSource());
+        }
     }
 
-    public JLabel getValueLabel() {
-        return valueLabel;
+    private boolean handleAxisEvent(AWTEvent e) {
+        if (e.getSource() == minText || e.getSource() == maxText) {
+            short min = Short.parseShort(minText.getText());
+            short max = Short.parseShort(maxText.getText());
+            if (max > min) {
+                return device.setAxisLimits(axisIndex, min, max);
+            }
+        } else if (e.getSource() == centerText) {
+            return device.setAxisCenter(axisIndex, Short.parseShort(centerText.getText()));
+        } else if (e.getSource() == setMinButton) {
+            short min = Short.parseShort(rawText.getText());
+            short max = Short.parseShort(maxText.getText());
+            if (max > min) {
+                return device.setAxisLimits(axisIndex, min, max);
+            }
+        } else if (e.getSource() == setMaxButton) {
+            short min = Short.parseShort(minText.getText());
+            short max = Short.parseShort(rawText.getText());
+            if (max > min) {
+                return device.setAxisLimits(axisIndex, min, max);
+            }
+        } else if (e.getSource() == setCenterButton) {
+            centerText.setText(rawText.getText());
+            return device.setAxisCenter(axisIndex, Short.parseShort(rawText.getText()));
+        } else if (e.getSource() == dzText) {
+            return device.setAxisDeadZone(axisIndex, Short.parseShort(dzText.getText()));
+        } else if (e.getSource() == hasCenterCheckBox) {
+            if (hasCenterCheckBox.isSelected()) {
+                centerText.setEnabled(true);
+                dzText.setEnabled(true);
+                setCenterButton.setEnabled(true);
+                return device.setAxisCenter(axisIndex, Short.parseShort(centerText.getText()));
+            } else {
+                centerText.setEnabled(false);
+                dzText.setEnabled(false);
+                setCenterButton.setEnabled(false);
+                return device.setAxisCenter(axisIndex, Short.MIN_VALUE);
+            }
+        } else if (e.getSource() == autoLimitCheckBox) {
+            if (autoLimitCheckBox.isSelected()) {
+                return device.setAxisAutoLimit(axisIndex, (short) 1);
+            } else {
+                return device.setAxisAutoLimit(axisIndex, (short) 0);
+            }
+        } else if (e.getSource() == enabledCheckBox) {
+            if (enabledCheckBox.isSelected()) {
+                //these are inverted, since the original value is isDisabled
+                return device.setAxisEnabledAndTrim(axisIndex, (short) 0, (short) 0); //last param is trim index
+            } else {
+                return device.setAxisEnabledAndTrim(axisIndex, (short) 1, (short) 0); //last param is trim index
+            }
+        }
+        return true;
     }
 
-    public JTextField getValueText() {
-        return valueText;
+    private void updateControls(AxisDataReport axisData) {
+            enabledCheckBox.setSelected(axisData.isEnabled());
+            if (wasEnabled && !axisData.isEnabled()) {
+                setPanelEnabled(false);
+            } else if (!wasEnabled && axisData.isEnabled()) {
+                setPanelEnabled(true);
+            }
+            wasEnabled = axisData.isEnabled();
+        if (axisData.isEnabled()) {
+            progress.setValue(axisData.getRawValue());
+            progress.setMaximum(axisData.getMax());
+            progress.setMinimum(axisData.getMin());
+            valueText.setText(String.valueOf(axisData.getValue()));
+            rawText.setText(String.valueOf(axisData.getRawValue()));
+
+            if (!minText.isFocusOwner()) {
+                minText.setText(String.valueOf(axisData.getMin()));
+            }
+            if (!maxText.isFocusOwner()) {
+                maxText.setText(String.valueOf(axisData.getMax()));
+            }
+            if (!centerText.isFocusOwner()) {
+                String value = String.valueOf(axisData.getCenter());
+                if (!value.equals(centerText.getText())) {
+                    centerText.setText(value);
+                }
+            }
+            if (!dzText.isFocusOwner()) {
+                dzText.setText(String.valueOf(axisData.getDeadZone()));
+            }
+            if (!hasCenterCheckBox.isFocusOwner()) {
+                hasCenterCheckBox.setSelected(axisData.isHasCenter());
+                centerText.setEnabled(axisData.isHasCenter());
+                dzText.setEnabled(axisData.isHasCenter());
+                setCenterButton.setEnabled(axisData.isHasCenter());
+            }
+            if (!autoLimitCheckBox.isFocusOwner()) {
+                autoLimitCheckBox.setSelected(axisData.isAutoLimit());
+            }
+        }
+        //should always be enabled
+        enabledCheckBox.setEnabled(true);
     }
 
-    public JLabel getRawLabel() {
-        return rawLabel;
-    }
-
-    public JTextField getRawText() {
-        return rawText;
-    }
-
-    public JLabel getDeadZoneLabel() {
-        return deadZoneLabel;
-    }
-
-    public JPanel getMainPanel() {
-        return mainPanel;
-    }
-
-    public JButton getSetMinButton() {
-        return setMinButton;
-    }
-
-    public JButton getSetCenterButton() {
-        return setCenterButton;
-    }
-
-    public JButton getSetMaxButton() {
-        return setMaxButton;
-    }
-
-    public JCheckBox getAutoLimitCheckBox() {
-        return autoLimitCheckBox;
-    }
-
-    public JCheckBox getHasCenterCheckBox() {
-        return hasCenterCheckBox;
-    }
-
-    public JCheckBox getEnabledCheckBox() {
-        return enabledCheckBox;
-    }
-
-    public JComboBox<String> getTrimComboBox() {
-        return trimComboBox;
+    private void setPanelEnabled(boolean enable) {
+        for (JComponent component : controls) {
+            component.setEnabled(enable);
+        }
     }
 
     {
