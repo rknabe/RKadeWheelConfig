@@ -267,6 +267,35 @@
           <text value="Has Center"/>
         </properties>
       </component>
+      <component id="39fea" class="javax.swing.JComboBox" binding="trimComboBox">
+        <constraints>
+          <grid row="2" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <minimumSize width="38" height="30"/>
+          <model>
+            <item value="None"/>
+            <item value="1 bit(/2)"/>
+            <item value="2 bit(/4)"/>
+            <item value="3 bit(/8)"/>
+            <item value="4 bit(/16)"/>
+            <item value="5 bit(/32)"/>
+            <item value="6 bit(/64)"/>
+            <item value="7 bit(/128)"/>
+          </model>
+          <preferredSize width="38" height="30"/>
+        </properties>
+      </component>
+      <component id="8b663" class="javax.swing.JLabel" binding="trimLabel">
+        <constraints>
+          <grid row="2" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="Trim"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

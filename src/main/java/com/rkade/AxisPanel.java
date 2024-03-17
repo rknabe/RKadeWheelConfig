@@ -36,6 +36,8 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
     private JCheckBox autoLimitCheckBox;
     private JCheckBox hasCenterCheckBox;
     private JCheckBox enabledCheckBox;
+    private JComboBox<String> trimComboBox;
+    private JLabel trimLabel;
     private Device device = null;
     private short axisIndex;
     private boolean wasEnabled = false;
@@ -61,7 +63,7 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
         dzText.setFormatterFactory(formatterFactory);
 
         controls = List.of(minText, centerText, maxText, dzText, setMinButton, setCenterButton,
-                setMaxButton, autoLimitCheckBox, hasCenterCheckBox, enabledCheckBox);
+                setMaxButton, autoLimitCheckBox, hasCenterCheckBox, enabledCheckBox, trimComboBox);
 
         setPanelEnabled(false);
         setupControlListener();
@@ -71,9 +73,9 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
         for (JComponent component : controls) {
             component.addFocusListener(this);
             switch (component) {
-                case AbstractButton abstractButton -> abstractButton.addActionListener(this);
-                case JTextField jTextField -> jTextField.addActionListener(this);
-                case JComboBox<?> jComboBox -> jComboBox.addActionListener(this);
+                case AbstractButton button -> button.addActionListener(this);
+                case JTextField textField -> textField.addActionListener(this);
+                case JComboBox<?> comboBox -> comboBox.addActionListener(this);
                 default -> {
                 }
             }
@@ -175,27 +177,30 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
             } else {
                 return device.setAxisAutoLimit(axisIndex, (short) 0);
             }
-        } else if (e.getSource() == enabledCheckBox) {
+        } else if (e.getSource() == enabledCheckBox || e.getSource() == trimComboBox) {
+            short disabled = 1;
             if (enabledCheckBox.isSelected()) {
-                //these are inverted, since the original value is isDisabled
-                return device.setAxisEnabledAndTrim(axisIndex, (short) 0, (short) 0); //last param is trim index
-            } else {
-                return device.setAxisEnabledAndTrim(axisIndex, (short) 1, (short) 0); //last param is trim index
+                disabled = 0;
             }
+            if (disabled == 1) {
+                progress.setValue(0);
+            }
+            //these are inverted, since the original value is isDisabled
+            return device.setAxisEnabledAndTrim(axisIndex, disabled, (short) trimComboBox.getSelectedIndex()); //last param is trim index
         }
         return true;
     }
 
     private void updateControls(AxisDataReport axisData) {
-            enabledCheckBox.setSelected(axisData.isEnabled());
-            if (wasEnabled && !axisData.isEnabled()) {
-                setPanelEnabled(false);
-            } else if (!wasEnabled && axisData.isEnabled()) {
-                setPanelEnabled(true);
-            }
-            wasEnabled = axisData.isEnabled();
+        enabledCheckBox.setSelected(axisData.isEnabled());
+        if (wasEnabled && !axisData.isEnabled()) {
+            setPanelEnabled(false);
+        } else if (!wasEnabled && axisData.isEnabled()) {
+            setPanelEnabled(true);
+        }
+        wasEnabled = axisData.isEnabled();
         if (axisData.isEnabled()) {
-            progress.setValue(axisData.getRawValue());
+            progress.setValue(axisData.getRawValue());//TODO: fix bar when axis is centered.
             progress.setMaximum(axisData.getMax());
             progress.setMinimum(axisData.getMin());
             valueText.setText(String.valueOf(axisData.getValue()));
@@ -224,6 +229,9 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
             }
             if (!autoLimitCheckBox.isFocusOwner()) {
                 autoLimitCheckBox.setSelected(axisData.isAutoLimit());
+            }
+            if (!trimComboBox.isFocusOwner()) {
+                trimComboBox.setSelectedIndex(axisData.getTrim());
             }
         }
         //should always be enabled
@@ -463,6 +471,32 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(hasCenterCheckBox, gbc);
+        trimComboBox = new JComboBox();
+        trimComboBox.setMinimumSize(new Dimension(38, 30));
+        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+        defaultComboBoxModel1.addElement("None");
+        defaultComboBoxModel1.addElement("1 bit(/2)");
+        defaultComboBoxModel1.addElement("2 bit(/4)");
+        defaultComboBoxModel1.addElement("3 bit(/8)");
+        defaultComboBoxModel1.addElement("4 bit(/16)");
+        defaultComboBoxModel1.addElement("5 bit(/32)");
+        defaultComboBoxModel1.addElement("6 bit(/64)");
+        defaultComboBoxModel1.addElement("7 bit(/128)");
+        trimComboBox.setModel(defaultComboBoxModel1);
+        trimComboBox.setPreferredSize(new Dimension(38, 30));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 11;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(trimComboBox, gbc);
+        trimLabel = new JLabel();
+        trimLabel.setText("Trim");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 10;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        mainPanel.add(trimLabel, gbc);
         minLabel.setLabelFor(minText);
         centerLabel.setLabelFor(centerText);
         maxLabel.setLabelFor(maxText);
