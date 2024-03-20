@@ -202,6 +202,9 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         for (AxisPanel axisPanel : axisPanels) {
             axisPanel.deviceAttached(device);
         }
+        for (GainPanel gainPanel : gainPanels) {
+            gainPanel.deviceAttached(device);
+        }
     }
 
     @Override
@@ -211,6 +214,9 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         setPanelEnabled(false);
         for (AxisPanel axisPanel : axisPanels) {
             axisPanel.deviceDetached(device);
+        }
+        for (GainPanel gainPanel : gainPanels) {
+            gainPanel.deviceDetached(device);
         }
     }
 
@@ -225,7 +231,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
                 switch (report) {
                     case WheelDataReport wheelData -> updateWheelPanel(wheelData);
                     case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
-                    case GainsDataReport gainsData -> updateGains(gainsData);
+                    case GainsDataReport gainsData -> updateGainPanels(device, status, gainsData);
                     case VersionDataReport versionData ->
                             versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
                     default -> {
@@ -254,12 +260,9 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         accText.setText(String.valueOf(wheelData.getAcceleration()));
     }
 
-    private void updateGains(GainsDataReport gainsReport) {
-        for (int i = 0; i < gainPanels.size(); i++) {
-            GainPanel gainPanel = gainPanels.get(i);
-            int value = gainsReport.getValues().get(i);
-            gainPanel.setGainAmount(value);
-
+    private void updateGainPanels(Device device, String status, GainsDataReport report) {
+        for (GainPanel gainPanel : gainPanels) {
+            gainPanel.deviceUpdated(device, status, report);
         }
     }
 

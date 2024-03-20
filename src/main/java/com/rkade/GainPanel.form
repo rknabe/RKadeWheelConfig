@@ -18,10 +18,12 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="b27e0" class="javax.swing.JTextField" binding="gainText">
+      <component id="5d64b" class="javax.swing.JFormattedTextField" binding="gainText">
         <constraints/>
         <properties>
-          <text value="1024"/>
+          <focusLostBehavior value="1"/>
+          <horizontalAlignment value="2"/>
+          <preferredSize width="65" height="30"/>
         </properties>
       </component>
       <component id="3b1c9" class="javax.swing.JLabel" binding="gainPercent">
