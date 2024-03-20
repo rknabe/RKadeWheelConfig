@@ -23,6 +23,8 @@ public abstract class DataReportFactory {
                     return new WheelDataReport(reportType, reportIndex, section, values);
                 case DataReport.CMD_GET_ANALOG:
                     return new AxisDataReport(reportType, reportIndex, section, values);
+                case DataReport.CMD_GET_GAINS:
+                    return new GainsDataReport(reportType, reportIndex, section, values);
                 case DataReport.CMD_GET_VER:
                     return new VersionDataReport(reportType, reportIndex, section, data);
             }

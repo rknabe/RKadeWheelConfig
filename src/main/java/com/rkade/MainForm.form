@@ -6,7 +6,7 @@
     </constraints>
     <properties>
       <minimumSize width="1060" height="400"/>
-      <preferredSize width="1060" height="700"/>
+      <preferredSize width="1060" height="800"/>
     </properties>
     <border type="none"/>
     <children>
@@ -20,7 +20,7 @@
         <properties>
           <minimumSize width="1060" height="400"/>
           <name value="Inputs"/>
-          <preferredSize width="1060" height="700"/>
+          <preferredSize width="1060" height="800"/>
           <tabLayoutPolicy value="0"/>
         </properties>
         <border type="none"/>
@@ -31,7 +31,7 @@
             </constraints>
             <properties>
               <minimumSize width="1060" height="60"/>
-              <preferredSize width="1060" height="700"/>
+              <preferredSize width="1060" height="800"/>
             </properties>
             <border type="none"/>
             <children>
@@ -208,60 +208,69 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="7fec8" binding="ffbPanel" layout-manager="GridBagLayout">
+          <grid id="7fec8" binding="ffbPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <tabbedpane title="Force Feedback"/>
             </constraints>
             <properties>
-              <autoscrolls value="true"/>
-              <minimumSize width="1024" height="768"/>
-              <preferredSize width="1024" height="768"/>
+              <autoscrolls value="false"/>
+              <minimumSize width="1060" height="60"/>
+              <preferredSize width="1060" height="800"/>
             </properties>
             <border type="none"/>
             <children>
-              <hspacer id="82bd">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-              </hspacer>
-              <vspacer id="719c8">
-                <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-              </vspacer>
-              <component id="1066c" class="javax.swing.JButton" binding="sineFfbButton">
-                <constraints>
-                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
+              <scrollpane id="dd85e" binding="ffbScroll">
+                <constraints border-constraint="Center"/>
                 <properties>
-                  <actionCommand value="doSineFfb"/>
-                  <text value="Sine"/>
+                  <preferredSize width="1000" height="800"/>
                 </properties>
-              </component>
-              <component id="c53c7" class="javax.swing.JButton" binding="pullLeftFfbButton">
-                <constraints>
-                  <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <actionCommand value="doPullLeftFfb"/>
-                  <text value="Constant Pull Left"/>
-                </properties>
-              </component>
-              <component id="fd9df" class="javax.swing.JButton" binding="springFfbButton">
-                <constraints>
-                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <actionCommand value="doSpringFfb"/>
-                  <inheritsPopupMenu value="true"/>
-                  <text value="Spring"/>
-                </properties>
-              </component>
+                <border type="none"/>
+                <children>
+                  <grid id="ad3ac" binding="ffbSubPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="1000" height="800"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <grid id="c9b9b" binding="gainsPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                        <constraints border-constraint="West"/>
+                        <properties>
+                          <minimumSize width="570" height="700"/>
+                          <preferredSize width="575" height="800"/>
+                        </properties>
+                        <border type="etched" title="Effect Gains"/>
+                        <children/>
+                      </grid>
+                      <grid id="c8afc" binding="rightPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <preferredSize width="500" height="800"/>
+                        </properties>
+                        <border type="none"/>
+                        <children>
+                          <grid id="fcca5" binding="miscPanel" layout-manager="GridBagLayout">
+                            <constraints border-constraint="Center"/>
+                            <properties>
+                              <preferredSize width="200" height="250"/>
+                            </properties>
+                            <border type="etched" title="Misc"/>
+                            <children/>
+                          </grid>
+                          <grid id="b8603" binding="testPanel" layout-manager="GridBagLayout">
+                            <constraints border-constraint="South"/>
+                            <properties>
+                              <preferredSize width="200" height="400"/>
+                            </properties>
+                            <border type="etched" title="Test Effects"/>
+                            <children/>
+                          </grid>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+                </children>
+              </scrollpane>
             </children>
           </grid>
         </children>

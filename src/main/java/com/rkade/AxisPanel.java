@@ -200,7 +200,7 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
         }
         wasEnabled = axisData.isEnabled();
         if (axisData.isEnabled()) {
-            progress.setValue(axisData.getRawValue());//TODO: fix bar when axis is centered.
+            progress.setValue(axisData.getRawValue());
             progress.setMaximum(axisData.getMax());
             progress.setMinimum(axisData.getMin());
             valueText.setText(String.valueOf(axisData.getValue()));

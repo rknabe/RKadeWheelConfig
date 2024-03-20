@@ -23,7 +23,21 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
             "Axis 5 (rZ - Aux 2)",
             "Axis 6 (Slider - Aux 3)",
             "Axis 7 (Dial - Aux 4)");
+    private final static List<String> gainLabels = List.of(
+            "All",
+            "Constant",
+            "Ramp",
+            "Square",
+            "Sine",
+            "Triangle",
+            "Sawtooth Up",
+            "Sawtooth Down",
+            "Spring",
+            "Damper",
+            "Inertia",
+            "Friction");
     private final List<AxisPanel> axisPanels;
+    private final List<GainPanel> gainPanels;
     private final List<JComponent> controls;
     private JPanel mainPanel;
     private JTabbedPane mainTab;
@@ -55,13 +69,16 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
     private AxisPanel axis7Panel;
     private JScrollPane axisScroll;
     private JPanel inputsPanel;
-    private JButton sineFfbButton;
-    private JButton pullLeftFfbButton;
-    private JButton springFfbButton;
     private JButton defaultsButton;
     private JButton loadButton;
     private JButton saveButton;
     private JButton autoCenterButton;
+    private JScrollPane ffbScroll;
+    private JPanel ffbSubPanel;
+    private JPanel gainsPanel;
+    private JPanel rightPanel;
+    private JPanel miscPanel;
+    private JPanel testPanel;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
@@ -84,7 +101,10 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         rangeComboBox.addItem("1080");
 
         axisPanels = List.of(axis1Panel, axis2Panel, axis3Panel, axis4Panel, axis5Panel, axis6Panel, axis7Panel);
+        gainPanels = List.of(new GainPanel(), new GainPanel(), new GainPanel(), new GainPanel(), new GainPanel(), new GainPanel(),
+                new GainPanel(), new GainPanel(), new GainPanel(), new GainPanel(), new GainPanel(), new GainPanel());
         setupAxisPanels();
+        setupGainPanels();
 
         controls = List.of(deviceComboBox, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton, loadButton);
         setupControlListener();
@@ -97,6 +117,17 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
             if (panel != null) {
                 panel.setAxisLabel(axisLabels.get(i));
                 panel.setAxisIndex(i);
+            }
+        }
+    }
+
+    private void setupGainPanels() {
+        for (short i = 0; i < gainPanels.size(); i++) {
+            GainPanel panel = gainPanels.get(i);
+            if (panel != null) {
+                gainsPanel.add(panel.$$$getRootComponent$$$());
+                panel.setGainLabel(gainLabels.get(i));
+                panel.setGainIndex(i);
             }
         }
     }
@@ -124,12 +155,6 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
                 status = device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
             } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
                 status = doWheelAutoCenter();
-            } else if (e.getActionCommand().equals(sineFfbButton.getActionCommand())) {
-                status = device.doFfbSine();
-            } else if (e.getActionCommand().equals(pullLeftFfbButton.getActionCommand())) {
-                status = device.doFfbPullLeft();
-            } else if (e.getActionCommand().equals(springFfbButton.getActionCommand())) {
-                status = device.doFfbSpring();
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
                 status = device.saveSettings();
             } else {
@@ -200,6 +225,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
                 switch (report) {
                     case WheelDataReport wheelData -> updateWheelPanel(wheelData);
                     case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
+                    case GainsDataReport gainsData -> updateGains(gainsData);
                     case VersionDataReport versionData ->
                             versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
                     default -> {
@@ -226,6 +252,15 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         wheelValueTextField.setText(String.valueOf(wheelData.getValue()));
         velocityText.setText(String.valueOf(wheelData.getVelocity()));
         accText.setText(String.valueOf(wheelData.getAcceleration()));
+    }
+
+    private void updateGains(GainsDataReport gainsReport) {
+        for (int i = 0; i < gainPanels.size(); i++) {
+            GainPanel gainPanel = gainPanels.get(i);
+            int value = gainsReport.getValues().get(i);
+            gainPanel.setGainAmount(value);
+
+        }
     }
 
     private void updateAxisPanel(AxisPanel axisPanel, Device device, String status, DataReport report) {
@@ -302,11 +337,11 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setMinimumSize(new Dimension(1060, 400));
-        mainPanel.setPreferredSize(new Dimension(1060, 700));
+        mainPanel.setPreferredSize(new Dimension(1060, 800));
         mainTab = new JTabbedPane();
         mainTab.setMinimumSize(new Dimension(1060, 400));
         mainTab.setName("Inputs");
-        mainTab.setPreferredSize(new Dimension(1060, 700));
+        mainTab.setPreferredSize(new Dimension(1060, 800));
         mainTab.setTabLayoutPolicy(0);
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
@@ -319,7 +354,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         inputsPanel = new JPanel();
         inputsPanel.setLayout(new BorderLayout(0, 0));
         inputsPanel.setMinimumSize(new Dimension(1060, 60));
-        inputsPanel.setPreferredSize(new Dimension(1060, 700));
+        inputsPanel.setPreferredSize(new Dimension(1060, 800));
         mainTab.addTab("Inputs", inputsPanel);
         axisScroll = new JScrollPane();
         axisScroll.setAutoscrolls(true);
@@ -426,48 +461,38 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         axis7Panel = new AxisPanel();
         axisPanel.add(axis7Panel.$$$getRootComponent$$$());
         ffbPanel = new JPanel();
-        ffbPanel.setLayout(new GridBagLayout());
-        ffbPanel.setAutoscrolls(true);
-        ffbPanel.setMinimumSize(new Dimension(1024, 768));
-        ffbPanel.setPreferredSize(new Dimension(1024, 768));
+        ffbPanel.setLayout(new BorderLayout(0, 0));
+        ffbPanel.setAutoscrolls(false);
+        ffbPanel.setMinimumSize(new Dimension(1060, 60));
+        ffbPanel.setPreferredSize(new Dimension(1060, 800));
         mainTab.addTab("Force Feedback", ffbPanel);
-        final JPanel spacer1 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        ffbPanel.add(spacer1, gbc);
-        final JPanel spacer2 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.VERTICAL;
-        ffbPanel.add(spacer2, gbc);
-        sineFfbButton = new JButton();
-        sineFfbButton.setActionCommand("doSineFfb");
-        sineFfbButton.setText("Sine");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        ffbPanel.add(sineFfbButton, gbc);
-        pullLeftFfbButton = new JButton();
-        pullLeftFfbButton.setActionCommand("doPullLeftFfb");
-        pullLeftFfbButton.setText("Constant Pull Left");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        ffbPanel.add(pullLeftFfbButton, gbc);
-        springFfbButton = new JButton();
-        springFfbButton.setActionCommand("doSpringFfb");
-        springFfbButton.setInheritsPopupMenu(true);
-        springFfbButton.setText("Spring");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        ffbPanel.add(springFfbButton, gbc);
+        ffbScroll = new JScrollPane();
+        ffbScroll.setPreferredSize(new Dimension(1000, 800));
+        ffbPanel.add(ffbScroll, BorderLayout.CENTER);
+        ffbSubPanel = new JPanel();
+        ffbSubPanel.setLayout(new BorderLayout(0, 0));
+        ffbSubPanel.setPreferredSize(new Dimension(1000, 800));
+        ffbScroll.setViewportView(ffbSubPanel);
+        gainsPanel = new JPanel();
+        gainsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        gainsPanel.setMinimumSize(new Dimension(570, 700));
+        gainsPanel.setPreferredSize(new Dimension(575, 800));
+        ffbSubPanel.add(gainsPanel, BorderLayout.WEST);
+        gainsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Effect Gains", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        rightPanel = new JPanel();
+        rightPanel.setLayout(new BorderLayout(0, 0));
+        rightPanel.setPreferredSize(new Dimension(500, 800));
+        ffbSubPanel.add(rightPanel, BorderLayout.CENTER);
+        miscPanel = new JPanel();
+        miscPanel.setLayout(new GridBagLayout());
+        miscPanel.setPreferredSize(new Dimension(200, 250));
+        rightPanel.add(miscPanel, BorderLayout.CENTER);
+        miscPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Misc", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        testPanel = new JPanel();
+        testPanel.setLayout(new GridBagLayout());
+        testPanel.setPreferredSize(new Dimension(200, 400));
+        rightPanel.add(testPanel, BorderLayout.SOUTH);
+        testPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Test Effects", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         bottomPanel.setAutoscrolls(false);
