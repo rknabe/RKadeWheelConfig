@@ -23,13 +23,16 @@
         <properties>
           <focusLostBehavior value="1"/>
           <horizontalAlignment value="2"/>
-          <preferredSize width="65" height="30"/>
+          <minimumSize width="57" height="30"/>
+          <preferredSize width="57" height="30"/>
         </properties>
       </component>
       <component id="3b1c9" class="javax.swing.JLabel" binding="gainPercent">
         <constraints/>
         <properties>
           <enabled value="true"/>
+          <minimumSize width="37" height="17"/>
+          <preferredSize width="37" height="17"/>
           <text value="100%"/>
         </properties>
       </component>
@@ -38,7 +41,7 @@
         <properties>
           <majorTickSpacing value="128"/>
           <maximum value="2048"/>
-          <minimumSize width="220" height="31"/>
+          <minimumSize width="350" height="31"/>
           <minorTickSpacing value="32"/>
           <name value=""/>
           <paintLabels value="false"/>

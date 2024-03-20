@@ -76,6 +76,10 @@ public class Device {
         return sendCommand(CMD_SET_ODTRIM, axisIndex, enabledFlag, trimIndex);
     }
 
+    public boolean setGainValue(short gainIndex, short gainValue) {
+        return sendCommand(CMD_SET_GAIN, gainIndex, gainValue);
+    }
+
     public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {
