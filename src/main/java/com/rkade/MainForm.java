@@ -135,9 +135,10 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         setupAxisPanels();
         setupGainPanels();
 
-        controls = List.of(deviceComboBox, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton, loadButton,
-                sineButton, springButton, frictionButton, rampButton, sawtoothUpButton, sawtoothDownButton, inertiaButton,
-                damperButton, triangleButton);
+        controls = List.of(deviceComboBox, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton,
+                loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton,
+                rampButton, sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton,
+                constantSpringCheckBox);
 
         IntegerFormatterFactory zeroToMaxShortFormatterFactory = new IntegerFormatterFactory(0, Short.MAX_VALUE - 1);
         maxVelocityDamperText.setFormatterFactory(zeroToMaxShortFormatterFactory);
@@ -206,6 +207,10 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
                 status = device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
             } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
                 status = doWheelAutoCenter();
+            } else if (e.getActionCommand().equals(constantLeftButton.getActionCommand())) {
+                status = device.doFfbConstantLeft();
+            } else if (e.getActionCommand().equals(constantRightButton.getActionCommand())) {
+                status = device.doFfbConstantRight();
             } else if (e.getActionCommand().equals(sineButton.getActionCommand())) {
                 status = device.doFfbSine();
             } else if (e.getActionCommand().equals(springButton.getActionCommand())) {
@@ -224,6 +229,8 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
                 status = device.doFfbDamper();
             } else if (e.getActionCommand().equals(triangleButton.getActionCommand())) {
                 status = device.doFfbTriangle();
+            } else if (e.getActionCommand().equals(constantSpringCheckBox.getActionCommand())) {
+                status = device.doSetConstantSpring(constantSpringCheckBox.isSelected());
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
                 status = device.saveSettings();
             } else {
@@ -267,6 +274,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
     public void deviceAttached(Device device) {
         this.device = device;
         deviceComboBox.addItem(device.getName());
+        device.doSetConstantSpring(false);
         setPanelEnabled(true);
         for (AxisPanel axisPanel : axisPanels) {
             axisPanel.deviceAttached(device);
@@ -299,7 +307,8 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
             if (report.getReportType() == DataReport.DATA_REPORT_ID) {
                 switch (report) {
                     case WheelDataReport wheelData -> updateWheelPanel(wheelData);
-                    case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
+                    case AxisDataReport axisData ->
+                            updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
                     case GainsDataReport gainsData -> updateGainPanels(device, status, gainsData);
                     case VersionDataReport versionData ->
                             versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());

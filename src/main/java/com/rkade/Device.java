@@ -27,11 +27,10 @@ public class Device {
     private SerialPort port;
     private int sineEffectId = -1;
     private int springEffectId = -1;
-    private int pullLeftEffectId = -1;
-    private int pullRightEffectId = -1;
     private int rampEffectId = -1;
     private int frictionEffectId = -1;
-    private int constantEffectId = -1;
+    private int constantEffectLeftId = -1;
+    private int constantEffectRightId = -1;
     private int sawtoothUpEffectId = -1;
     private int sawtoothDownEffectId = -1;
     private int inertiaEffectId = -1;
@@ -100,6 +99,13 @@ public class Device {
 
     public boolean doAutoCenter() {
         return writeTextToPort(CMD_AUTOCENTER_TEXT);
+    }
+
+    public boolean doSetConstantSpring(boolean state) {
+        if (state) {
+            return writeTextToPort(CMD_SPRING_ON_TEXT);
+        }
+        return writeTextToPort(CMD_SPRING_OFF_TEXT);
     }
 
     public void setPort(SerialPort port) {
@@ -227,40 +233,6 @@ public class Device {
         return SDL_HapticRunEffect(ffbDevice, springEffectId, 1) == 0;
     }
 
-    public synchronized boolean doFfbPullLeft() {
-        SDL_Haptic ffbDevice = getHapticJoystick();
-        if (pullLeftEffectId < 0) {
-            SDL_HapticEffect effect = createEffect(SDL_HAPTIC_CONSTANT);
-            pullLeftEffectId = SDL_HapticNewEffect(ffbDevice, effect);
-            effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
-            effect.constant.direction.dir[0] = 1;
-            effect.constant.length = 500;
-            effect.constant.delay = 0;
-            effect.constant.level = 8000;
-            SDL_HapticUpdateEffect(ffbDevice, pullLeftEffectId, effect);
-            //seems at least 2 milliseconds sleep needed after update
-            sleep(WAIT_AFTER_EFFECT_UPDATE);
-        }
-        return SDL_HapticRunEffect(ffbDevice, pullLeftEffectId, 1) == 0;
-    }
-
-    public synchronized boolean doFfbPullRight() {
-        SDL_Haptic ffbDevice = getHapticJoystick();
-        if (pullRightEffectId < 0) {
-            SDL_HapticEffect effect = createEffect(SDL_HAPTIC_CONSTANT);
-            pullRightEffectId = SDL_HapticNewEffect(ffbDevice, effect);
-            effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
-            effect.constant.length = 500;
-            effect.constant.delay = 0;
-            effect.constant.direction.dir[0] = -1;
-            effect.constant.level = -8000;
-            SDL_HapticUpdateEffect(ffbDevice, pullRightEffectId, effect);
-            //seems at least 2 milliseconds sleep needed after update
-            sleep(WAIT_AFTER_EFFECT_UPDATE);
-        }
-        return SDL_HapticRunEffect(ffbDevice, pullRightEffectId, 1) == 0;
-    }
-
     public synchronized boolean doFfbRamp() {
         SDL_Haptic ffbDevice = getHapticJoystick();
         if (rampEffectId < 0) {
@@ -279,22 +251,40 @@ public class Device {
         return SDL_HapticRunEffect(ffbDevice, rampEffectId, 1) == 0;
     }
 
-    public synchronized boolean doFfbConstant() {
+    public synchronized boolean doFfbConstantLeft() {
         SDL_Haptic ffbDevice = getHapticJoystick();
-        if (constantEffectId < 0) {
+        if (constantEffectLeftId < 0) {
             SDL_HapticEffect effect = createEffect(SDL_HAPTIC_CONSTANT);
-            constantEffectId = SDL_HapticNewEffect(ffbDevice, effect);
+            constantEffectLeftId = SDL_HapticNewEffect(ffbDevice, effect);
             effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
             effect.constant.direction.dir[0] = 1;
             effect.constant.length = 500;
             effect.constant.delay = 0;
             effect.constant.level = 8000;
-            SDL_HapticUpdateEffect(ffbDevice, constantEffectId, effect);
+            SDL_HapticUpdateEffect(ffbDevice, constantEffectLeftId, effect);
             //seems at least 2 milliseconds sleep needed after update
             sleep(WAIT_AFTER_EFFECT_UPDATE);
         }
-        return SDL_HapticRunEffect(ffbDevice, constantEffectId, 1) == 0;
+        return SDL_HapticRunEffect(ffbDevice, constantEffectLeftId, 1) == 0;
     }
+
+    public synchronized boolean doFfbConstantRight() {
+        SDL_Haptic ffbDevice = getHapticJoystick();
+        if (constantEffectRightId < 0) {
+            SDL_HapticEffect effect = createEffect(SDL_HAPTIC_CONSTANT);
+            constantEffectRightId = SDL_HapticNewEffect(ffbDevice, effect);
+            effect.constant.direction.type = SDL_HAPTIC_CARTESIAN;
+            effect.constant.direction.dir[0] = -1;
+            effect.constant.length = 500;
+            effect.constant.delay = 0;
+            effect.constant.level = -8000;
+            SDL_HapticUpdateEffect(ffbDevice, constantEffectRightId, effect);
+            //seems at least 2 milliseconds sleep needed after update
+            sleep(WAIT_AFTER_EFFECT_UPDATE);
+        }
+        return SDL_HapticRunEffect(ffbDevice, constantEffectRightId, 1) == 0;
+    }
+
 
     public synchronized boolean doFfbFriction() {
         SDL_Haptic ffbDevice = getHapticJoystick();

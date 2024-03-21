@@ -115,7 +115,7 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (e.getSource() == gainSlider) {
+        if (device != null && e.getSource() == gainSlider) {
             if (!gainSlider.getValueIsAdjusting()) {
                 device.setGainValue(gainIndex, (short) gainSlider.getValue());
             } else {
