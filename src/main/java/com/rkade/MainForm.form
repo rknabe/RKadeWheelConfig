@@ -236,34 +236,408 @@
                       <grid id="c9b9b" binding="gainsPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                         <constraints border-constraint="West"/>
                         <properties>
-                          <minimumSize width="570" height="700"/>
-                          <preferredSize width="575" height="800"/>
+                          <minimumSize width="570" height="650"/>
+                          <preferredSize width="575" height="650"/>
                         </properties>
                         <border type="etched" title="Effect Gains"/>
                         <children/>
                       </grid>
-                      <grid id="c8afc" binding="rightPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                      <grid id="c8afc" binding="rightPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                         <constraints border-constraint="Center"/>
                         <properties>
-                          <preferredSize width="500" height="800"/>
+                          <minimumSize width="520" height="310"/>
+                          <preferredSize width="520" height="400"/>
                         </properties>
                         <border type="none"/>
                         <children>
                           <grid id="fcca5" binding="miscPanel" layout-manager="GridBagLayout">
-                            <constraints border-constraint="Center"/>
+                            <constraints/>
                             <properties>
-                              <preferredSize width="200" height="250"/>
+                              <maximumSize width="100" height="400"/>
+                              <minimumSize width="475" height="160"/>
+                              <preferredSize width="475" height="275"/>
                             </properties>
                             <border type="etched" title="Misc"/>
-                            <children/>
+                            <children>
+                              <component id="6d6fa" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <horizontalAlignment value="4"/>
+                                  <minimumSize width="100" height="17"/>
+                                  <preferredSize width="100" height="17"/>
+                                  <text value="Min Force"/>
+                                </properties>
+                              </component>
+                              <component id="65eb0" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <horizontalAlignment value="4"/>
+                                  <minimumSize width="100" height="17"/>
+                                  <preferredSize width="100" height="17"/>
+                                  <text value="Max Force"/>
+                                </properties>
+                              </component>
+                              <component id="33d5c" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <horizontalAlignment value="4"/>
+                                  <minimumSize width="100" height="17"/>
+                                  <preferredSize width="100" height="17"/>
+                                  <text value="Cut Force"/>
+                                </properties>
+                              </component>
+                              <component id="970fc" class="javax.swing.JFormattedTextField" binding="minForceText">
+                                <constraints>
+                                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <minimumSize width="75" height="30"/>
+                                  <preferredSize width="75" height="30"/>
+                                </properties>
+                              </component>
+                              <component id="28ee0" class="javax.swing.JFormattedTextField" binding="maxForceText">
+                                <constraints>
+                                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <minimumSize width="75" height="30"/>
+                                  <preferredSize width="75" height="30"/>
+                                </properties>
+                              </component>
+                              <component id="915ea" class="javax.swing.JFormattedTextField" binding="cutForceText">
+                                <constraints>
+                                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <minimumSize width="75" height="30"/>
+                                  <preferredSize width="75" height="30"/>
+                                </properties>
+                              </component>
+                              <component id="7fc76" class="javax.swing.JLabel" binding="minForceLabel">
+                                <constraints>
+                                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <text value="0%"/>
+                                </properties>
+                              </component>
+                              <component id="8931f" class="javax.swing.JLabel" binding="maxForceLabel">
+                                <constraints>
+                                  <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <text value="100%"/>
+                                </properties>
+                              </component>
+                              <component id="c954e" class="javax.swing.JLabel" binding="cutForceLabel">
+                                <constraints>
+                                  <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <text value="100%"/>
+                                </properties>
+                              </component>
+                              <component id="9e411" class="javax.swing.JSlider" binding="minForceSlider">
+                                <constraints>
+                                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <majorTickSpacing value="1024"/>
+                                  <maximum value="16383"/>
+                                  <minimumSize width="140" height="24"/>
+                                  <minorTickSpacing value="0"/>
+                                  <paintTicks value="true"/>
+                                  <paintTrack value="true"/>
+                                  <preferredSize width="140" height="24"/>
+                                </properties>
+                              </component>
+                              <component id="fa483" class="javax.swing.JSlider" binding="maxForceSlider">
+                                <constraints>
+                                  <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <majorTickSpacing value="1024"/>
+                                  <maximum value="16383"/>
+                                  <minimumSize width="140" height="24"/>
+                                  <minorTickSpacing value="0"/>
+                                  <paintTicks value="true"/>
+                                  <paintTrack value="true"/>
+                                  <preferredSize width="140" height="24"/>
+                                </properties>
+                              </component>
+                              <component id="1542d" class="javax.swing.JSlider" binding="cutForceSlider">
+                                <constraints>
+                                  <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <majorTickSpacing value="1024"/>
+                                  <maximum value="16383"/>
+                                  <minimumSize width="140" height="24"/>
+                                  <minorTickSpacing value="0"/>
+                                  <paintTicks value="true"/>
+                                  <paintTrack value="true"/>
+                                  <preferredSize width="140" height="24"/>
+                                </properties>
+                              </component>
+                              <component id="9b5e3" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <text value="PWM bitdepth/frequency"/>
+                                </properties>
+                              </component>
+                              <component id="2cc53" class="javax.swing.JComboBox" binding="frequencyCombo">
+                                <constraints>
+                                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <preferredSize width="100" height="30"/>
+                                </properties>
+                              </component>
+                              <component id="28571" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <horizontalAlignment value="4"/>
+                                  <minimumSize width="170" height="17"/>
+                                  <preferredSize width="170" height="17"/>
+                                  <text value="Max Velocity for Damper"/>
+                                </properties>
+                              </component>
+                              <component id="f2177" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <horizontalAlignment value="4"/>
+                                  <minimumSize width="170" height="17"/>
+                                  <preferredSize width="170" height="17"/>
+                                  <text value="Max Velocity for Friction"/>
+                                </properties>
+                              </component>
+                              <component id="fdf63" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <horizontalAlignment value="4"/>
+                                  <minimumSize width="170" height="17"/>
+                                  <preferredSize width="170" height="17"/>
+                                  <text value="Max Velocity for Inertia"/>
+                                </properties>
+                              </component>
+                              <component id="25262" class="javax.swing.JFormattedTextField" binding="maxVelocityFrictionText">
+                                <constraints>
+                                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <minimumSize width="75" height="30"/>
+                                  <preferredSize width="75" height="30"/>
+                                </properties>
+                              </component>
+                              <component id="4a088" class="javax.swing.JFormattedTextField" binding="maxVelocityInertiaText">
+                                <constraints>
+                                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <minimumSize width="75" height="30"/>
+                                  <preferredSize width="75" height="30"/>
+                                </properties>
+                              </component>
+                              <component id="b4c0" class="javax.swing.JFormattedTextField" binding="maxVelocityDamperText">
+                                <constraints>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <minimumSize width="75" height="30"/>
+                                  <preferredSize width="75" height="30"/>
+                                </properties>
+                              </component>
+                              <component id="4efbe" class="javax.swing.JCheckBox" binding="constantSpringCheckBox">
+                                <constraints>
+                                  <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <horizontalAlignment value="0"/>
+                                  <label value="Constant Spring"/>
+                                  <text value="Constant Spring"/>
+                                </properties>
+                              </component>
+                            </children>
                           </grid>
                           <grid id="b8603" binding="testPanel" layout-manager="GridBagLayout">
-                            <constraints border-constraint="South"/>
+                            <constraints/>
                             <properties>
-                              <preferredSize width="200" height="400"/>
+                              <maximumSize width="400" height="400"/>
+                              <minimumSize width="475" height="220"/>
+                              <preferredSize width="475" height="220"/>
                             </properties>
                             <border type="etched" title="Test Effects"/>
-                            <children/>
+                            <children>
+                              <component id="781e4" class="javax.swing.JButton" binding="constantLeftButton">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Constant Pull Left"/>
+                                  <verticalAlignment value="0"/>
+                                </properties>
+                              </component>
+                              <component id="2cf0a" class="javax.swing.JButton" binding="sineButton">
+                                <constraints>
+                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Sine"/>
+                                </properties>
+                              </component>
+                              <component id="4de4d" class="javax.swing.JButton" binding="springButton">
+                                <constraints>
+                                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Spring"/>
+                                </properties>
+                              </component>
+                              <component id="34c0a" class="javax.swing.JButton" binding="frictionButton">
+                                <constraints>
+                                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Friction"/>
+                                </properties>
+                              </component>
+                              <component id="573e3" class="javax.swing.JButton" binding="rampButton">
+                                <constraints>
+                                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Ramp"/>
+                                </properties>
+                              </component>
+                              <component id="6a336" class="javax.swing.JButton" binding="sawtoothUpButton">
+                                <constraints>
+                                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Sawtooth Up"/>
+                                </properties>
+                              </component>
+                              <component id="abcb2" class="javax.swing.JButton" binding="sawtoothDownButton">
+                                <constraints>
+                                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Sawtooth Down"/>
+                                </properties>
+                              </component>
+                              <component id="83ff7" class="javax.swing.JButton" binding="inertiaButton">
+                                <constraints>
+                                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Inertia"/>
+                                </properties>
+                              </component>
+                              <component id="8f72e" class="javax.swing.JButton" binding="damperButton">
+                                <constraints>
+                                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Damper"/>
+                                </properties>
+                              </component>
+                              <component id="8fa5c" class="javax.swing.JButton" binding="triangleButton">
+                                <constraints>
+                                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Triangle"/>
+                                </properties>
+                              </component>
+                              <component id="b82ef" class="javax.swing.JButton" binding="constantRightButton">
+                                <constraints>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Constant Pull Right"/>
+                                  <verticalAlignment value="0"/>
+                                </properties>
+                              </component>
+                            </children>
                           </grid>
                         </children>
                       </grid>

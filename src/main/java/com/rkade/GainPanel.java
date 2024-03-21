@@ -3,15 +3,11 @@ package com.rkade;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,35 +23,9 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
     private Device device = null;
 
     public GainPanel() {
-        NumberFormat format = NumberFormat.getIntegerInstance();
-        NumberFormatter formatter = new NumberFormatter() {
-            public Object stringToValue(String text) throws ParseException {
-                if (text == null) {
-                    return null;
-                } else if (text.isEmpty()) {
-                    return null;
-                }
-                return super.stringToValue(text);
-            }
-        };
-        formatter.setFormat(format);
-        formatter.setValueClass(Integer.class);
-        formatter.setMinimum(0);
-        formatter.setMaximum(2048);
-        format.setGroupingUsed(false); //no commas
-        formatter.setAllowsInvalid(false);
-
-        DefaultFormatterFactory formatterFactory = new DefaultFormatterFactory() {
-            @Override
-            public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
-                return formatter;
-            }
-        };
-        gainText.setFormatterFactory(formatterFactory);
-
         controls = List.of(gainText, gainSlider);
-
         setPanelEnabled(false);
+        gainText.setFormatterFactory(new IntegerFormatterFactory(0, 2048));
         setupControlListener();
     }
 

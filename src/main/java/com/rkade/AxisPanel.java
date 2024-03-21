@@ -2,14 +2,11 @@ package com.rkade;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -43,20 +40,7 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
     private boolean wasEnabled = false;
 
     public AxisPanel() {
-        NumberFormat format = NumberFormat.getInstance();
-        NumberFormatter formatter = new NumberFormatter(format);
-        formatter.setValueClass(Short.class);
-        formatter.setMinimum(Short.MIN_VALUE);
-        formatter.setMaximum(Short.MAX_VALUE);
-        format.setGroupingUsed(false); //no commas
-        formatter.setAllowsInvalid(false);
-
-        DefaultFormatterFactory formatterFactory = new DefaultFormatterFactory() {
-            @Override
-            public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
-                return formatter;
-            }
-        };
+        IntegerFormatterFactory formatterFactory = new IntegerFormatterFactory(Short.MIN_VALUE, Short.MAX_VALUE);
         minText.setFormatterFactory(formatterFactory);
         maxText.setFormatterFactory(formatterFactory);
         centerText.setFormatterFactory(formatterFactory);
