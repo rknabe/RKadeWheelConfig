@@ -6,6 +6,7 @@ import io.github.libsdl4j.api.haptic.SDL_HapticEffect;
 import io.github.libsdl4j.api.joystick.SDL_Joystick;
 import purejavahidapi.HidDevice;
 
+import javax.swing.*;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
@@ -78,6 +79,14 @@ public class Device {
 
     public synchronized boolean saveSettings() {
         return sendCommand(CMD_EESAVE);
+    }
+
+    public synchronized boolean loadDefaults() {
+        return sendCommand(CMD_DEFAULT);
+    }
+
+    public synchronized boolean loadFromEeprom() {
+        return sendCommand(CMD_EELOAD);
     }
 
     public synchronized boolean setWheelCenter() {
@@ -162,6 +171,33 @@ public class Device {
     }
 
     private boolean sendCommand(byte command, short arg1, short arg2, short arg3) {
+        final boolean[] status = {true};
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            public Void doInBackground() {
+                byte[] data = new byte[7];
+                data[0] = command;
+                data[1] = getFirstByte(arg1);
+                data[2] = getSecondByte(arg1);
+
+                data[3] = getFirstByte(arg2);
+                data[4] = getSecondByte(arg2);
+
+                data[5] = getFirstByte(arg3);
+                data[6] = getSecondByte(arg3);
+
+                int ret = hidDevice.setOutputReport(CMD_REPORT_ID, data, 7);
+                if (ret <= 0) {
+                    logger.severe("Device returned error on Save:" + ret);
+                    status[0] = false;
+                }
+                return null;
+            }
+        };
+        worker.execute();
+        return status[0];
+    }
+
+    private boolean sendCommanda(byte command, short arg1, short arg2, short arg3) {
         byte[] data = new byte[7];
         data[0] = command;
         data[1] = getFirstByte(arg1);

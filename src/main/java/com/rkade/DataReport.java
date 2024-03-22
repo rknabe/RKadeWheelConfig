@@ -25,4 +25,13 @@ public class DataReport {
     public byte getReportType() {
         return reportType;
     }
+
+    @Override
+    public String toString() {
+        return "DataReport{" +
+                "reportType=" + reportType +
+                ", reportIndex=" + reportIndex +
+                ", section=" + section +
+                '}';
+    }
 }

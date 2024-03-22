@@ -109,6 +109,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
+    private volatile boolean isWaitingOnDevice = false;
 
     public MainForm() {
         try {
@@ -242,10 +243,53 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
             } else if (e.getActionCommand().equals(constantSpringCheckBox.getActionCommand())) {
                 return device.doSetConstantSpring(constantSpringCheckBox.isSelected());
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
-                return device.saveSettings();
+                isWaitingOnDevice = true;
+                boolean status = device.saveSettings();
+                showWaitDialog();
+                return status;
+            } else if (e.getActionCommand().equals(defaultsButton.getActionCommand())) {
+                isWaitingOnDevice = true;
+                boolean status = device.loadDefaults();
+                showWaitDialog();
+                return status;
+            } else if (e.getActionCommand().equals(loadButton.getActionCommand())) {
+                isWaitingOnDevice = true;
+                boolean status = device.loadFromEeprom();
+                showWaitDialog();
+                return status;
             }
         }
         return true;
+    }
+
+    private void showWaitDialog() {
+        JLabel validator = new JLabel("<html><body>Please wait, this may take up to 1 minute.</body></html>");
+        JOptionPane pane = new JOptionPane(validator, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION,
+                null, new Object[]{}, null);
+        final JDialog dialog = pane.createDialog(mainPanel, "Loading Settings...");
+        dialog.setModal(true);
+        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            public Void doInBackground() {
+                setPanelEnabled(false);
+                int seconds = 0;
+                isWaitingOnDevice = true;
+                do {
+                    try {
+                        Thread.sleep(1000);
+                        validator.setText(String.format("<html><body>Please wait, this may take up to 1 minute.<br/>Elapsed Seconds: %d</body></html>", ++seconds));
+                    } catch (InterruptedException ignored) {
+                    }
+                } while (isWaitingOnDevice);
+                dialog.setVisible(false);
+                setPanelEnabled(true);
+                return null;
+            }
+        };
+        isWaitingOnDevice = true;
+        worker.execute();
+        dialog.setVisible(true);
+        isWaitingOnDevice = true;
     }
 
     private boolean handleFocusLost(FocusEvent e) {
@@ -320,13 +364,13 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
         JOptionPane pane = new JOptionPane(validator, JOptionPane.WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION);
         final JDialog dialog = pane.createDialog(autoCenterButton, "Please keep hands off wheel!");
         dialog.setModal(true);
-        SwingWorker<Void, Void> myWorker = new SwingWorker<>() {
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
             public Void doInBackground() {
                 status[0] = device.doAutoCenter();
                 return null;
             }
         };
-        myWorker.execute();
+        worker.execute();
         dialog.setVisible(true);
         if (status[0]) {
             return device.setWheelCenter();
@@ -379,6 +423,9 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
                     default -> {
                     }
                 }
+            }
+            if (isWaitingOnDevice) {
+                isWaitingOnDevice = false;
             }
         }
     }
