@@ -72,7 +72,7 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
     @Override
     public void deviceUpdated(Device device, String status, DataReport report) {
         if (report != null) {
-            if (report.getReportType() == DataReport.DATA_REPORT_ID) {
+            if (report.getReportType() == Device.DATA_REPORT_ID) {
                 if (report instanceof GainsDataReport gainsDataReport) {
                     updateControls(gainsDataReport);
                 }
@@ -81,7 +81,7 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
     }
 
     private void updateControls(GainsDataReport gainsDataReport) {
-        short amount = gainsDataReport.getValues().get(gainIndex);
+        short amount = gainsDataReport.getGainValue(gainIndex);
         if (!gainSlider.getValueIsAdjusting()) {
             gainSlider.setValue(amount);
             double percent = ((double) gainSlider.getValue() / (double) 1024) * 100;
@@ -94,10 +94,6 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        boolean status = handleGainEvent(e);
-        if (!status) {
-            logger.warning("Action failed for:" + e.getActionCommand());
-        }
     }
 
     @Override
@@ -107,10 +103,17 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
 
     @Override
     public void focusLost(FocusEvent e) {
-        boolean status = handleGainEvent(e);
+        boolean status = handleFocusLost(e);
         if (!status) {
             logger.warning("Focus lost, failed for:" + e.getSource());
         }
+    }
+
+    private boolean handleFocusLost(FocusEvent e) {
+        if (e.getSource() == gainText) {
+            return device.setGainValue(gainIndex, Short.parseShort(gainText.getText()));
+        }
+        return true;
     }
 
     @Override
@@ -124,13 +127,6 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
                 gainText.setValue(gainSlider.getValue());
             }
         }
-    }
-
-    private boolean handleGainEvent(AWTEvent e) {
-        if (e.getSource() == gainText) {
-            return device.setGainValue(gainIndex, Short.parseShort(gainText.getText()));
-        }
-        return true;
     }
 
     {

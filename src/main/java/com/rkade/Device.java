@@ -9,7 +9,6 @@ import purejavahidapi.HidDevice;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
-import static com.rkade.DataReport.*;
 import static io.github.libsdl4j.api.Sdl.SDL_Init;
 import static io.github.libsdl4j.api.SdlSubSystemConst.*;
 import static io.github.libsdl4j.api.haptic.SDL_HapticDirectionEncoding.SDL_HAPTIC_CARTESIAN;
@@ -18,6 +17,40 @@ import static io.github.libsdl4j.api.haptic.SdlHaptic.*;
 import static io.github.libsdl4j.api.joystick.SdlJoystick.*;
 
 public class Device {
+    public static final byte CMD_REPORT_ID = 15;
+    public static final byte DATA_REPORT_ID = 16;
+    public static final byte DATA_REPORT_VALUE_COUNT = 31;
+    public static final byte CMD_GET_VER = 1;
+    public static final byte CMD_GET_STEER = 2;
+    public static final byte CMD_GET_ANALOG = 3;
+    public static final byte CMD_GET_BUTTONS = 4;
+    public static final byte CMD_GET_GAINS = 5;
+    public static final byte CMD_GET_MISC = 6;
+    public static final byte CMD_SET_RANGE = 10;
+    public static final byte CMD_SET_AALIMITS = 11;
+    public static final byte CMD_SET_AACENTER = 12;
+    public static final byte CMD_SET_AADZ = 13;
+    public static final byte CMD_SET_AAAUTOLIM = 14;
+    public static final byte CMD_SET_CENTERBTN = 15;
+    public static final byte CMD_SET_DEBOUNCE = 16;
+    public static final byte CMD_SET_GAIN = 17;
+    public static final byte CMD_SET_MISC = 18;
+    public static final byte MISC_MAXVD = 0;
+    public static final byte MISC_MAXVF = 1;
+    public static final byte MISC_MAXACC = 2;
+    public static final byte MISC_MINF = 3;
+    public static final byte MISC_MAXF = 4;
+    public static final byte MISC_CUTF = 5;
+    public static final byte MISC_FFBBD = 6;
+    public static final byte MISC_ENDSTOP = 7;
+    public static final byte CMD_SET_ODTRIM = 19;
+    public static final byte CMD_EELOAD = 20;
+    public static final byte CMD_EESAVE = 21;
+    public static final byte CMD_DEFAULT = 22;
+    public static final byte CMD_CENTER = 23;
+    public static final String CMD_AUTOCENTER_TEXT = "autocenter ";
+    public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
+    public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
     private static final Logger logger = Logger.getLogger(Device.class.getName());
     private static final int WAIT_AFTER_EFFECT_UPDATE = 5;
     private final String hidPath;
@@ -55,28 +88,32 @@ public class Device {
         return sendCommand(CMD_SET_RANGE, range);
     }
 
-    public boolean setAxisLimits(short axisIndex, Short minValue, short maxValue) {
+    public synchronized boolean setAxisLimits(short axisIndex, Short minValue, short maxValue) {
         return sendCommand(CMD_SET_AALIMITS, axisIndex, minValue, maxValue);
     }
 
-    public boolean setAxisCenter(short axisIndex, short center) {
+    public synchronized boolean setAxisCenter(short axisIndex, short center) {
         return sendCommand(CMD_SET_AACENTER, axisIndex, center);
     }
 
-    public boolean setAxisDeadZone(short axisIndex, short deadZone) {
+    public synchronized boolean setAxisDeadZone(short axisIndex, short deadZone) {
         return sendCommand(CMD_SET_AADZ, axisIndex, deadZone);
     }
 
-    public boolean setAxisAutoLimit(short axisIndex, short flag) {
+    public synchronized boolean setAxisAutoLimit(short axisIndex, short flag) {
         return sendCommand(CMD_SET_AAAUTOLIM, axisIndex, flag);
     }
 
-    public boolean setAxisEnabledAndTrim(short axisIndex, short enabledFlag, short trimIndex) {
+    public synchronized boolean setAxisEnabledAndTrim(short axisIndex, short enabledFlag, short trimIndex) {
         return sendCommand(CMD_SET_ODTRIM, axisIndex, enabledFlag, trimIndex);
     }
 
-    public boolean setGainValue(short gainIndex, short gainValue) {
+    public synchronized boolean setGainValue(short gainIndex, short gainValue) {
         return sendCommand(CMD_SET_GAIN, gainIndex, gainValue);
+    }
+
+    public synchronized boolean setMiscValue(short miscType, short value) {
+        return sendCommand(CMD_SET_MISC, miscType, value);
     }
 
     public synchronized boolean writeTextToPort(String text) {
@@ -97,11 +134,11 @@ public class Device {
         return false;
     }
 
-    public boolean doAutoCenter() {
+    public synchronized boolean doAutoCenter() {
         return writeTextToPort(CMD_AUTOCENTER_TEXT);
     }
 
-    public boolean doSetConstantSpring(boolean state) {
+    public synchronized boolean doSetConstantSpring(boolean state) {
         if (state) {
             return writeTextToPort(CMD_SPRING_ON_TEXT);
         }

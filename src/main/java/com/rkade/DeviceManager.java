@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static com.rkade.DataReport.DATA_REPORT_ID;
+import static com.rkade.Device.DATA_REPORT_ID;
 
 public final class DeviceManager implements InputReportListener, DeviceRemovalListener {
     private final static Logger logger = Logger.getLogger(DeviceManager.class.getName());
@@ -89,7 +89,7 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     private void getOutputReport(byte dataType, byte dataIndex, byte[] data) throws IOException {
         data[0] = dataType;
         data[1] = dataIndex;
-        int ret = openedDevice.setOutputReport(DataReport.CMD_REPORT_ID, data, OUTPUT_REPORT_DATA_LENGTH);
+        int ret = openedDevice.setOutputReport(Device.CMD_REPORT_ID, data, OUTPUT_REPORT_DATA_LENGTH);
         if (ret <= 0) {
             throw new IOException("Device returned error for dataType:" + dataType + " dataIndex:" + dataIndex);
         }
@@ -167,16 +167,16 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                     try {
                         if (!versionReported) {
                             //only need to do this once
-                            getOutputReport(DataReport.CMD_GET_VER, (byte) 0, data);
+                            getOutputReport(Device.CMD_GET_VER, (byte) 0, data);
                         }
-                        getOutputReport(DataReport.CMD_GET_STEER, (byte) 0, data);
+                        getOutputReport(Device.CMD_GET_STEER, (byte) 0, data);
                         for (byte i = 0; i < AXIS_COUNT; i++) {
-                            getOutputReport(DataReport.CMD_GET_ANALOG, i, data);
+                            getOutputReport(Device.CMD_GET_ANALOG, i, data);
                         }
-                        getOutputReport(DataReport.CMD_GET_STEER, (byte) 0, data);
-                        getOutputReport(DataReport.CMD_GET_BUTTONS, (byte) 0, data);
-                        getOutputReport(DataReport.CMD_GET_GAINS, (byte) 0, data);
-                        getOutputReport(DataReport.CMD_GET_MISC, (byte) 0, data);
+                        getOutputReport(Device.CMD_GET_STEER, (byte) 0, data);
+                        getOutputReport(Device.CMD_GET_BUTTONS, (byte) 0, data);
+                        getOutputReport(Device.CMD_GET_GAINS, (byte) 0, data);
+                        getOutputReport(Device.CMD_GET_MISC, (byte) 0, data);
                         failCount = 0;
                     } catch (IOException ex) {
                         ++failCount;

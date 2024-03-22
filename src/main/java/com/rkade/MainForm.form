@@ -412,6 +412,7 @@
                                   <gridbag weightx="0.0" weighty="0.0"/>
                                 </constraints>
                                 <properties>
+                                  <actionCommand value="changeFfbBd"/>
                                   <preferredSize width="100" height="30"/>
                                 </properties>
                               </component>
@@ -690,6 +691,7 @@
           <component id="21199" class="javax.swing.JButton" binding="defaultsButton">
             <constraints/>
             <properties>
+              <actionCommand value="resetDefaults"/>
               <minimumSize width="201" height="30"/>
               <preferredSize width="201" height="30"/>
               <text value="Reset Settings to Defaults"/>
@@ -698,6 +700,7 @@
           <component id="6479" class="javax.swing.JButton" binding="loadButton">
             <constraints/>
             <properties>
+              <actionCommand value="loadEEPROM"/>
               <text value="Load Settings From EEPROM"/>
             </properties>
           </component>

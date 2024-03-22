@@ -1,6 +1,6 @@
 package com.rkade;
 
-import java.util.List;
+import java.nio.ByteBuffer;
 
 public final class AxisDataReport extends DataReport {
     private final short rawValue;
@@ -15,36 +15,21 @@ public final class AxisDataReport extends DataReport {
     private final byte trim;
     private final int axis;
 
-    public AxisDataReport(byte reportType, byte reportIndex, short section, List<Short> data) {
-        super(reportType, reportIndex, section, data);
+    public AxisDataReport(byte reportType, byte reportIndex, short section, ByteBuffer buffer) {
+        super(reportType, reportIndex, section);
         axis = section + 1;
-        rawValue = values.get(0);
-        value = values.get(1);
-        min = values.get(2);
-        max = values.get(3);
-        center = values.get(4);
-        deadZone = values.get(5);
-        autoLimit = getBoolean(getFirstByte(values.get(6)));
-        hasCenter = getBoolean(getSecondByte(values.get(6)));
-        enabled = !getBoolean(getFirstByte(values.get(7)));
-        trim = getSecondByte(values.get(7));
-    }
+        rawValue = buffer.getShort();
+        value = buffer.getShort();
+        min = buffer.getShort();
+        max = buffer.getShort();
 
-    @Override
-    public String toString() {
-        return "AxisDataReport{" +
-                "axis=" + axis +
-                ", rawValue=" + rawValue +
-                ", value=" + value +
-                ", min=" + min +
-                ", max=" + max +
-                ", center=" + center +
-                ", deadZone=" + deadZone +
-                ", autoLimit=" + autoLimit +
-                ", hasCenter=" + hasCenter +
-                ", enabled=" + enabled +
-                ", trim=" + trim +
-                '}';
+        center = buffer.getShort();
+        deadZone = buffer.getShort();
+
+        autoLimit = (buffer.get() == 1);
+        hasCenter = (buffer.get() == 1);
+        enabled = !(buffer.get() == 1);
+        trim = buffer.get();
     }
 
     public int getAxis() {

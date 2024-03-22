@@ -2,6 +2,8 @@ package com.rkade;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-public class MainForm implements DeviceListener, ActionListener, FocusListener {
+public class MainForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
     private final static List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
@@ -138,17 +140,17 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         controls = List.of(deviceComboBox, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton,
                 loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton,
                 rampButton, sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton,
-                constantSpringCheckBox);
+                constantSpringCheckBox, maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText,
+                minForceText, maxForceText, cutForceText, minForceSlider, maxForceSlider, cutForceSlider, frequencyCombo);
 
-        IntegerFormatterFactory zeroToMaxShortFormatterFactory = new IntegerFormatterFactory(0, Short.MAX_VALUE - 1);
-        maxVelocityDamperText.setFormatterFactory(zeroToMaxShortFormatterFactory);
-        maxVelocityInertiaText.setFormatterFactory(zeroToMaxShortFormatterFactory);
-        maxVelocityFrictionText.setFormatterFactory(zeroToMaxShortFormatterFactory);
+        setupControlListener();
 
-        IntegerFormatterFactory forceFormatterFactory = new IntegerFormatterFactory(0, 16383);
-        minForceText.setFormatterFactory(forceFormatterFactory);
-        maxForceText.setFormatterFactory(forceFormatterFactory);
-        cutForceText.setFormatterFactory(forceFormatterFactory);
+        maxVelocityDamperText.setFormatterFactory(new IntegerFormatterFactory(0, Short.MAX_VALUE - 1));
+        maxVelocityInertiaText.setFormatterFactory(new IntegerFormatterFactory(0, Short.MAX_VALUE - 1));
+        maxVelocityFrictionText.setFormatterFactory(new IntegerFormatterFactory(0, Short.MAX_VALUE - 1));
+        minForceText.setFormatterFactory(new IntegerFormatterFactory(0, 16383));
+        maxForceText.setFormatterFactory(new IntegerFormatterFactory(0, 16383));
+        cutForceText.setFormatterFactory(new IntegerFormatterFactory(0, 16383));
         minForceSlider.setMinimum(0);
         minForceSlider.setMaximum(16383);
         maxForceSlider.setMinimum(0);
@@ -156,7 +158,6 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         cutForceSlider.setMinimum(0);
         cutForceSlider.setMaximum(16383);
 
-        setupControlListener();
         setPanelEnabled(false);
     }
 
@@ -188,9 +189,10 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         for (JComponent component : controls) {
             component.addFocusListener(this);
             switch (component) {
-                case AbstractButton abstractButton -> abstractButton.addActionListener(this);
-                case JTextField jTextField -> jTextField.addActionListener(this);
-                case JComboBox<?> jComboBox -> jComboBox.addActionListener(this);
+                case AbstractButton button -> button.addActionListener(this);
+                case JTextField textField -> textField.addActionListener(this);
+                case JSlider slider -> slider.addChangeListener(this);
+                case JComboBox<?> comboBox -> comboBox.addActionListener(this);
                 default -> {
                 }
             }
@@ -199,47 +201,70 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (device != null && !e.getActionCommand().isEmpty()) {
-            boolean status;
+        boolean status = handleAction(e);
+        if (!status) {
+            logger.warning("Action failed for:" + e.getActionCommand());
+        }
+    }
+
+    private boolean handleAction(ActionEvent e) {
+        if (device != null) {
             if (e.getActionCommand().equals(centerButton.getActionCommand())) {
-                status = device.setWheelCenter();
+                return device.setWheelCenter();
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
-                status = device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
+                return device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
+            } else if (e.getActionCommand().equals(frequencyCombo.getActionCommand())) {
+                return device.setMiscValue(Device.MISC_FFBBD, (short) (frequencyCombo.getSelectedIndex() + 8));
             } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
-                status = doWheelAutoCenter();
+                return doWheelAutoCenter();
             } else if (e.getActionCommand().equals(constantLeftButton.getActionCommand())) {
-                status = device.doFfbConstantLeft();
+                return device.doFfbConstantLeft();
             } else if (e.getActionCommand().equals(constantRightButton.getActionCommand())) {
-                status = device.doFfbConstantRight();
+                return device.doFfbConstantRight();
             } else if (e.getActionCommand().equals(sineButton.getActionCommand())) {
-                status = device.doFfbSine();
+                return device.doFfbSine();
             } else if (e.getActionCommand().equals(springButton.getActionCommand())) {
-                status = device.doFfbSpring();
+                return device.doFfbSpring();
             } else if (e.getActionCommand().equals(frictionButton.getActionCommand())) {
-                status = device.doFfbFriction();
+                return device.doFfbFriction();
             } else if (e.getActionCommand().equals(rampButton.getActionCommand())) {
-                status = device.doFfbRamp();
+                return device.doFfbRamp();
             } else if (e.getActionCommand().equals(sawtoothUpButton.getActionCommand())) {
-                status = device.doFfbSawtoothUp();
+                return device.doFfbSawtoothUp();
             } else if (e.getActionCommand().equals(sawtoothDownButton.getActionCommand())) {
-                status = device.doFfbSawtoothDown();
+                return device.doFfbSawtoothDown();
             } else if (e.getActionCommand().equals(inertiaButton.getActionCommand())) {
-                status = device.doFfbInertia();
+                return device.doFfbInertia();
             } else if (e.getActionCommand().equals(damperButton.getActionCommand())) {
-                status = device.doFfbDamper();
+                return device.doFfbDamper();
             } else if (e.getActionCommand().equals(triangleButton.getActionCommand())) {
-                status = device.doFfbTriangle();
+                return device.doFfbTriangle();
             } else if (e.getActionCommand().equals(constantSpringCheckBox.getActionCommand())) {
-                status = device.doSetConstantSpring(constantSpringCheckBox.isSelected());
+                return device.doSetConstantSpring(constantSpringCheckBox.isSelected());
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
-                status = device.saveSettings();
-            } else {
-                return;
-            }
-            if (!status) {
-                logger.warning("Action failed for:" + e.getActionCommand());
+                return device.saveSettings();
             }
         }
+        return true;
+    }
+
+    private boolean handleFocusLost(FocusEvent e) {
+        if (device != null) {
+            if (e.getSource() == maxVelocityDamperText) {
+                return device.setMiscValue(Device.MISC_MAXVD, Short.parseShort(maxVelocityDamperText.getText()));
+            } else if (e.getSource() == maxVelocityFrictionText) {
+                return device.setMiscValue(Device.MISC_MAXVF, Short.parseShort(maxVelocityFrictionText.getText()));
+            } else if (e.getSource() == maxVelocityInertiaText) {
+                return device.setMiscValue(Device.MISC_MAXACC, Short.parseShort(maxVelocityInertiaText.getText()));
+            } else if (e.getSource() == minForceText) {
+                return device.setMiscValue(Device.MISC_MINF, Short.parseShort(minForceText.getText()));
+            } else if (e.getSource() == maxForceText) {
+                return device.setMiscValue(Device.MISC_MAXF, Short.parseShort(maxForceText.getText()));
+            } else if (e.getSource() == cutForceText) {
+                return device.setMiscValue(Device.MISC_CUTF, Short.parseShort(cutForceText.getText()));
+            }
+        }
+        return true;
     }
 
     @Override
@@ -248,6 +273,45 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
 
     @Override
     public void focusLost(FocusEvent e) {
+        boolean status = handleFocusLost(e);
+        if (!status) {
+            logger.warning("Focus lost, failed for:" + e.getSource());
+        }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (device != null) {
+            boolean status = true;
+            if (e.getSource() == minForceSlider) {
+                if (!minForceSlider.getValueIsAdjusting()) {
+                    status = device.setMiscValue(Device.MISC_MINF, (short) minForceSlider.getValue());
+                } else {
+                    double percent = ((double) minForceSlider.getValue() / (double) minForceSlider.getMaximum()) * 100;
+                    minForceLabel.setText(String.format("%.1f%%", percent));
+                    minForceText.setValue(minForceSlider.getValue());
+                }
+            } else if (e.getSource() == maxForceSlider) {
+                if (!maxForceSlider.getValueIsAdjusting()) {
+                    status = device.setMiscValue(Device.MISC_MAXF, (short) maxForceSlider.getValue());
+                } else {
+                    double percent = ((double) maxForceSlider.getValue() / (double) maxForceSlider.getMaximum()) * 100;
+                    maxForceLabel.setText(String.format("%.1f%%", percent));
+                    maxForceText.setValue(maxForceSlider.getValue());
+                }
+            } else if (e.getSource() == cutForceSlider) {
+                if (!cutForceSlider.getValueIsAdjusting()) {
+                    status = device.setMiscValue(Device.MISC_CUTF, (short) cutForceSlider.getValue());
+                } else {
+                    double percent = ((double) cutForceSlider.getValue() / (double) cutForceSlider.getMaximum()) * 100;
+                    cutForceLabel.setText(String.format("%.1f%%", percent));
+                    cutForceText.setValue(cutForceSlider.getValue());
+                }
+            }
+            if (!status) {
+                logger.warning("State Changed, failed for:" + e.getSource());
+            }
+        }
     }
 
     private boolean doWheelAutoCenter() {
@@ -304,17 +368,69 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         }
 
         if (report != null) {
-            if (report.getReportType() == DataReport.DATA_REPORT_ID) {
+            if (report.getReportType() == Device.DATA_REPORT_ID) {
                 switch (report) {
                     case WheelDataReport wheelData -> updateWheelPanel(wheelData);
-                    case AxisDataReport axisData ->
-                            updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
+                    case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
                     case GainsDataReport gainsData -> updateGainPanels(device, status, gainsData);
+                    case MiscDataReport miscData -> updateMiscPanel(miscData);
                     case VersionDataReport versionData ->
                             versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
                     default -> {
                     }
                 }
+            }
+        }
+    }
+
+    private void updateMiscPanel(MiscDataReport miscData) {
+        if (!maxVelocityDamperText.isFocusOwner()) {
+            maxVelocityDamperText.setText(String.valueOf(miscData.getMaxVd()));
+        }
+        if (!maxVelocityFrictionText.isFocusOwner()) {
+            maxVelocityFrictionText.setText(String.valueOf(miscData.getMaxVf()));
+        }
+        if (!maxVelocityInertiaText.isFocusOwner()) {
+            maxVelocityInertiaText.setText(String.valueOf(miscData.getMaxAcc()));
+        }
+
+        if (!minForceSlider.getValueIsAdjusting()) {
+            minForceSlider.setValue(miscData.getMinForce());
+            double percent = ((double) minForceSlider.getValue() / (double) minForceSlider.getMaximum()) * 100;
+            minForceLabel.setText(String.format("%.1f%%", percent));
+        }
+        if (!minForceSlider.getValueIsAdjusting() && !minForceText.isFocusOwner()) {
+            minForceText.setValue(miscData.getMinForce());
+        }
+
+        if (!maxForceSlider.getValueIsAdjusting()) {
+            maxForceSlider.setValue(miscData.getMaxForce());
+            double percent = ((double) maxForceSlider.getValue() / (double) maxForceSlider.getMaximum()) * 100;
+            maxForceLabel.setText(String.format("%.1f%%", percent));
+        }
+        if (!maxForceSlider.getValueIsAdjusting() && !maxForceText.isFocusOwner()) {
+            maxForceText.setValue(miscData.getMaxForce());
+        }
+
+        if (!cutForceSlider.getValueIsAdjusting()) {
+            cutForceSlider.setValue(miscData.getCutForce());
+            double percent = ((double) cutForceSlider.getValue() / (double) cutForceSlider.getMaximum()) * 100;
+            cutForceLabel.setText(String.format("%.1f%%", percent));
+        }
+        if (!cutForceSlider.getValueIsAdjusting() && !cutForceText.isFocusOwner()) {
+            cutForceText.setValue(miscData.getCutForce());
+        }
+
+        if (!maxForceText.isFocusOwner()) {
+            maxForceText.setText(String.valueOf(miscData.getMaxForce()));
+        }
+        if (!cutForceText.isFocusOwner()) {
+            cutForceText.setText(String.valueOf(miscData.getCutForce()));
+        }
+        if (!frequencyCombo.isFocusOwner()) {
+            int index = miscData.getFfbBitDepth() - 8;
+            if (frequencyCombo.getSelectedIndex() != index) {
+                frequencyCombo.setSelectedIndex(index);
             }
         }
     }
@@ -694,6 +810,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         gbc.anchor = GridBagConstraints.EAST;
         miscPanel.add(label5, gbc);
         frequencyCombo = new JComboBox();
+        frequencyCombo.setActionCommand("changeFfbBd");
         frequencyCombo.setPreferredSize(new Dimension(100, 30));
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
@@ -895,11 +1012,13 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener {
         statusLabel.setText("Device Not Found...");
         bottomPanel.add(statusLabel);
         defaultsButton = new JButton();
+        defaultsButton.setActionCommand("resetDefaults");
         defaultsButton.setMinimumSize(new Dimension(201, 30));
         defaultsButton.setPreferredSize(new Dimension(201, 30));
         defaultsButton.setText("Reset Settings to Defaults");
         bottomPanel.add(defaultsButton);
         loadButton = new JButton();
+        loadButton.setActionCommand("loadEEPROM");
         loadButton.setText("Load Settings From EEPROM");
         bottomPanel.add(loadButton);
         saveButton = new JButton();

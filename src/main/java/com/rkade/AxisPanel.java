@@ -89,7 +89,7 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
     @Override
     public void deviceUpdated(Device device, String status, DataReport report) {
         if (report != null) {
-            if (report.getReportType() == DataReport.DATA_REPORT_ID) {
+            if (report.getReportType() == Device.DATA_REPORT_ID) {
                 if (report instanceof AxisDataReport axisData) {
                     updateControls(axisData);
                 }
@@ -99,7 +99,7 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        boolean status = handleAxisEvent(e);
+        boolean status = handleAction(e);
         if (!status) {
             logger.warning("Action failed for:" + e.getActionCommand());
         }
@@ -111,66 +111,76 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
 
     @Override
     public void focusLost(FocusEvent e) {
-        boolean status = handleAxisEvent(e);
+        boolean status = handleFocusLost(e);
         if (!status) {
             logger.warning("Focus lost, failed for:" + e.getSource());
         }
     }
 
-    private boolean handleAxisEvent(AWTEvent e) {
-        if (e.getSource() == minText || e.getSource() == maxText) {
-            short min = Short.parseShort(minText.getText());
-            short max = Short.parseShort(maxText.getText());
-            if (max > min) {
-                return device.setAxisLimits(axisIndex, min, max);
+    private boolean handleAction(ActionEvent e) {
+        if (device != null) {
+            if (e.getActionCommand().equals(setMinButton.getActionCommand())) {
+                short min = Short.parseShort(rawText.getText());
+                short max = Short.parseShort(maxText.getText());
+                if (max > min) {
+                    return device.setAxisLimits(axisIndex, min, max);
+                }
+            } else if (e.getActionCommand().equals(setMaxButton.getActionCommand())) {
+                short min = Short.parseShort(minText.getText());
+                short max = Short.parseShort(rawText.getText());
+                if (max > min) {
+                    return device.setAxisLimits(axisIndex, min, max);
+                }
+            } else if (e.getActionCommand().equals(setCenterButton.getActionCommand())) {
+                centerText.setText(rawText.getText());
+                return device.setAxisCenter(axisIndex, Short.parseShort(rawText.getText()));
+            } else if (e.getActionCommand().equals(hasCenterCheckBox.getActionCommand())) {
+                if (hasCenterCheckBox.isSelected()) {
+                    centerText.setEnabled(true);
+                    dzText.setEnabled(true);
+                    setCenterButton.setEnabled(true);
+                    return device.setAxisCenter(axisIndex, Short.parseShort(centerText.getText()));
+                } else {
+                    centerText.setEnabled(false);
+                    dzText.setEnabled(false);
+                    setCenterButton.setEnabled(false);
+                    return device.setAxisCenter(axisIndex, Short.MIN_VALUE);
+                }
+            } else if (e.getActionCommand().equals(autoLimitCheckBox.getActionCommand())) {
+                if (autoLimitCheckBox.isSelected()) {
+                    return device.setAxisAutoLimit(axisIndex, (short) 1);
+                } else {
+                    return device.setAxisAutoLimit(axisIndex, (short) 0);
+                }
+            } else if (e.getActionCommand().equals(enabledCheckBox.getActionCommand())
+                    || e.getActionCommand().equals(trimComboBox.getActionCommand())) {
+                short disabled = 1;
+                if (enabledCheckBox.isSelected()) {
+                    disabled = 0;
+                }
+                if (disabled == 1) {
+                    progress.setValue(0);
+                }
+                //these are inverted, since the original value is isDisabled
+                return device.setAxisEnabledAndTrim(axisIndex, disabled, (short) trimComboBox.getSelectedIndex()); //last param is trim index
             }
-        } else if (e.getSource() == centerText) {
-            return device.setAxisCenter(axisIndex, Short.parseShort(centerText.getText()));
-        } else if (e.getSource() == setMinButton) {
-            short min = Short.parseShort(rawText.getText());
-            short max = Short.parseShort(maxText.getText());
-            if (max > min) {
-                return device.setAxisLimits(axisIndex, min, max);
-            }
-        } else if (e.getSource() == setMaxButton) {
-            short min = Short.parseShort(minText.getText());
-            short max = Short.parseShort(rawText.getText());
-            if (max > min) {
-                return device.setAxisLimits(axisIndex, min, max);
-            }
-        } else if (e.getSource() == setCenterButton) {
-            centerText.setText(rawText.getText());
-            return device.setAxisCenter(axisIndex, Short.parseShort(rawText.getText()));
-        } else if (e.getSource() == dzText) {
-            return device.setAxisDeadZone(axisIndex, Short.parseShort(dzText.getText()));
-        } else if (e.getSource() == hasCenterCheckBox) {
-            if (hasCenterCheckBox.isSelected()) {
-                centerText.setEnabled(true);
-                dzText.setEnabled(true);
-                setCenterButton.setEnabled(true);
+        }
+        return true;
+    }
+
+    private boolean handleFocusLost(FocusEvent e) {
+        if (device != null) {
+            if (e.getSource() == minText || e.getSource() == maxText) {
+                short min = Short.parseShort(minText.getText());
+                short max = Short.parseShort(maxText.getText());
+                if (max > min) {
+                    return device.setAxisLimits(axisIndex, min, max);
+                }
+            } else if (e.getSource() == centerText) {
                 return device.setAxisCenter(axisIndex, Short.parseShort(centerText.getText()));
-            } else {
-                centerText.setEnabled(false);
-                dzText.setEnabled(false);
-                setCenterButton.setEnabled(false);
-                return device.setAxisCenter(axisIndex, Short.MIN_VALUE);
+            } else if (e.getSource() == dzText) {
+                return device.setAxisDeadZone(axisIndex, Short.parseShort(dzText.getText()));
             }
-        } else if (e.getSource() == autoLimitCheckBox) {
-            if (autoLimitCheckBox.isSelected()) {
-                return device.setAxisAutoLimit(axisIndex, (short) 1);
-            } else {
-                return device.setAxisAutoLimit(axisIndex, (short) 0);
-            }
-        } else if (e.getSource() == enabledCheckBox || e.getSource() == trimComboBox) {
-            short disabled = 1;
-            if (enabledCheckBox.isSelected()) {
-                disabled = 0;
-            }
-            if (disabled == 1) {
-                progress.setValue(0);
-            }
-            //these are inverted, since the original value is isDisabled
-            return device.setAxisEnabledAndTrim(axisIndex, disabled, (short) trimComboBox.getSelectedIndex()); //last param is trim index
         }
         return true;
     }
@@ -456,6 +466,7 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
         gbc.anchor = GridBagConstraints.EAST;
         mainPanel.add(hasCenterCheckBox, gbc);
         trimComboBox = new JComboBox();
+        trimComboBox.setActionCommand("trimChanged");
         trimComboBox.setMinimumSize(new Dimension(38, 30));
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("None");

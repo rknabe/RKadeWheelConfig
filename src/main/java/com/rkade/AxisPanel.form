@@ -273,6 +273,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
+          <actionCommand value="trimChanged"/>
           <minimumSize width="38" height="30"/>
           <model>
             <item value="None"/>
