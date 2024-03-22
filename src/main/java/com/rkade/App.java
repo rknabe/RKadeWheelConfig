@@ -24,11 +24,11 @@ public class App {
                 //com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProIJTheme.setup();
                 //com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme.setup();
                 com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme.setup();
-                JFrame frame = new JFrame("R-Kade Wheel Config");
+                JFrame frame = new JFrame("RKADE Wheel Config");
                 MainForm mainForm = new MainForm();
                 frame.setContentPane(mainForm.getRootComponent());
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                Image icon = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("wheel.png"));
+                Image icon = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("wheel32.png"));
                 frame.setIconImage(icon);
                 frame.pack();
                 frame.setLocationRelativeTo(null);

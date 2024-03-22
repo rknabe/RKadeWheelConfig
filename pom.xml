@@ -117,11 +117,9 @@
                             </jre>
                             <versionInfo>
                                 <fileVersion>1.0.0.0</fileVersion>
-                                <txtFileVersion>txt file version?</txtFileVersion>
-                                <fileDescription>a description</fileDescription>
-                                <copyright>my copyright</copyright>
+                                <fileDescription>FFB Wheel Device Config</fileDescription>
+                                <copyright>Copyright 2024 Rusty Knabe</copyright>
                                 <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>txt product version</txtProductVersion>
                                 <productName>FFbWheelConfig</productName>
                                 <internalName>FFbWheelConfig</internalName>
                                 <originalFilename>FFbWheelConfig.exe</originalFilename>
