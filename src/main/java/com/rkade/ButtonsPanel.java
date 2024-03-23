@@ -28,7 +28,7 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     private Device device = null;
 
     public ButtonsPanel() {
-        controls = List.of(debounceSpinner, button1, button2, button3, button4, button5, button6, button7, button8);
+        controls = List.of(debounceSpinner);
         switchButtons = List.of(button1, button2, button3, button4, button5, button6, button7, button8);
 
         setPanelEnabled(false);
@@ -124,21 +124,21 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         mainButtonPanel.add(topPanel, BorderLayout.CENTER);
         button1 = new JButton();
-        button1.setEnabled(true);
+        button1.setEnabled(false);
         button1.setMinimumSize(new Dimension(50, 50));
         button1.setPreferredSize(new Dimension(50, 50));
         button1.setSelected(false);
         button1.setText("1");
         topPanel.add(button1);
         button2 = new JButton();
-        button2.setEnabled(true);
+        button2.setEnabled(false);
         button2.setMinimumSize(new Dimension(50, 50));
         button2.setPreferredSize(new Dimension(50, 50));
         button2.setSelected(false);
         button2.setText("2");
         topPanel.add(button2);
         button3 = new JButton();
-        button3.setEnabled(true);
+        button3.setEnabled(false);
         button3.setMinimumSize(new Dimension(50, 50));
         button3.setPreferredSize(new Dimension(50, 50));
         button3.setRolloverEnabled(false);
@@ -146,7 +146,7 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         button3.setText("3");
         topPanel.add(button3);
         button4 = new JButton();
-        button4.setEnabled(true);
+        button4.setEnabled(false);
         button4.setMinimumSize(new Dimension(50, 50));
         button4.setPreferredSize(new Dimension(50, 50));
         button4.setRolloverEnabled(false);
@@ -154,7 +154,7 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         button4.setText("4");
         topPanel.add(button4);
         button5 = new JButton();
-        button5.setEnabled(true);
+        button5.setEnabled(false);
         button5.setMinimumSize(new Dimension(50, 50));
         button5.setPreferredSize(new Dimension(50, 50));
         button5.setRolloverEnabled(false);
@@ -162,7 +162,7 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         button5.setText("5");
         topPanel.add(button5);
         button6 = new JButton();
-        button6.setEnabled(true);
+        button6.setEnabled(false);
         button6.setMinimumSize(new Dimension(50, 50));
         button6.setPreferredSize(new Dimension(50, 50));
         button6.setRolloverEnabled(false);
@@ -170,7 +170,7 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         button6.setText("6");
         topPanel.add(button6);
         button7 = new JButton();
-        button7.setEnabled(true);
+        button7.setEnabled(false);
         button7.setMinimumSize(new Dimension(50, 50));
         button7.setPreferredSize(new Dimension(50, 50));
         button7.setRolloverEnabled(false);
@@ -178,7 +178,7 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         button7.setText("7");
         topPanel.add(button7);
         button8 = new JButton();
-        button8.setEnabled(true);
+        button8.setEnabled(false);
         button8.setMinimumSize(new Dimension(50, 50));
         button8.setPreferredSize(new Dimension(50, 50));
         button8.setRolloverEnabled(false);
