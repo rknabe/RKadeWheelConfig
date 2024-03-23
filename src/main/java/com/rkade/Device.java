@@ -147,11 +147,11 @@ public class Device {
         return false;
     }
 
-    public synchronized boolean doAutoCenter() {
+    public synchronized boolean runAutoCenter() {
         return writeTextToPort(CMD_AUTOCENTER_TEXT);
     }
 
-    public synchronized boolean doSetConstantSpring(boolean state) {
+    public synchronized boolean setConstantSpring(boolean state) {
         if (state) {
             return writeTextToPort(CMD_SPRING_ON_TEXT);
         }

@@ -227,7 +227,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
             } else if (e.getActionCommand().equals(triangleButton.getActionCommand())) {
                 return device.doFfbTriangle();
             } else if (e.getActionCommand().equals(constantSpringCheckBox.getActionCommand())) {
-                return device.doSetConstantSpring(constantSpringCheckBox.isSelected());
+                return device.setConstantSpring(constantSpringCheckBox.isSelected());
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
                 isWaitingOnDevice = true;
                 boolean status = device.saveSettings();
@@ -348,7 +348,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         dialog.setModal(true);
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             public Void doInBackground() {
-                status[0] = device.doAutoCenter();
+                status[0] = device.runAutoCenter();
                 return null;
             }
         };
@@ -364,7 +364,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     public void deviceAttached(Device device) {
         this.device = device;
         deviceComboBox.addItem(device.getName());
-        device.doSetConstantSpring(false);
+        device.setConstantSpring(false);
         setPanelEnabled(true);
         for (AxisPanel axisPanel : axisPanels) {
             axisPanel.deviceAttached(device);

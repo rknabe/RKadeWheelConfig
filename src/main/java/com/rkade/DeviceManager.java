@@ -28,6 +28,76 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         new Thread(new OutputReportRunner()).start();
     }
 
+    private static void notifyListenersDeviceAttached(Device device) {
+        for (DeviceListener deviceListener : deviceListeners) {
+            deviceListener.deviceAttached(device);
+        }
+    }
+
+    private static void notifyListenersDeviceDetached(Device device) {
+        for (DeviceListener deviceListener : deviceListeners) {
+            deviceListener.deviceDetached(device);
+        }
+    }
+
+    private static void notifyListenersDeviceUpdated(Device device, String status, DataReport report) {
+        for (DeviceListener deviceListener : deviceListeners) {
+            deviceListener.deviceUpdated(device, status, report);
+        }
+    }
+
+    public static Device openDevice() {
+        List<HidDeviceInfo> devList = PureJavaHidApi.enumerateDevices();
+        for (HidDeviceInfo info : devList) {
+            if (info.getVendorId() == LEONARDO_VENDOR_ID && info.getProductId() == LEONARDO_PRODUCT_ID) {
+                deviceInfo = info;
+                break;
+            }
+        }
+        if (deviceInfo == null) {
+            logger.info("device not found");
+            notifyListenersDeviceUpdated(null, "Device Not Found...", null);
+            sleep(1000);
+        } else {
+            logger.info("device found");
+            notifyListenersDeviceUpdated(null, "Attached...", null);
+            deviceAttached = true;
+            if (deviceAttached) {
+                try {
+                    openedDevice = PureJavaHidApi.openDevice(deviceInfo);
+                    if (openedDevice != null) {
+                        openedDevice.open();
+                        return getDevice(openedDevice);
+                    }
+                } catch (IOException ex) {
+                    logger.warning(ex.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
+    private static Device getDevice(HidDevice hidDevice) {
+        String path = getHidPath(hidDevice);
+        return deviceMap.computeIfAbsent(path, k -> new Device(hidDevice, path));
+    }
+
+    private static String getHidPath(HidDevice device) {
+        if (device != null) {
+            //hidPath is not null terminated, force to it null-term and uppercase to match SDL case
+            return device.getHidDeviceInfo().getPath().trim().toUpperCase();
+        }
+        return null;
+    }
+
+    private static void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (Exception ex) {
+            logger.warning(ex.getMessage());
+        }
+    }
+
     public void addDeviceListener(DeviceListener deviceListener) {
         deviceListeners.add(deviceListener);
     }
@@ -42,37 +112,6 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         Device device = getDevice(hidDevice);
         deviceMap.remove(getHidPath(hidDevice));
         notifyListenersDeviceDetached(device);
-    }
-
-    private void notifyListenersDeviceAttached(Device device) {
-        for (DeviceListener deviceListener : deviceListeners) {
-            deviceListener.deviceAttached(device);
-        }
-    }
-
-    private void notifyListenersDeviceDetached(Device device) {
-        for (DeviceListener deviceListener : deviceListeners) {
-            deviceListener.deviceDetached(device);
-        }
-    }
-
-    private void notifyListenersDeviceUpdated(Device device, String status, DataReport report) {
-        for (DeviceListener deviceListener : deviceListeners) {
-            deviceListener.deviceUpdated(device, status, report);
-        }
-    }
-
-    private Device getDevice(HidDevice hidDevice) {
-        String path = getHidPath(hidDevice);
-        return deviceMap.computeIfAbsent(path, k -> new Device(hidDevice, path));
-    }
-
-    private String getHidPath(HidDevice device) {
-        if (device != null) {
-            //hidPath is not null terminated, force to it null-term and uppercase to match SDL case
-            return device.getHidDeviceInfo().getPath().trim().toUpperCase();
-        }
-        return null;
     }
 
     @Override
@@ -96,14 +135,6 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         sleep(SLEEP_BETWEEN_OUTPUT_REPORT);
     }
 
-    private void sleep(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (Exception ex) {
-            logger.warning(ex.getMessage());
-        }
-    }
-
     private final class ConnectionRunner implements Runnable {
         @Override
         public void run() {
@@ -112,44 +143,20 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                     deviceInfo = null;
                     logger.info("scanning");
                     notifyListenersDeviceUpdated(null, "Scanning...", null);
-                    List<HidDeviceInfo> devList = PureJavaHidApi.enumerateDevices();
-                    for (HidDeviceInfo info : devList) {
-                        if (info.getVendorId() == LEONARDO_VENDOR_ID && info.getProductId() == LEONARDO_PRODUCT_ID) {
-                            deviceInfo = info;
-                            break;
-                        }
-                    }
-                    if (deviceInfo == null) {
-                        logger.info("device not found");
-                        notifyListenersDeviceUpdated(null, "Device Not Found...", null);
-                        sleep(1000);
-                    } else {
-                        logger.info("device found");
-                        notifyListenersDeviceUpdated(null, "Attached...", null);
-                        deviceAttached = true;
-                        if (deviceAttached) {
-                            try {
-                                openedDevice = PureJavaHidApi.openDevice(deviceInfo);
-                                if (openedDevice != null) {
-                                    openedDevice.open();
-                                    Device device = getDevice(openedDevice);
-                                    notifyListenersDeviceUpdated(device, "Opened", null);
+                    Device device = openDevice();
+                    if (device != null) {
+                        notifyListenersDeviceUpdated(device, "Opened", null);
 
-                                    SerialPort[] ports = SerialPort.getCommPorts();
-                                    for (SerialPort port : ports) {
-                                        if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
-                                            device.setName(port.getDescriptivePortName());
-                                            device.setPort(port);
-                                        }
-                                    }
-                                    openedDevice.setDeviceRemovalListener(DeviceManager.this);
-                                    openedDevice.setInputReportListener(DeviceManager.this);
-                                    notifyListenersDeviceAttached(device);
-                                }
-                            } catch (IOException ex) {
-                                logger.warning(ex.getMessage());
+                        SerialPort[] ports = SerialPort.getCommPorts();
+                        for (SerialPort port : ports) {
+                            if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
+                                device.setName(port.getDescriptivePortName());
+                                device.setPort(port);
                             }
                         }
+                        openedDevice.setDeviceRemovalListener(DeviceManager.this);
+                        openedDevice.setInputReportListener(DeviceManager.this);
+                        notifyListenersDeviceAttached(device);
                     }
                 }
                 sleep(2000);
