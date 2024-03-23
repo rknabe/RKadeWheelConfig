@@ -12,13 +12,25 @@ import java.util.logging.Logger;
 
 public class ButtonsPanel extends BaseForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(ButtonsPanel.class.getName());
+    private final List<JButton> switchButtons;
     private JPanel mainButtonPanel;
-    private JButton a32Button;
+    private JButton button1;
     private JSpinner debounceSpinner;
+    private JPanel bottomPanel;
+    private JPanel topPanel;
+    private JButton button2;
+    private JButton button3;
+    private JButton button4;
+    private JButton button5;
+    private JButton button6;
+    private JButton button7;
+    private JButton button8;
     private Device device = null;
 
     public ButtonsPanel() {
-        controls = List.of(debounceSpinner, a32Button);
+        controls = List.of(debounceSpinner, button1, button2, button3, button4, button5, button6, button7, button8);
+        switchButtons = List.of(button1, button2, button3, button4, button5, button6, button7, button8);
+
         setPanelEnabled(false);
         setupControlListener();
 
@@ -49,8 +61,15 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         }
     }
 
+    private boolean getButtonState(ButtonsDataReport buttonsDataReport, int buttonIndex) {
+        return ((buttonsDataReport.getButtonsState() & buttonIndex) > 0);
+    }
+
     private void updateControls(ButtonsDataReport buttonsDataReport) {
         System.out.println(buttonsDataReport);
+        for (JButton button : switchButtons) {
+            button.setSelected(getButtonState(buttonsDataReport, switchButtons.indexOf(button)));
+        }
     }
 
     @Override
@@ -89,19 +108,86 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
      */
     private void $$$setupUI$$$() {
         mainButtonPanel = new JPanel();
-        mainButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        mainButtonPanel.setLayout(new BorderLayout(0, 0));
         mainButtonPanel.setMinimumSize(new Dimension(1040, 200));
         mainButtonPanel.setName("mainButtonPanel");
         mainButtonPanel.setPreferredSize(new Dimension(1040, 800));
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        mainButtonPanel.add(bottomPanel, BorderLayout.SOUTH);
+        final JLabel label1 = new JLabel();
+        label1.setText("Debounce  (0-255)");
+        bottomPanel.add(label1);
         debounceSpinner = new JSpinner();
         debounceSpinner.setMinimumSize(new Dimension(88, 35));
         debounceSpinner.setPreferredSize(new Dimension(88, 35));
-        mainButtonPanel.add(debounceSpinner);
-        a32Button = new JButton();
-        a32Button.setMinimumSize(new Dimension(50, 50));
-        a32Button.setPreferredSize(new Dimension(50, 50));
-        a32Button.setText("32");
-        mainButtonPanel.add(a32Button);
+        bottomPanel.add(debounceSpinner);
+        topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        mainButtonPanel.add(topPanel, BorderLayout.CENTER);
+        button1 = new JButton();
+        button1.setEnabled(true);
+        button1.setMinimumSize(new Dimension(50, 50));
+        button1.setPreferredSize(new Dimension(50, 50));
+        button1.setSelected(false);
+        button1.setText("1");
+        topPanel.add(button1);
+        button2 = new JButton();
+        button2.setEnabled(true);
+        button2.setMinimumSize(new Dimension(50, 50));
+        button2.setPreferredSize(new Dimension(50, 50));
+        button2.setSelected(false);
+        button2.setText("2");
+        topPanel.add(button2);
+        button3 = new JButton();
+        button3.setEnabled(true);
+        button3.setMinimumSize(new Dimension(50, 50));
+        button3.setPreferredSize(new Dimension(50, 50));
+        button3.setRolloverEnabled(false);
+        button3.setSelected(false);
+        button3.setText("3");
+        topPanel.add(button3);
+        button4 = new JButton();
+        button4.setEnabled(true);
+        button4.setMinimumSize(new Dimension(50, 50));
+        button4.setPreferredSize(new Dimension(50, 50));
+        button4.setRolloverEnabled(false);
+        button4.setSelected(false);
+        button4.setText("4");
+        topPanel.add(button4);
+        button5 = new JButton();
+        button5.setEnabled(true);
+        button5.setMinimumSize(new Dimension(50, 50));
+        button5.setPreferredSize(new Dimension(50, 50));
+        button5.setRolloverEnabled(false);
+        button5.setSelected(false);
+        button5.setText("5");
+        topPanel.add(button5);
+        button6 = new JButton();
+        button6.setEnabled(true);
+        button6.setMinimumSize(new Dimension(50, 50));
+        button6.setPreferredSize(new Dimension(50, 50));
+        button6.setRolloverEnabled(false);
+        button6.setSelected(false);
+        button6.setText("6");
+        topPanel.add(button6);
+        button7 = new JButton();
+        button7.setEnabled(true);
+        button7.setMinimumSize(new Dimension(50, 50));
+        button7.setPreferredSize(new Dimension(50, 50));
+        button7.setRolloverEnabled(false);
+        button7.setSelected(false);
+        button7.setText("7");
+        topPanel.add(button7);
+        button8 = new JButton();
+        button8.setEnabled(true);
+        button8.setMinimumSize(new Dimension(50, 50));
+        button8.setPreferredSize(new Dimension(50, 50));
+        button8.setRolloverEnabled(false);
+        button8.setSelected(false);
+        button8.setText("8");
+        topPanel.add(button8);
+        label1.setLabelFor(debounceSpinner);
     }
 
     /**
