@@ -62,15 +62,10 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     }
 
     private boolean getButtonState(ButtonsDataReport buttonsDataReport, int buttonIndex) {
-        //if (buttonIndex == 5) {
-            int mask = (int) Math.pow(2, buttonIndex);
-            return ((buttonsDataReport.getButtonsState() & mask) > 0);
-        //}
-        //return false;
+        return ((buttonsDataReport.getButtonsState() & (int) Math.pow(2, buttonIndex)) > 0);
     }
 
     private void updateControls(ButtonsDataReport buttonsDataReport) {
-        System.out.println(buttonsDataReport);
         for (JButton button : switchButtons) {
             button.setSelected(getButtonState(buttonsDataReport, switchButtons.indexOf(button)));
         }
@@ -93,7 +88,6 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
 
     @Override
     public void stateChanged(ChangeEvent e) {
-
     }
 
     {

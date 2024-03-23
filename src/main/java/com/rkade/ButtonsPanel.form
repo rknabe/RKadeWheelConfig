@@ -40,7 +40,7 @@
           <component id="6b4a0" class="javax.swing.JButton" binding="button1">
             <constraints/>
             <properties>
-              <enabled value="true"/>
+              <enabled value="false"/>
               <minimumSize width="50" height="50"/>
               <preferredSize width="50" height="50"/>
               <selected value="false"/>
@@ -50,7 +50,7 @@
           <component id="e6cb3" class="javax.swing.JButton" binding="button2">
             <constraints/>
             <properties>
-              <enabled value="true"/>
+              <enabled value="false"/>
               <minimumSize width="50" height="50"/>
               <preferredSize width="50" height="50"/>
               <selected value="false"/>
@@ -60,7 +60,7 @@
           <component id="891bb" class="javax.swing.JButton" binding="button3">
             <constraints/>
             <properties>
-              <enabled value="true"/>
+              <enabled value="false"/>
               <minimumSize width="50" height="50"/>
               <preferredSize width="50" height="50"/>
               <rolloverEnabled value="false"/>
@@ -71,7 +71,7 @@
           <component id="f66a3" class="javax.swing.JButton" binding="button4">
             <constraints/>
             <properties>
-              <enabled value="true"/>
+              <enabled value="false"/>
               <minimumSize width="50" height="50"/>
               <preferredSize width="50" height="50"/>
               <rolloverEnabled value="false"/>
@@ -82,7 +82,7 @@
           <component id="f48d9" class="javax.swing.JButton" binding="button5">
             <constraints/>
             <properties>
-              <enabled value="true"/>
+              <enabled value="false"/>
               <minimumSize width="50" height="50"/>
               <preferredSize width="50" height="50"/>
               <rolloverEnabled value="false"/>
@@ -93,7 +93,7 @@
           <component id="f92c8" class="javax.swing.JButton" binding="button6">
             <constraints/>
             <properties>
-              <enabled value="true"/>
+              <enabled value="false"/>
               <minimumSize width="50" height="50"/>
               <preferredSize width="50" height="50"/>
               <rolloverEnabled value="false"/>
@@ -104,7 +104,7 @@
           <component id="ea70a" class="javax.swing.JButton" binding="button7">
             <constraints/>
             <properties>
-              <enabled value="true"/>
+              <enabled value="false"/>
               <minimumSize width="50" height="50"/>
               <preferredSize width="50" height="50"/>
               <rolloverEnabled value="false"/>
@@ -115,7 +115,7 @@
           <component id="4a55b" class="javax.swing.JButton" binding="button8">
             <constraints/>
             <properties>
-              <enabled value="true"/>
+              <enabled value="false"/>
               <minimumSize width="50" height="50"/>
               <preferredSize width="50" height="50"/>
               <rolloverEnabled value="false"/>
