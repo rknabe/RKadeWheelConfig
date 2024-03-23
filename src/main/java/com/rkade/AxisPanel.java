@@ -10,9 +10,8 @@ import java.awt.event.FocusListener;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class AxisPanel implements DeviceListener, ActionListener, FocusListener {
+public class AxisPanel extends BaseForm implements DeviceListener, ActionListener, FocusListener {
     private final static Logger logger = Logger.getLogger(AxisPanel.class.getName());
-    private final List<JComponent> controls;
     private JLabel minLabel;
     private JFormattedTextField minText;
     private JLabel centerLabel;
@@ -53,19 +52,6 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
         setupControlListener();
     }
 
-    private void setupControlListener() {
-        for (JComponent component : controls) {
-            component.addFocusListener(this);
-            switch (component) {
-                case AbstractButton button -> button.addActionListener(this);
-                case JTextField textField -> textField.addActionListener(this);
-                case JComboBox<?> comboBox -> comboBox.addActionListener(this);
-                default -> {
-                }
-            }
-        }
-    }
-
     public void setAxisIndex(short axisIndex) {
         this.axisIndex = axisIndex;
     }
@@ -78,6 +64,9 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
     @Override
     public void deviceAttached(Device device) {
         this.device = device;
+        if (wasEnabled) {
+            setPanelEnabled(true);
+        }
     }
 
     @Override
@@ -103,10 +92,6 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
         if (!status) {
             logger.warning("Action failed for:" + e.getActionCommand());
         }
-    }
-
-    @Override
-    public void focusGained(FocusEvent e) {
     }
 
     @Override
@@ -230,12 +215,6 @@ public class AxisPanel implements DeviceListener, ActionListener, FocusListener 
         }
         //should always be enabled
         enabledCheckBox.setEnabled(true);
-    }
-
-    private void setPanelEnabled(boolean enable) {
-        for (JComponent component : controls) {
-            component.setEnabled(enable);
-        }
     }
 
     {

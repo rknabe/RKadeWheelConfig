@@ -22,6 +22,8 @@ public abstract class DataReportFactory {
                     return new GainsDataReport(reportType, reportIndex, section, buffer);
                 case Device.CMD_GET_MISC:
                     return new MiscDataReport(reportType, reportIndex, section, buffer);
+                case Device.CMD_GET_BUTTONS:
+                    return new ButtonsDataReport(reportType, reportIndex, section, buffer);
                 case Device.CMD_GET_VER:
                     return new VersionDataReport(reportType, reportIndex, section, buffer);
             }

@@ -9,13 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-public class MainForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
+public class MainForm extends BaseForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
     private final static List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
@@ -38,7 +37,6 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
             "Damper",
             "Inertia",
             "Friction");
-    private final List<JComponent> controls;
     private List<AxisPanel> axisPanels;
     private List<GainPanel> gainPanels;
     private JPanel mainPanel;
@@ -70,7 +68,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
     private AxisPanel axis6Panel;
     private AxisPanel axis7Panel;
     private JScrollPane axisScroll;
-    private JPanel inputsPanel;
+    private JPanel axesPanel;
     private JButton defaultsButton;
     private JButton loadButton;
     private JButton saveButton;
@@ -106,6 +104,8 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
     private JLabel maxForceLabel;
     private JLabel cutForceLabel;
     private JCheckBox constantSpringCheckBox;
+    private ButtonsPanel buttonsPanel;
+    private JPanel buttonsTab;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
@@ -182,20 +182,6 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
                 gainsPanel.add(panel.$$$getRootComponent$$$());
                 panel.setGainLabel(gainLabels.get(i));
                 panel.setGainIndex(i);
-            }
-        }
-    }
-
-    private void setupControlListener() {
-        for (JComponent component : controls) {
-            component.addFocusListener(this);
-            switch (component) {
-                case AbstractButton button -> button.addActionListener(this);
-                case JTextField textField -> textField.addActionListener(this);
-                case JSlider slider -> slider.addChangeListener(this);
-                case JComboBox<?> comboBox -> comboBox.addActionListener(this);
-                default -> {
-                }
             }
         }
     }
@@ -312,10 +298,6 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
     }
 
     @Override
-    public void focusGained(FocusEvent e) {
-    }
-
-    @Override
     public void focusLost(FocusEvent e) {
         boolean status = handleFocusLost(e);
         if (!status) {
@@ -390,6 +372,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
         for (GainPanel gainPanel : gainPanels) {
             gainPanel.deviceAttached(device);
         }
+        buttonsPanel.deviceAttached(device);
     }
 
     @Override
@@ -403,6 +386,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
         for (GainPanel gainPanel : gainPanels) {
             gainPanel.deviceDetached(device);
         }
+        buttonsPanel.deviceDetached(device);
     }
 
     @Override
@@ -418,6 +402,7 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
                     case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
                     case GainsDataReport gainsData -> updateGainPanels(device, status, gainsData);
                     case MiscDataReport miscData -> updateMiscPanel(miscData);
+                    case ButtonsDataReport buttonsData -> buttonsPanel.deviceUpdated(device, status, buttonsData);
                     case VersionDataReport versionData ->
                             versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
                     default -> {
@@ -517,52 +502,6 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
         return mainPanel;
     }
 
-    private void setPanelEnabled(boolean isEnabled) {
-        for (JComponent component : controls) {
-            component.setEnabled(isEnabled);
-        }
-    }
-
-    private BufferedImage toBufferedImage(Image img) {
-        if (img instanceof BufferedImage) {
-            return (BufferedImage) img;
-        }
-
-        // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(55, 55, BufferedImage.TYPE_INT_ARGB);
-
-        // Draw the image on to the buffered image
-        Graphics2D bGr = bimage.createGraphics();
-        bGr.drawImage(img, 0, 0, null);
-        bGr.dispose();
-
-        // Return the buffered image
-        return bimage;
-    }
-
-    private BufferedImage rotate(BufferedImage image, Double degrees) {
-        // Calculate the new size of the image based on the angle of rotation
-        double radians = Math.toRadians(degrees);
-        int newWidth = image.getWidth();
-        int newHeight = image.getHeight();
-
-        // Create a new image
-        BufferedImage rotate = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = rotate.createGraphics();
-        // Calculate the "anchor" point around which the image will be rotated
-        int x = (newWidth - image.getWidth()) / 2;
-        int y = (newHeight - image.getHeight()) / 2;
-        // Transform the origin point around the anchor point
-        AffineTransform at = new AffineTransform();
-        at.setToRotation(radians, x + (image.getWidth() / 2.0), y + (image.getHeight() / 2.0));
-        at.translate(x, y);
-        g2d.setTransform(at);
-        // Paint the original image
-        g2d.drawImage(image, 0, 0, null);
-        g2d.dispose();
-        return rotate;
-    }
-
     {
 // GUI initializer generated by IntelliJ IDEA GUI Designer
 // >>> IMPORTANT!! <<<
@@ -595,17 +534,17 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         mainPanel.add(mainTab, gbc);
-        inputsPanel = new JPanel();
-        inputsPanel.setLayout(new BorderLayout(0, 0));
-        inputsPanel.setMinimumSize(new Dimension(1060, 60));
-        inputsPanel.setPreferredSize(new Dimension(1060, 800));
-        mainTab.addTab("Inputs", inputsPanel);
+        axesPanel = new JPanel();
+        axesPanel.setLayout(new BorderLayout(0, 0));
+        axesPanel.setMinimumSize(new Dimension(1060, 60));
+        axesPanel.setPreferredSize(new Dimension(1060, 800));
+        mainTab.addTab("Axes", axesPanel);
         axisScroll = new JScrollPane();
         axisScroll.setAutoscrolls(true);
         axisScroll.setMaximumSize(new Dimension(32767, 32767));
         axisScroll.setMinimumSize(new Dimension(1060, 60));
         axisScroll.setPreferredSize(new Dimension(1060, 590));
-        inputsPanel.add(axisScroll, BorderLayout.WEST);
+        axesPanel.add(axisScroll, BorderLayout.WEST);
         axisPanel = new JPanel();
         axisPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         axisPanel.setAutoscrolls(true);
@@ -1030,6 +969,11 @@ public class MainForm implements DeviceListener, ActionListener, FocusListener, 
         gbc.gridx = 1;
         gbc.gridy = 0;
         testPanel.add(constantRightButton, gbc);
+        buttonsTab = new JPanel();
+        buttonsTab.setLayout(new BorderLayout(0, 0));
+        mainTab.addTab("Buttons", buttonsTab);
+        buttonsPanel = new ButtonsPanel();
+        buttonsTab.add(buttonsPanel.$$$getRootComponent$$$(), BorderLayout.WEST);
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         bottomPanel.setAutoscrolls(false);

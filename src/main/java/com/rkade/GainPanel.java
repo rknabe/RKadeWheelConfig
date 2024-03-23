@@ -4,16 +4,14 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class GainPanel implements DeviceListener, ActionListener, FocusListener, ChangeListener {
+public class GainPanel extends BaseForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(GainPanel.class.getName());
-    private final List<JComponent> controls;
     private JFormattedTextField gainText;
     private JLabel gainPercent;
     private JSlider gainSlider;
@@ -35,26 +33,6 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
 
     public void setGainLabel(String label) {
         labelText.setText(label);
-    }
-
-    private void setPanelEnabled(boolean enable) {
-        for (JComponent component : controls) {
-            component.setEnabled(enable);
-        }
-    }
-
-    private void setupControlListener() {
-        for (JComponent component : controls) {
-            component.addFocusListener(this);
-            switch (component) {
-                case AbstractButton button -> button.addActionListener(this);
-                case JTextField textField -> textField.addActionListener(this);
-                case JSlider slider -> slider.addChangeListener(this);
-                case JComboBox<?> comboBox -> comboBox.addActionListener(this);
-                default -> {
-                }
-            }
-        }
     }
 
     @Override
@@ -90,15 +68,6 @@ public class GainPanel implements DeviceListener, ActionListener, FocusListener,
         if (!gainSlider.getValueIsAdjusting() && !gainText.isFocusOwner()) {
             gainText.setValue(amount);
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-
-    @Override
-    public void focusGained(FocusEvent e) {
-
     }
 
     @Override

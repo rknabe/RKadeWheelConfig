@@ -25,9 +25,9 @@
         </properties>
         <border type="none"/>
         <children>
-          <grid id="b8e5d" binding="inputsPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="b8e5d" binding="axesPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <tabbedpane title="Inputs"/>
+              <tabbedpane title="Axes"/>
             </constraints>
             <properties>
               <minimumSize width="1060" height="60"/>
@@ -646,6 +646,18 @@
                   </grid>
                 </children>
               </scrollpane>
+            </children>
+          </grid>
+          <grid id="4284d" binding="buttonsTab" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Buttons"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <nested-form id="63a6a" form-file="com/rkade/ButtonsPanel.form" binding="buttonsPanel">
+                <constraints border-constraint="West"/>
+              </nested-form>
             </children>
           </grid>
         </children>
