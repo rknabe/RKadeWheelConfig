@@ -22,6 +22,7 @@ public abstract class BaseForm implements ActionListener, ChangeListener, FocusL
                 case AbstractButton button -> button.addActionListener(this);
                 case JTextField textField -> textField.addActionListener(this);
                 case JSlider slider -> slider.addChangeListener(this);
+                case JSpinner spinner -> spinner.addChangeListener(this);
                 case JComboBox<?> comboBox -> comboBox.addActionListener(this);
                 default -> {
                 }
@@ -51,24 +52,24 @@ public abstract class BaseForm implements ActionListener, ChangeListener, FocusL
     public void focusLost(FocusEvent e) {
     }
 
-    protected BufferedImage toBufferedImage(Image img) {
-        if (img instanceof BufferedImage) {
-            return (BufferedImage) img;
+    protected final BufferedImage toBufferedImage(Image image) {
+        if (image instanceof BufferedImage) {
+            return (BufferedImage) image;
         }
 
         // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(55, 55, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bufferedImage = new BufferedImage(55, 55, BufferedImage.TYPE_INT_ARGB);
 
         // Draw the image on to the buffered image
-        Graphics2D bGr = bimage.createGraphics();
-        bGr.drawImage(img, 0, 0, null);
+        Graphics2D bGr = bufferedImage.createGraphics();
+        bGr.drawImage(image, 0, 0, null);
         bGr.dispose();
 
         // Return the buffered image
-        return bimage;
+        return bufferedImage;
     }
 
-    protected BufferedImage rotate(BufferedImage image, Double degrees) {
+    protected final BufferedImage rotate(BufferedImage image, Double degrees) {
         // Calculate the new size of the image based on the angle of rotation
         double radians = Math.toRadians(degrees);
         int newWidth = image.getWidth();

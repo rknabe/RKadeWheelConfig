@@ -5,7 +5,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,11 +24,20 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     private JButton button6;
     private JButton button7;
     private JButton button8;
+    private JButton button9;
+    private JButton button10;
+    private JButton button11;
+    private JButton button12;
+    private JButton button13;
+    private JButton button14;
+    private JButton button15;
+    private JButton button16;
     private Device device = null;
 
     public ButtonsPanel() {
         controls = List.of(debounceSpinner);
-        switchButtons = List.of(button1, button2, button3, button4, button5, button6, button7, button8);
+        switchButtons = List.of(button1, button2, button3, button4, button5, button6, button7, button8,
+                button9, button10, button11, button12, button13, button14, button15, button16);
 
         setPanelEnabled(false);
         setupControlListener();
@@ -66,28 +74,27 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     }
 
     private void updateControls(ButtonsDataReport buttonsDataReport) {
+        debounceSpinner.setValue(buttonsDataReport.getDebounce());
         for (JButton button : switchButtons) {
             button.setSelected(getButtonState(buttonsDataReport, switchButtons.indexOf(button)));
         }
     }
 
     @Override
-    public void focusLost(FocusEvent e) {
-        boolean status = handleFocusLost(e);
-        if (!status) {
-            logger.warning("Focus lost, failed for:" + e.getSource());
-        }
-    }
-
-    private boolean handleFocusLost(FocusEvent e) {
-        if (e.getSource() == debounceSpinner) {
-            //return device.setGainValue(gainIndex, Short.parseShort(gainText.getText()));
-        }
-        return true;
-    }
-
-    @Override
     public void stateChanged(ChangeEvent e) {
+        if (device != null) {
+            boolean status = true;
+            if (e.getSource() == debounceSpinner) {
+                Number ival = (Number) debounceSpinner.getValue();
+                if (ival == null) {
+                    ival = 0;
+                }
+                status = device.setDebounce(ival.byteValue());
+            }
+            if (!status) {
+                logger.warning("State Changed, failed for:" + e.getSource());
+            }
+        }
     }
 
     {
@@ -107,84 +114,219 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     private void $$$setupUI$$$() {
         mainButtonPanel = new JPanel();
         mainButtonPanel.setLayout(new BorderLayout(0, 0));
-        mainButtonPanel.setMinimumSize(new Dimension(1040, 200));
+        mainButtonPanel.setAutoscrolls(false);
+        mainButtonPanel.setMinimumSize(new Dimension(100, 200));
         mainButtonPanel.setName("mainButtonPanel");
-        mainButtonPanel.setPreferredSize(new Dimension(1040, 800));
+        mainButtonPanel.setPreferredSize(new Dimension(500, 600));
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        mainButtonPanel.add(bottomPanel, BorderLayout.SOUTH);
+        mainButtonPanel.add(bottomPanel, BorderLayout.CENTER);
         final JLabel label1 = new JLabel();
         label1.setText("Debounce  (0-255)");
         bottomPanel.add(label1);
         debounceSpinner = new JSpinner();
         debounceSpinner.setMinimumSize(new Dimension(88, 35));
-        debounceSpinner.setPreferredSize(new Dimension(88, 35));
+        debounceSpinner.setPreferredSize(new Dimension(70, 35));
         bottomPanel.add(debounceSpinner);
         topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        mainButtonPanel.add(topPanel, BorderLayout.CENTER);
+        topPanel.setLayout(new GridBagLayout());
+        topPanel.setAutoscrolls(false);
+        topPanel.setMinimumSize(new Dimension(100, 120));
+        topPanel.setPreferredSize(new Dimension(200, 120));
+        mainButtonPanel.add(topPanel, BorderLayout.NORTH);
         button1 = new JButton();
+        button1.setAutoscrolls(false);
         button1.setEnabled(false);
+        button1.setHorizontalAlignment(0);
         button1.setMinimumSize(new Dimension(50, 50));
         button1.setPreferredSize(new Dimension(50, 50));
         button1.setSelected(false);
         button1.setText("1");
-        topPanel.add(button1);
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        topPanel.add(button1, gbc);
         button2 = new JButton();
+        button2.setAutoscrolls(false);
         button2.setEnabled(false);
         button2.setMinimumSize(new Dimension(50, 50));
         button2.setPreferredSize(new Dimension(50, 50));
         button2.setSelected(false);
         button2.setText("2");
-        topPanel.add(button2);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        topPanel.add(button2, gbc);
         button3 = new JButton();
+        button3.setAutoscrolls(false);
         button3.setEnabled(false);
         button3.setMinimumSize(new Dimension(50, 50));
         button3.setPreferredSize(new Dimension(50, 50));
         button3.setRolloverEnabled(false);
         button3.setSelected(false);
         button3.setText("3");
-        topPanel.add(button3);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        topPanel.add(button3, gbc);
         button4 = new JButton();
+        button4.setAutoscrolls(false);
         button4.setEnabled(false);
         button4.setMinimumSize(new Dimension(50, 50));
         button4.setPreferredSize(new Dimension(50, 50));
         button4.setRolloverEnabled(false);
         button4.setSelected(false);
         button4.setText("4");
-        topPanel.add(button4);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        topPanel.add(button4, gbc);
         button5 = new JButton();
+        button5.setAutoscrolls(false);
         button5.setEnabled(false);
         button5.setMinimumSize(new Dimension(50, 50));
         button5.setPreferredSize(new Dimension(50, 50));
         button5.setRolloverEnabled(false);
         button5.setSelected(false);
         button5.setText("5");
-        topPanel.add(button5);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 0;
+        topPanel.add(button5, gbc);
         button6 = new JButton();
+        button6.setAutoscrolls(false);
         button6.setEnabled(false);
         button6.setMinimumSize(new Dimension(50, 50));
         button6.setPreferredSize(new Dimension(50, 50));
         button6.setRolloverEnabled(false);
         button6.setSelected(false);
         button6.setText("6");
-        topPanel.add(button6);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        topPanel.add(button6, gbc);
         button7 = new JButton();
+        button7.setAutoscrolls(false);
         button7.setEnabled(false);
         button7.setMinimumSize(new Dimension(50, 50));
         button7.setPreferredSize(new Dimension(50, 50));
         button7.setRolloverEnabled(false);
         button7.setSelected(false);
         button7.setText("7");
-        topPanel.add(button7);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 6;
+        gbc.gridy = 0;
+        topPanel.add(button7, gbc);
         button8 = new JButton();
+        button8.setAutoscrolls(false);
         button8.setEnabled(false);
         button8.setMinimumSize(new Dimension(50, 50));
         button8.setPreferredSize(new Dimension(50, 50));
         button8.setRolloverEnabled(false);
         button8.setSelected(false);
         button8.setText("8");
-        topPanel.add(button8);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 7;
+        gbc.gridy = 0;
+        topPanel.add(button8, gbc);
+        button16 = new JButton();
+        button16.setAutoscrolls(false);
+        button16.setEnabled(false);
+        button16.setHorizontalAlignment(0);
+        button16.setMinimumSize(new Dimension(50, 50));
+        button16.setPreferredSize(new Dimension(50, 50));
+        button16.setSelected(false);
+        button16.setText("16");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 7;
+        gbc.gridy = 1;
+        topPanel.add(button16, gbc);
+        button15 = new JButton();
+        button15.setAutoscrolls(false);
+        button15.setEnabled(false);
+        button15.setHorizontalAlignment(0);
+        button15.setMinimumSize(new Dimension(50, 50));
+        button15.setPreferredSize(new Dimension(50, 50));
+        button15.setSelected(false);
+        button15.setText("15");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 6;
+        gbc.gridy = 1;
+        topPanel.add(button15, gbc);
+        button14 = new JButton();
+        button14.setAutoscrolls(false);
+        button14.setEnabled(false);
+        button14.setHorizontalAlignment(0);
+        button14.setMinimumSize(new Dimension(50, 50));
+        button14.setPreferredSize(new Dimension(50, 50));
+        button14.setSelected(false);
+        button14.setText("14");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 1;
+        topPanel.add(button14, gbc);
+        button13 = new JButton();
+        button13.setAutoscrolls(false);
+        button13.setEnabled(false);
+        button13.setHorizontalAlignment(0);
+        button13.setMinimumSize(new Dimension(50, 50));
+        button13.setPreferredSize(new Dimension(50, 50));
+        button13.setSelected(false);
+        button13.setText("13");
+        button13.setToolTipText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 1;
+        topPanel.add(button13, gbc);
+        button12 = new JButton();
+        button12.setAutoscrolls(false);
+        button12.setEnabled(false);
+        button12.setHorizontalAlignment(0);
+        button12.setMinimumSize(new Dimension(50, 50));
+        button12.setPreferredSize(new Dimension(50, 50));
+        button12.setSelected(false);
+        button12.setText("12");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        topPanel.add(button12, gbc);
+        button9 = new JButton();
+        button9.setAutoscrolls(false);
+        button9.setEnabled(false);
+        button9.setHorizontalAlignment(0);
+        button9.setMinimumSize(new Dimension(50, 50));
+        button9.setPreferredSize(new Dimension(50, 50));
+        button9.setSelected(false);
+        button9.setText("9");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        topPanel.add(button9, gbc);
+        button10 = new JButton();
+        button10.setAutoscrolls(false);
+        button10.setEnabled(false);
+        button10.setHorizontalAlignment(0);
+        button10.setMinimumSize(new Dimension(50, 50));
+        button10.setPreferredSize(new Dimension(50, 50));
+        button10.setSelected(false);
+        button10.setText("10");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        topPanel.add(button10, gbc);
+        button11 = new JButton();
+        button11.setAutoscrolls(false);
+        button11.setEnabled(false);
+        button11.setHorizontalAlignment(0);
+        button11.setMinimumSize(new Dimension(50, 50));
+        button11.setPreferredSize(new Dimension(50, 50));
+        button11.setSelected(false);
+        button11.setText("11");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        topPanel.add(button11, gbc);
         label1.setLabelFor(debounceSpinner);
     }
 

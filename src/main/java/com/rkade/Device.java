@@ -125,6 +125,10 @@ public class Device {
         return sendCommand(CMD_SET_MISC, miscType, value);
     }
 
+    public synchronized boolean setDebounce(byte value) {
+        return sendCommand(CMD_SET_DEBOUNCE, value);
+    }
+
     public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {
@@ -195,26 +199,6 @@ public class Device {
         };
         worker.execute();
         return status[0];
-    }
-
-    private boolean sendCommanda(byte command, short arg1, short arg2, short arg3) {
-        byte[] data = new byte[7];
-        data[0] = command;
-        data[1] = getFirstByte(arg1);
-        data[2] = getSecondByte(arg1);
-
-        data[3] = getFirstByte(arg2);
-        data[4] = getSecondByte(arg2);
-
-        data[5] = getFirstByte(arg3);
-        data[6] = getSecondByte(arg3);
-
-        int ret = hidDevice.setOutputReport(CMD_REPORT_ID, data, 7);
-        if (ret <= 0) {
-            logger.severe("Device returned error on Save:" + ret);
-            return false;
-        }
-        return true;
     }
 
     private byte getFirstByte(short value) {

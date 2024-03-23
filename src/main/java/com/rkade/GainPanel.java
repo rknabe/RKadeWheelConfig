@@ -87,13 +87,19 @@ public class GainPanel extends BaseForm implements DeviceListener, ActionListene
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        if (device != null && e.getSource() == gainSlider) {
-            if (!gainSlider.getValueIsAdjusting()) {
-                device.setGainValue(gainIndex, (short) gainSlider.getValue());
-            } else {
-                double percent = ((double) gainSlider.getValue() / (double) 1024) * 100;
-                gainPercent.setText(String.format("%.1f%%", percent));
-                gainText.setValue(gainSlider.getValue());
+        if (device != null) {
+            boolean status = true;
+            if (e.getSource() == gainSlider) {
+                if (!gainSlider.getValueIsAdjusting()) {
+                    device.setGainValue(gainIndex, (short) gainSlider.getValue());
+                } else {
+                    double percent = ((double) gainSlider.getValue() / (double) 1024) * 100;
+                    gainPercent.setText(String.format("%.1f%%", percent));
+                    gainText.setValue(gainSlider.getValue());
+                }
+            }
+            if (!status) {
+                logger.warning("State Changed, failed for:" + e.getSource());
             }
         }
     }

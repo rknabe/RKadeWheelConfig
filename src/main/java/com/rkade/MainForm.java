@@ -41,7 +41,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private List<GainPanel> gainPanels;
     private JPanel mainPanel;
     private JTabbedPane mainTab;
-    private JPanel ffbPanel;
+    private JPanel ffbTab;
     private JPanel bottomPanel;
     private JComboBox<String> deviceComboBox;
     private JLabel statusLabel;
@@ -68,7 +68,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private AxisPanel axis6Panel;
     private AxisPanel axis7Panel;
     private JScrollPane axisScroll;
-    private JPanel axesPanel;
+    private JPanel axesTab;
     private JButton defaultsButton;
     private JButton loadButton;
     private JButton saveButton;
@@ -398,11 +398,31 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         if (report != null) {
             if (report.getReportType() == Device.DATA_REPORT_ID) {
                 switch (report) {
-                    case WheelDataReport wheelData -> updateWheelPanel(wheelData);
-                    case AxisDataReport axisData -> updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
-                    case GainsDataReport gainsData -> updateGainPanels(device, status, gainsData);
-                    case MiscDataReport miscData -> updateMiscPanel(miscData);
-                    case ButtonsDataReport buttonsData -> buttonsPanel.deviceUpdated(device, status, buttonsData);
+                    case WheelDataReport wheelData -> {
+                        if (mainTab.getSelectedComponent() == axesTab) {
+                            updateWheelPanel(wheelData);
+                        }
+                    }
+                    case AxisDataReport axisData -> {
+                        if (mainTab.getSelectedComponent() == axesTab) {
+                            updateAxisPanel(axisPanels.get(axisData.getAxis() - 1), device, status, report);
+                        }
+                    }
+                    case GainsDataReport gainsData -> {
+                        if (mainTab.getSelectedComponent() == ffbTab) {
+                            updateGainPanels(device, status, gainsData);
+                        }
+                    }
+                    case MiscDataReport miscData -> {
+                        if (mainTab.getSelectedComponent() == ffbTab) {
+                            updateMiscPanel(miscData);
+                        }
+                    }
+                    case ButtonsDataReport buttonsData -> {
+                        if (mainTab.getSelectedComponent() == buttonsTab) {
+                            buttonsPanel.deviceUpdated(device, status, buttonsData);
+                        }
+                    }
                     case VersionDataReport versionData ->
                             versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
                     default -> {
@@ -534,17 +554,17 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         mainPanel.add(mainTab, gbc);
-        axesPanel = new JPanel();
-        axesPanel.setLayout(new BorderLayout(0, 0));
-        axesPanel.setMinimumSize(new Dimension(1060, 60));
-        axesPanel.setPreferredSize(new Dimension(1060, 800));
-        mainTab.addTab("Axes", axesPanel);
+        axesTab = new JPanel();
+        axesTab.setLayout(new BorderLayout(0, 0));
+        axesTab.setMinimumSize(new Dimension(1060, 60));
+        axesTab.setPreferredSize(new Dimension(1060, 800));
+        mainTab.addTab("Axes", axesTab);
         axisScroll = new JScrollPane();
         axisScroll.setAutoscrolls(true);
         axisScroll.setMaximumSize(new Dimension(32767, 32767));
         axisScroll.setMinimumSize(new Dimension(1060, 60));
         axisScroll.setPreferredSize(new Dimension(1060, 590));
-        axesPanel.add(axisScroll, BorderLayout.WEST);
+        axesTab.add(axisScroll, BorderLayout.WEST);
         axisPanel = new JPanel();
         axisPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         axisPanel.setAutoscrolls(true);
@@ -578,7 +598,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         wheelPanel.add(autoCenterButton);
         wheelIconLabel = new JLabel();
         wheelIconLabel.setAlignmentY(0.0f);
+        wheelIconLabel.setDoubleBuffered(true);
         wheelIconLabel.setFocusable(false);
+        wheelIconLabel.setMinimumSize(new Dimension(55, 55));
         wheelIconLabel.setPreferredSize(new Dimension(55, 55));
         wheelIconLabel.setRequestFocusEnabled(false);
         wheelIconLabel.setText("");
@@ -643,15 +665,15 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         axisPanel.add(axis6Panel.$$$getRootComponent$$$());
         axis7Panel = new AxisPanel();
         axisPanel.add(axis7Panel.$$$getRootComponent$$$());
-        ffbPanel = new JPanel();
-        ffbPanel.setLayout(new BorderLayout(0, 0));
-        ffbPanel.setAutoscrolls(false);
-        ffbPanel.setMinimumSize(new Dimension(1060, 60));
-        ffbPanel.setPreferredSize(new Dimension(1060, 800));
-        mainTab.addTab("Force Feedback", ffbPanel);
+        ffbTab = new JPanel();
+        ffbTab.setLayout(new BorderLayout(0, 0));
+        ffbTab.setAutoscrolls(false);
+        ffbTab.setMinimumSize(new Dimension(1060, 60));
+        ffbTab.setPreferredSize(new Dimension(1060, 800));
+        mainTab.addTab("Force Feedback", ffbTab);
         ffbScroll = new JScrollPane();
         ffbScroll.setPreferredSize(new Dimension(1000, 800));
-        ffbPanel.add(ffbScroll, BorderLayout.CENTER);
+        ffbTab.add(ffbScroll, BorderLayout.CENTER);
         ffbSubPanel = new JPanel();
         ffbSubPanel.setLayout(new BorderLayout(0, 0));
         ffbSubPanel.setPreferredSize(new Dimension(1000, 800));
