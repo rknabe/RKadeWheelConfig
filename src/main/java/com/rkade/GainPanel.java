@@ -80,7 +80,11 @@ public class GainPanel extends BaseForm implements DeviceListener, ActionListene
 
     private boolean handleFocusLost(FocusEvent e) {
         if (e.getSource() == gainText) {
-            return device.setGainValue(gainIndex, Short.parseShort(gainText.getText()));
+            String gainStr = gainText.getText();
+            if (gainStr == null || gainStr.isEmpty()) {
+                gainStr = "1024";
+            }
+            return device.setGainValue(gainIndex, Short.parseShort(gainStr));
         }
         return true;
     }
