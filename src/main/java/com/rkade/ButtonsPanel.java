@@ -120,8 +120,12 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         mainButtonPanel.setPreferredSize(new Dimension(500, 600));
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        bottomPanel.setMinimumSize(new Dimension(100, 35));
+        bottomPanel.setPreferredSize(new Dimension(100, 35));
         mainButtonPanel.add(bottomPanel, BorderLayout.CENTER);
         final JLabel label1 = new JLabel();
+        label1.setHorizontalAlignment(0);
+        label1.setPreferredSize(new Dimension(125, 17));
         label1.setText("Debounce  (0-255)");
         bottomPanel.add(label1);
         debounceSpinner = new JSpinner();

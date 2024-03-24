@@ -1,5 +1,6 @@
 package com.rkade;
 
+import com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme;
 import org.apache.commons.cli.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,72 +15,90 @@ public class App {
     public static final String CL_PARAM_SPRING_OFF = "springoff";
     public static final String CL_PARAM_AUTO_CENTER = "autocenter";
     public static final String CL_PARAM_CENTER = "center";
-    private static final Logger logger = Logger.getLogger(App.class.getName());
+    public static final String CL_PARAM_HELP = "help";
     private static DeviceManager deviceManager;
 
     public static void main(String[] args) {
         boolean showGui = true;
 
-        try {
-            InputStream is = App.class.getResourceAsStream("/logging.properties");
-            LogManager.getLogManager().readConfiguration(is);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        Options options = setupCommandLineOptions();
 
         try {
-            Options options = setupCommandLineOptions();
-
             CommandLineParser parser = new DefaultParser();
             CommandLine cl = parser.parse(options, args);
+
+            if (cl.hasOption(CL_PARAM_HELP)) {
+                HelpFormatter fmt = new HelpFormatter();
+                fmt.printHelp("Help", options);
+                System.exit(1);
+            }
 
             if (cl.hasOption(CL_PARAM_SPRING_ON) || cl.hasOption(CL_PARAM_SPRING_OFF)
                     || cl.hasOption(CL_PARAM_AUTO_CENTER) || cl.hasOption(CL_PARAM_CENTER)) {
                 showGui = false;
+                int failed = 0;
                 Device device = DeviceManager.openDevice();
                 if (device != null) {
                     if (cl.hasOption(CL_PARAM_SPRING_ON)) {
                         if (device.setConstantSpring(true)) {
-                            logger.info("Constant Spring enabled");
+                            System.out.println("Constant Spring enabled");
                         } else {
-                            logger.info("Error enabling Constant Spring");
+                            failed = 1;
+                            System.out.println("Error enabling Constant Spring");
                         }
                     }
                     if (cl.hasOption(CL_PARAM_SPRING_OFF)) {
                         if (device.setConstantSpring(false)) {
-                            logger.info("Constant Spring disabled");
+                            System.out.println("Constant Spring disabled");
                         } else {
-                            logger.info("Error disabling Constant Spring");
+                            failed = 1;
+                            System.out.println("Error disabling Constant Spring");
                         }
                     }
                     if (cl.hasOption(CL_PARAM_AUTO_CENTER)) {
                         if (device.runAutoCenter()) {
-                            logger.info("AutoCenter complete");
+                            System.out.println("AutoCenter complete");
                         } else {
-                            logger.info("Error running AutoCenter");
+                            failed = 1;
+                            System.out.println("Error running AutoCenter");
                         }
                     }
-                    if (cl.hasOption(CL_PARAM_AUTO_CENTER)) {
+                    if (cl.hasOption(CL_PARAM_CENTER)) {
                         if (device.setWheelCenter()) {
-                            logger.info("Wheel center set to current position");
+                            System.out.println("Wheel center set to current position");
                         } else {
-                            logger.info("Error setting wheel center");
+                            failed = 1;
+                            System.out.println("Error setting wheel center");
                         }
                     }
                 } else {
-                    logger.severe("Could not open device for cli");
+                    failed = 1;
+                    System.out.println("Could not open device for cli");
                 }
+                System.exit(failed);
             }
+        } catch (UnrecognizedOptionException e) {
+            HelpFormatter fmt = new HelpFormatter();
+            fmt.printHelp("Help", options);
+            System.exit(1);
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            System.out.println(e.getMessage());
         }
 
         if (showGui) {
+            try {
+                InputStream is = App.class.getResourceAsStream("/logging.properties");
+                LogManager.getLogManager().readConfiguration(is);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            Logger logger = Logger.getLogger(App.class.getName());
+
             SwingUtilities.invokeLater(() -> {
                 try {
                     //com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProIJTheme.setup();
                     //com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme.setup();
-                    com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme.setup();
+                    FlatMaterialDesignDarkIJTheme.setup();
                     JFrame frame = new JFrame("RKADE Wheel Config");
                     MainForm mainForm = new MainForm();
                     frame.setContentPane(mainForm.getRootComponent());
@@ -122,6 +141,14 @@ public class App {
         centerOption.setRequired(false);
         centerOption.setOptionalArg(false);
         options.addOption(centerOption);
+
+        Option helpOption = Option.builder("h")
+                .longOpt(CL_PARAM_HELP)
+                .required(false)
+                .hasArg(false)
+                .build();
+        options.addOption(helpOption);
+
         return options;
     }
 }

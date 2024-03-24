@@ -14,13 +14,18 @@
     <children>
       <grid id="200ec" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <minimumSize width="100" height="35"/>
+          <preferredSize width="100" height="35"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="ab876" class="javax.swing.JLabel">
             <constraints/>
             <properties>
+              <horizontalAlignment value="0"/>
               <labelFor value="9f82f"/>
+              <preferredSize width="125" height="17"/>
               <text value="Debounce  (0-255)"/>
             </properties>
           </component>

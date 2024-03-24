@@ -67,7 +67,19 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                     openedDevice = PureJavaHidApi.openDevice(deviceInfo);
                     if (openedDevice != null) {
                         openedDevice.open();
-                        return getDevice(openedDevice);
+                        Device device = getDevice(openedDevice);
+                        if (device != null) {
+                            SerialPort[] ports = SerialPort.getCommPorts();
+                            for (SerialPort port : ports) {
+                                if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
+                                    device.setName(port.getDescriptivePortName());
+                                    device.setPort(port);
+                                }
+                            }
+                        } else {
+                            logger.severe("Device could not be opened");
+                        }
+                        return device;
                     }
                 } catch (IOException ex) {
                     logger.warning(ex.getMessage());
@@ -146,14 +158,6 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                     Device device = openDevice();
                     if (device != null) {
                         notifyListenersDeviceUpdated(device, "Opened", null);
-
-                        SerialPort[] ports = SerialPort.getCommPorts();
-                        for (SerialPort port : ports) {
-                            if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
-                                device.setName(port.getDescriptivePortName());
-                                device.setPort(port);
-                            }
-                        }
                         openedDevice.setDeviceRemovalListener(DeviceManager.this);
                         openedDevice.setInputReportListener(DeviceManager.this);
                         notifyListenersDeviceAttached(device);

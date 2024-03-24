@@ -81,7 +81,8 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.rkade.App</mainClass>
                                 </transformer>
                             </transformers>
@@ -128,6 +129,43 @@
                                 <productName>FFbWheelConfig</productName>
                                 <internalName>FFbWheelConfig</internalName>
                                 <originalFilename>FFbWheelConfig.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>l4j-cl</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>console</headerType>
+                            <outfile>target/FFbWheelConfig-cli.exe</outfile>
+                            <jar>target/FFbWheelConfig-1.0.jar</jar>
+                            <errTitle>FFbWheelConfig</errTitle>
+                            <icon>src/main/resources/wheel.ico</icon>
+                            <singleInstance>
+                                <mutexName>com.rkade.FFbWheelConfig</mutexName>
+                            </singleInstance>
+                            <classPath>
+                                <mainClass>com.rkade.App</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <path>jre</path>
+                                <opts>
+                                    <opt>-XX:+UseZGC -XX:+ZGenerational</opt>
+                                </opts>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <fileDescription>FFB Wheel Device Config</fileDescription>
+                                <copyright>Copyright 2024 Rusty Knabe</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <productName>FFbWheelConfig</productName>
+                                <internalName>FFbWheelConfig</internalName>
+                                <originalFilename>FFbWheelConfig-cli.exe</originalFilename>
                             </versionInfo>
                         </configuration>
                     </execution>
