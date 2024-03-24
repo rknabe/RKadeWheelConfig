@@ -50,6 +50,7 @@ public class Device {
     public static final byte CMD_DEFAULT = 22;
     public static final byte CMD_CENTER = 23;
     public static final String CMD_AUTOCENTER_TEXT = "autocenter ";
+    public static final String CMD_CENTER_TEXT = "center ";
     public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
     public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
     private static final Logger logger = Logger.getLogger(Device.class.getName());
@@ -91,6 +92,10 @@ public class Device {
 
     public synchronized boolean setWheelCenter() {
         return sendCommand(CMD_CENTER);
+    }
+
+    public synchronized boolean setWheelCenterCli() {
+        return writeTextToPort(CMD_CENTER_TEXT);
     }
 
     public synchronized boolean setWheelRange(Short range) {
@@ -176,6 +181,7 @@ public class Device {
 
     private boolean sendCommand(byte command, short arg1, short arg2, short arg3) {
         final boolean[] status = {true};
+        //TODO: this will not work with CLI only invocation
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             public Void doInBackground() {
                 byte[] data = new byte[7];

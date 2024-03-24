@@ -64,7 +64,7 @@ public class App {
                         }
                     }
                     if (cl.hasOption(CL_PARAM_CENTER)) {
-                        if (device.setWheelCenter()) {
+                        if (device.setWheelCenterCli()) {
                             System.out.println("Wheel center set to current position");
                         } else {
                             failed = 1;
