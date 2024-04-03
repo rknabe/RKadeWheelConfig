@@ -12,6 +12,7 @@ public final class MiscDataReport extends DataReport {
     private final byte ffbBitDepth;
     private final short endStopOffset;
     private final short endStopWidth;
+    private final boolean constantSpring;
 
     public MiscDataReport(byte reportType, byte reportIndex, short section, ByteBuffer buffer) {
         super(reportType, reportIndex, section);
@@ -28,6 +29,7 @@ public final class MiscDataReport extends DataReport {
 
         endStopOffset = buffer.getShort();
         endStopWidth = buffer.getShort();
+        constantSpring = buffer.get() > 0;
     }
 
     public short getMaxVd() {
@@ -64,5 +66,9 @@ public final class MiscDataReport extends DataReport {
 
     public short getEndStopWidth() {
         return endStopWidth;
+    }
+
+    public boolean isConstantSpring() {
+        return constantSpring;
     }
 }

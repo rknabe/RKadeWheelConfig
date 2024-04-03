@@ -44,6 +44,7 @@ public class Device {
     public static final byte MISC_CUTF = 5;
     public static final byte MISC_FFBBD = 6;
     public static final byte MISC_ENDSTOP = 7;
+    public static final byte MISC_CONSTANT_SPRING = 8;
     public static final byte CMD_SET_ODTRIM = 19;
     public static final byte CMD_EELOAD = 20;
     public static final byte CMD_EESAVE = 21;
@@ -51,8 +52,6 @@ public class Device {
     public static final byte CMD_CENTER = 23;
     public static final String CMD_AUTOCENTER_TEXT = "autocenter ";
     public static final String CMD_CENTER_TEXT = "center ";
-    public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
-    public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
     private static final Logger logger = Logger.getLogger(Device.class.getName());
     private static final int WAIT_AFTER_EFFECT_UPDATE = 5;
     private final String hidPath;
@@ -130,6 +129,13 @@ public class Device {
         return sendCommand(CMD_SET_MISC, miscType, value);
     }
 
+    public synchronized boolean setMiscValue(short miscType, boolean value) {
+        if (value) {
+            return sendCommand(CMD_SET_MISC, miscType, (short) 1);
+        }
+        return sendCommand(CMD_SET_MISC, miscType, (short) 0);
+    }
+
     public synchronized boolean setDebounce(byte value) {
         return sendCommand(CMD_SET_DEBOUNCE, value);
     }
@@ -154,13 +160,6 @@ public class Device {
 
     public synchronized boolean runAutoCenter() {
         return writeTextToPort(CMD_AUTOCENTER_TEXT);
-    }
-
-    public synchronized boolean setConstantSpring(boolean state) {
-        if (state) {
-            return writeTextToPort(CMD_SPRING_ON_TEXT);
-        }
-        return writeTextToPort(CMD_SPRING_OFF_TEXT);
     }
 
     public void setPort(SerialPort port) {

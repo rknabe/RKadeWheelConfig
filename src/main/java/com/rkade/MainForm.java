@@ -227,7 +227,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
             } else if (e.getActionCommand().equals(triangleButton.getActionCommand())) {
                 return device.doFfbTriangle();
             } else if (e.getActionCommand().equals(constantSpringCheckBox.getActionCommand())) {
-                return device.setConstantSpring(constantSpringCheckBox.isSelected());
+                return device.setMiscValue(Device.MISC_CONSTANT_SPRING, constantSpringCheckBox.isSelected());
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
                 isWaitingOnDevice = true;
                 boolean status = device.saveSettings();
@@ -364,7 +364,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     public void deviceAttached(Device device) {
         this.device = device;
         deviceComboBox.addItem(device.getName());
-        device.setConstantSpring(false);
         setPanelEnabled(true);
         for (AxisPanel axisPanel : axisPanels) {
             axisPanel.deviceAttached(device);
@@ -484,6 +483,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
             if (frequencyCombo.getSelectedIndex() != index) {
                 frequencyCombo.setSelectedIndex(index);
             }
+        }
+        if (!constantSpringCheckBox.isFocusOwner()) {
+            constantSpringCheckBox.setSelected(miscData.isConstantSpring());
         }
     }
 

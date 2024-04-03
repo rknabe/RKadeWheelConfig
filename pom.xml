@@ -4,7 +4,7 @@
 
     <groupId>com.rkade</groupId>
     <artifactId>FFbWheelConfig</artifactId>
-    <version>1.0</version>
+    <version>1.0.1.0</version>
     <packaging>jar</packaging>
 
     <name>FFbWheelConfig</name>
@@ -19,6 +19,10 @@
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>maven</id>
+            <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
     </repositories>
 
@@ -52,17 +56,17 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.4</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf-intellij-themes</artifactId>
-            <version>3.4</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -104,7 +108,7 @@
                         <configuration>
                             <headerType>gui</headerType>
                             <outfile>target/FFbWheelConfig.exe</outfile>
-                            <jar>target/FFbWheelConfig-1.0.jar</jar>
+                            <jar>target/FFbWheelConfig-${project.version}.jar</jar>
                             <errTitle>FFbWheelConfig</errTitle>
                             <icon>src/main/resources/wheel.ico</icon>
                             <singleInstance>
@@ -122,10 +126,10 @@
                                 </opts>
                             </jre>
                             <versionInfo>
-                                <fileVersion>1.0.0.0</fileVersion>
+                                <fileVersion>${project.version}</fileVersion>
                                 <fileDescription>FFB Wheel Device Config</fileDescription>
                                 <copyright>Copyright 2024 Rusty Knabe</copyright>
-                                <productVersion>1.0.0.0</productVersion>
+                                <productVersion>${project.version}</productVersion>
                                 <productName>FFbWheelConfig</productName>
                                 <internalName>FFbWheelConfig</internalName>
                                 <originalFilename>FFbWheelConfig.exe</originalFilename>
@@ -141,7 +145,7 @@
                         <configuration>
                             <headerType>console</headerType>
                             <outfile>target/FFbWheelConfig-cli.exe</outfile>
-                            <jar>target/FFbWheelConfig-1.0.jar</jar>
+                            <jar>target/FFbWheelConfig-${project.version}.jar</jar>
                             <errTitle>FFbWheelConfig</errTitle>
                             <icon>src/main/resources/wheel.ico</icon>
                             <singleInstance>
@@ -159,10 +163,10 @@
                                 </opts>
                             </jre>
                             <versionInfo>
-                                <fileVersion>1.0.0.0</fileVersion>
+                                <fileVersion>${project.version}</fileVersion>
                                 <fileDescription>FFB Wheel Device Config</fileDescription>
                                 <copyright>Copyright 2024 Rusty Knabe</copyright>
-                                <productVersion>1.0.0.0</productVersion>
+                                <productVersion>${project.version}</productVersion>
                                 <productName>FFbWheelConfig</productName>
                                 <internalName>FFbWheelConfig</internalName>
                                 <originalFilename>FFbWheelConfig-cli.exe</originalFilename>
@@ -174,7 +178,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.7.1</version>
                 <executions>
                     <execution>
                         <id>assembly</id>

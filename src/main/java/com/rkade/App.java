@@ -40,7 +40,7 @@ public class App {
                 Device device = DeviceManager.openDevice();
                 if (device != null) {
                     if (cl.hasOption(CL_PARAM_SPRING_ON)) {
-                        if (device.setConstantSpring(true)) {
+                        if (device.setMiscValue(Device.MISC_CONSTANT_SPRING, (short) 1)) {
                             System.out.println("Constant Spring enabled");
                         } else {
                             failed = 1;
@@ -48,7 +48,7 @@ public class App {
                         }
                     }
                     if (cl.hasOption(CL_PARAM_SPRING_OFF)) {
-                        if (device.setConstantSpring(false)) {
+                        if (device.setMiscValue(Device.MISC_CONSTANT_SPRING, (short) 0)) {
                             System.out.println("Constant Spring disabled");
                         } else {
                             failed = 1;
