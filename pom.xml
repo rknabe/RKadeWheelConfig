@@ -6,8 +6,12 @@
     <artifactId>FFbWheelConfig</artifactId>
     <version>1.0.1.0</version>
     <packaging>jar</packaging>
-
+    <description>RKADE FFB Device Configuration Utility</description>
     <name>FFbWheelConfig</name>
+    <organization>
+        <name>RKADE</name>
+    </organization>
+    <inceptionYear>2024</inceptionYear>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
