@@ -52,6 +52,8 @@ public class Device {
     public static final byte CMD_CENTER = 23;
     public static final String CMD_AUTOCENTER_TEXT = "autocenter ";
     public static final String CMD_CENTER_TEXT = "center ";
+    public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
+    public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
     private static final Logger logger = Logger.getLogger(Device.class.getName());
     private static final int WAIT_AFTER_EFFECT_UPDATE = 5;
     private final String hidPath;
@@ -138,6 +140,13 @@ public class Device {
 
     public synchronized boolean setDebounce(byte value) {
         return sendCommand(CMD_SET_DEBOUNCE, value);
+    }
+
+    public synchronized boolean setConstantSpring(boolean state) {
+        if (state) {
+            return writeTextToPort(CMD_SPRING_ON_TEXT);
+        }
+        return writeTextToPort(CMD_SPRING_OFF_TEXT);
     }
 
     public synchronized boolean writeTextToPort(String text) {
