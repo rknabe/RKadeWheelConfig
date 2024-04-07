@@ -7,6 +7,10 @@ import io.github.libsdl4j.api.joystick.SDL_Joystick;
 import purejavahidapi.HidDevice;
 
 import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
@@ -54,6 +58,8 @@ public class Device {
     public static final String CMD_CENTER_TEXT = "center ";
     public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
     public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
+    public static final String CMD_VERSION = "version ";
+    public static final String SUPPORTED_FIRMWARE_TYPE = "RKADE";
     private static final Logger logger = Logger.getLogger(Device.class.getName());
     private static final int WAIT_AFTER_EFFECT_UPDATE = 5;
     private final String hidPath;
@@ -61,6 +67,8 @@ public class Device {
     private String name;
     private SDL_Haptic hapticJoystick;
     private SerialPort port;
+    private String firmwareType;
+    private String firmwareVersion;
     private int sineEffectId = -1;
     private int springEffectId = -1;
     private int rampEffectId = -1;
@@ -167,6 +175,36 @@ public class Device {
         return false;
     }
 
+    public synchronized String readVersion() {
+        boolean isOpen = port.isOpen();
+        if (!isOpen) {
+            port.setBaudRate(9600);
+            port.setParity(0);
+            port.setNumStopBits(1);
+            port.setNumDataBits(8);
+            isOpen = port.openPort(500);
+        }
+        if (isOpen) {
+            byte[] value = CMD_VERSION.getBytes(StandardCharsets.US_ASCII);
+            int ret = port.writeBytes(value, value.length);
+            if (ret > 0) {
+                try {
+                    InputStream is = port.getInputStream();
+                    port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
+                    InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
+                    BufferedReader bufferedReader = new BufferedReader(streamReader);
+                    return bufferedReader.readLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    port.closePort();
+                }
+            }
+            return null;
+        }
+        return null;
+    }
+
     public synchronized boolean runAutoCenter() {
         return writeTextToPort(CMD_AUTOCENTER_TEXT);
     }
@@ -229,6 +267,22 @@ public class Device {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFirmwareType() {
+        return firmwareType;
+    }
+
+    public void setFirmwareType(String firmwareType) {
+        this.firmwareType = firmwareType;
+    }
+
+    public String getFirmwareVersion() {
+        return firmwareVersion;
+    }
+
+    public void setFirmwareVersion(String firmwareVersion) {
+        this.firmwareVersion = firmwareVersion;
     }
 
     private void sleep(int millis) {

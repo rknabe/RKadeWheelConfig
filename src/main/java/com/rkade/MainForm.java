@@ -43,7 +43,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JTabbedPane mainTab;
     private JPanel ffbTab;
     private JPanel bottomPanel;
-    private JComboBox<String> deviceComboBox;
+    private JLabel deviceLabel;
     private JLabel statusLabel;
     private JComboBox<String> rangeComboBox;
     private JLabel rangeLabel;
@@ -59,7 +59,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JTextField wheelRawTextField;
     private JTextField wheelValueTextField;
     private JLabel wheelValueLabel;
-    private JLabel versionLabel;
+    private JLabel firmwareLabel;
     private AxisPanel axis1Panel;
     private AxisPanel axis2Panel;
     private AxisPanel axis3Panel;
@@ -106,6 +106,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JCheckBox constantSpringCheckBox;
     private ButtonsPanel buttonsPanel;
     private JPanel buttonsTab;
+    private JLabel versionLabel;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
@@ -138,7 +139,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         setupAxisPanels();
         setupGainPanels();
 
-        controls = List.of(deviceComboBox, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton,
+        controls = List.of(deviceLabel, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton,
                 loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton,
                 rampButton, sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton,
                 constantSpringCheckBox, maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText,
@@ -363,7 +364,8 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     @Override
     public void deviceAttached(Device device) {
         this.device = device;
-        deviceComboBox.addItem(device.getName());
+        deviceLabel.setText(device.getName());
+        versionLabel.setText(device.getFirmwareType() + ":" + device.getFirmwareVersion());
         setPanelEnabled(true);
         for (AxisPanel axisPanel : axisPanels) {
             axisPanel.deviceAttached(device);
@@ -376,7 +378,8 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
 
     @Override
     public void deviceDetached(Device device) {
-        deviceComboBox.removeItem(device.getName());
+        deviceLabel.setText("");
+        versionLabel.setText("");
         this.device = null;
         setPanelEnabled(false);
         for (AxisPanel axisPanel : axisPanels) {
@@ -999,48 +1002,73 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         buttonsPanel = new ButtonsPanel();
         buttonsTab.add(buttonsPanel.$$$getRootComponent$$$(), BorderLayout.WEST);
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
         bottomPanel.setAutoscrolls(false);
         bottomPanel.setMinimumSize(new Dimension(1060, 75));
-        bottomPanel.setPreferredSize(new Dimension(1060, 75));
+        bottomPanel.setPreferredSize(new Dimension(1065, 75));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(bottomPanel, gbc);
         bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        deviceComboBox = new JComboBox();
-        deviceComboBox.setEditable(false);
-        deviceComboBox.setMinimumSize(new Dimension(200, 30));
-        deviceComboBox.setPreferredSize(new Dimension(200, 30));
-        bottomPanel.add(deviceComboBox);
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        panel1.setPreferredSize(new Dimension(445, 32));
+        bottomPanel.add(panel1);
+        panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        deviceLabel = new JLabel();
+        deviceLabel.setEnabled(true);
+        deviceLabel.setHorizontalAlignment(2);
+        deviceLabel.setMinimumSize(new Dimension(145, 20));
+        deviceLabel.setPreferredSize(new Dimension(145, 20));
+        deviceLabel.setText("Device");
+        panel1.add(deviceLabel);
+        firmwareLabel = new JLabel();
+        firmwareLabel.setEnabled(true);
+        firmwareLabel.setFocusable(false);
+        firmwareLabel.setHorizontalAlignment(4);
+        firmwareLabel.setMaximumSize(new Dimension(70, 17));
+        firmwareLabel.setMinimumSize(new Dimension(60, 17));
+        firmwareLabel.setPreferredSize(new Dimension(70, 20));
+        firmwareLabel.setText("Firmware:");
+        panel1.add(firmwareLabel);
         versionLabel = new JLabel();
+        versionLabel.setEnabled(true);
         versionLabel.setFocusable(false);
-        versionLabel.setPreferredSize(new Dimension(80, 17));
+        versionLabel.setHorizontalAlignment(2);
+        versionLabel.setPreferredSize(new Dimension(80, 20));
         versionLabel.setText("Version");
-        bottomPanel.add(versionLabel);
+        panel1.add(versionLabel);
         statusLabel = new JLabel();
+        statusLabel.setEnabled(true);
         statusLabel.setFocusable(false);
+        statusLabel.setHorizontalAlignment(2);
         statusLabel.setMinimumSize(new Dimension(130, 20));
         statusLabel.setPreferredSize(new Dimension(130, 20));
         statusLabel.setRequestFocusEnabled(true);
         statusLabel.setText("Device Not Found...");
-        bottomPanel.add(statusLabel);
+        panel1.add(statusLabel);
         defaultsButton = new JButton();
         defaultsButton.setActionCommand("resetDefaults");
-        defaultsButton.setMinimumSize(new Dimension(201, 30));
-        defaultsButton.setPreferredSize(new Dimension(201, 30));
+        defaultsButton.setMaximumSize(new Dimension(196, 30));
+        defaultsButton.setMinimumSize(new Dimension(196, 30));
+        defaultsButton.setPreferredSize(new Dimension(196, 30));
         defaultsButton.setText("Reset Settings to Defaults");
         bottomPanel.add(defaultsButton);
         loadButton = new JButton();
         loadButton.setActionCommand("loadEEPROM");
+        loadButton.setMaximumSize(new Dimension(196, 30));
+        loadButton.setMinimumSize(new Dimension(196, 30));
+        loadButton.setPreferredSize(new Dimension(196, 30));
         loadButton.setText("Load Settings From EEPROM");
         bottomPanel.add(loadButton);
         saveButton = new JButton();
         saveButton.setActionCommand("saveSettings");
         saveButton.setHorizontalAlignment(0);
-        saveButton.setMinimumSize(new Dimension(201, 30));
-        saveButton.setPreferredSize(new Dimension(201, 30));
+        saveButton.setMaximumSize(new Dimension(196, 30));
+        saveButton.setMinimumSize(new Dimension(196, 30));
+        saveButton.setPreferredSize(new Dimension(196, 30));
         saveButton.setText("Save Settings to EEPROM");
         bottomPanel.add(saveButton);
         wheelRawLabel.setLabelFor(velocityText);

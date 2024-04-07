@@ -664,7 +664,7 @@
           </grid>
         </children>
       </tabbedpane>
-      <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="f3ed9" binding="bottomPanel" layout-manager="FlowLayout" hgap="4" vgap="4" flow-align="0">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -672,42 +672,70 @@
         <properties>
           <autoscrolls value="false"/>
           <minimumSize width="1060" height="75"/>
-          <preferredSize width="1060" height="75"/>
+          <preferredSize width="1065" height="75"/>
         </properties>
         <border type="bevel-raised"/>
         <children>
-          <component id="763d7" class="javax.swing.JComboBox" binding="deviceComboBox">
+          <grid id="6d238" layout-manager="FlowLayout" hgap="4" vgap="4" flow-align="0">
             <constraints/>
             <properties>
-              <editable value="false"/>
-              <minimumSize width="200" height="30"/>
-              <preferredSize width="200" height="30"/>
+              <preferredSize width="445" height="32"/>
             </properties>
-          </component>
-          <component id="bcaa2" class="javax.swing.JLabel" binding="versionLabel">
-            <constraints/>
-            <properties>
-              <focusable value="false"/>
-              <preferredSize width="80" height="17"/>
-              <text value="Version"/>
-            </properties>
-          </component>
-          <component id="ea116" class="javax.swing.JLabel" binding="statusLabel">
-            <constraints/>
-            <properties>
-              <focusable value="false"/>
-              <minimumSize width="130" height="20"/>
-              <preferredSize width="130" height="20"/>
-              <requestFocusEnabled value="true"/>
-              <text value="Device Not Found..."/>
-            </properties>
-          </component>
+            <border type="etched"/>
+            <children>
+              <component id="6cb29" class="javax.swing.JLabel" binding="deviceLabel">
+                <constraints/>
+                <properties>
+                  <enabled value="true"/>
+                  <horizontalAlignment value="2"/>
+                  <minimumSize width="145" height="20"/>
+                  <preferredSize width="145" height="20"/>
+                  <text value="Device"/>
+                </properties>
+              </component>
+              <component id="bcaa2" class="javax.swing.JLabel" binding="firmwareLabel">
+                <constraints/>
+                <properties>
+                  <enabled value="true"/>
+                  <focusable value="false"/>
+                  <horizontalAlignment value="4"/>
+                  <maximumSize width="70" height="17"/>
+                  <minimumSize width="60" height="17"/>
+                  <preferredSize width="70" height="20"/>
+                  <text value="Firmware:"/>
+                </properties>
+              </component>
+              <component id="a8f28" class="javax.swing.JLabel" binding="versionLabel">
+                <constraints/>
+                <properties>
+                  <enabled value="true"/>
+                  <focusable value="false"/>
+                  <horizontalAlignment value="2"/>
+                  <preferredSize width="80" height="20"/>
+                  <text value="Version"/>
+                </properties>
+              </component>
+              <component id="ea116" class="javax.swing.JLabel" binding="statusLabel">
+                <constraints/>
+                <properties>
+                  <enabled value="true"/>
+                  <focusable value="false"/>
+                  <horizontalAlignment value="2"/>
+                  <minimumSize width="130" height="20"/>
+                  <preferredSize width="130" height="20"/>
+                  <requestFocusEnabled value="true"/>
+                  <text value="Device Not Found..."/>
+                </properties>
+              </component>
+            </children>
+          </grid>
           <component id="21199" class="javax.swing.JButton" binding="defaultsButton">
             <constraints/>
             <properties>
               <actionCommand value="resetDefaults"/>
-              <minimumSize width="201" height="30"/>
-              <preferredSize width="201" height="30"/>
+              <maximumSize width="196" height="30"/>
+              <minimumSize width="196" height="30"/>
+              <preferredSize width="196" height="30"/>
               <text value="Reset Settings to Defaults"/>
             </properties>
           </component>
@@ -715,6 +743,9 @@
             <constraints/>
             <properties>
               <actionCommand value="loadEEPROM"/>
+              <maximumSize width="196" height="30"/>
+              <minimumSize width="196" height="30"/>
+              <preferredSize width="196" height="30"/>
               <text value="Load Settings From EEPROM"/>
             </properties>
           </component>
@@ -723,8 +754,9 @@
             <properties>
               <actionCommand value="saveSettings"/>
               <horizontalAlignment value="0"/>
-              <minimumSize width="201" height="30"/>
-              <preferredSize width="201" height="30"/>
+              <maximumSize width="196" height="30"/>
+              <minimumSize width="196" height="30"/>
+              <preferredSize width="196" height="30"/>
               <text value="Save Settings to EEPROM"/>
             </properties>
           </component>

@@ -74,12 +74,27 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                                 if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
                                     device.setName(port.getDescriptivePortName());
                                     device.setPort(port);
+                                    String version = device.readVersion();
+                                    if (version != null && version.contains(":")) {
+                                        String[] parts =  version.split(":");
+                                        if (parts.length == 2) {
+                                            String firmwareType = parts[0];
+                                            if (Device.SUPPORTED_FIRMWARE_TYPE.equalsIgnoreCase(firmwareType)) {
+                                                device.setFirmwareType(firmwareType);
+                                                device.setFirmwareVersion(parts[1]);
+                                                return device;
+                                            }
+                                            else {
+                                                notifyListenersDeviceUpdated(null, "Unsupported Firmware", null);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         } else {
                             logger.severe("Device could not be opened");
                         }
-                        return device;
+                        return null;
                     }
                 } catch (IOException ex) {
                     logger.warning(ex.getMessage());
