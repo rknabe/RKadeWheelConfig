@@ -75,20 +75,23 @@
                               <actionCommand value="rangeChanged"/>
                               <editable value="true"/>
                               <minimumSize width="100" height="30"/>
-                              <preferredSize width="100" height="30"/>
+                              <preferredSize width="97" height="30"/>
                             </properties>
                           </component>
                           <component id="54358" class="javax.swing.JButton" binding="centerButton">
                             <constraints/>
                             <properties>
-                              <preferredSize width="100" height="30"/>
-                              <text value="Set Center"/>
+                              <preferredSize width="75" height="30"/>
+                              <text value="Center"/>
                             </properties>
                           </component>
                           <component id="2e33b" class="javax.swing.JButton" binding="autoCenterButton">
                             <constraints/>
                             <properties>
                               <actionCommand value="autoCenter"/>
+                              <maximumSize width="105" height="34"/>
+                              <minimumSize width="105" height="34"/>
+                              <preferredSize width="100" height="34"/>
                               <text value="AutoCenter"/>
                             </properties>
                           </component>
@@ -128,7 +131,7 @@
                               <editable value="false"/>
                               <focusable value="false"/>
                               <minimumSize width="25" height="30"/>
-                              <preferredSize width="65" height="30"/>
+                              <preferredSize width="55" height="30"/>
                             </properties>
                           </component>
                           <component id="caa55" class="javax.swing.JLabel" binding="wheelValueLabel">
@@ -145,7 +148,7 @@
                               <editable value="false"/>
                               <focusable value="false"/>
                               <minimumSize width="25" height="30"/>
-                              <preferredSize width="65" height="30"/>
+                              <preferredSize width="55" height="30"/>
                             </properties>
                           </component>
                           <component id="f0703" class="javax.swing.JLabel">
@@ -162,7 +165,7 @@
                               <editable value="false"/>
                               <focusable value="false"/>
                               <minimumSize width="25" height="30"/>
-                              <preferredSize width="65" height="30"/>
+                              <preferredSize width="55" height="30"/>
                             </properties>
                           </component>
                           <component id="292c" class="javax.swing.JLabel" binding="accLabel">
@@ -178,7 +181,7 @@
                             <properties>
                               <editable value="false"/>
                               <focusable value="false"/>
-                              <preferredSize width="65" height="30"/>
+                              <preferredSize width="55" height="30"/>
                             </properties>
                           </component>
                         </children>
@@ -484,9 +487,19 @@
                                   <preferredSize width="75" height="30"/>
                                 </properties>
                               </component>
+                              <component id="59045" class="javax.swing.JCheckBox" binding="afcCheckBox">
+                                <constraints>
+                                  <grid row="8" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <label value="AutoCenter at Startup"/>
+                                  <text value="AutoCenter at Startup"/>
+                                </properties>
+                              </component>
                               <component id="4efbe" class="javax.swing.JCheckBox" binding="constantSpringCheckBox">
                                 <constraints>
-                                  <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                                   <gridbag weightx="0.0" weighty="0.0"/>
                                 </constraints>
                                 <properties>

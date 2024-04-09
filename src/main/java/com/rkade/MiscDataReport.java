@@ -13,6 +13,7 @@ public final class MiscDataReport extends DataReport {
     private final short endStopOffset;
     private final short endStopWidth;
     private final boolean constantSpring;
+    private final boolean autoCenterOnStartup;
 
     public MiscDataReport(byte reportType, byte reportIndex, short section, ByteBuffer buffer) {
         super(reportType, reportIndex, section);
@@ -30,6 +31,7 @@ public final class MiscDataReport extends DataReport {
         endStopOffset = buffer.getShort();
         endStopWidth = buffer.getShort();
         constantSpring = buffer.get() > 0;
+        autoCenterOnStartup = buffer.get() > 0;
     }
 
     public short getMaxVd() {
@@ -70,5 +72,9 @@ public final class MiscDataReport extends DataReport {
 
     public boolean isConstantSpring() {
         return constantSpring;
+    }
+
+    public boolean isAutoCenterOnStartup() {
+        return autoCenterOnStartup;
     }
 }

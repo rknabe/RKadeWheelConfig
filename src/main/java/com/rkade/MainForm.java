@@ -107,6 +107,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private ButtonsPanel buttonsPanel;
     private JPanel buttonsTab;
     private JLabel versionLabel;
+    private JCheckBox afcCheckBox;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
@@ -140,10 +141,10 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         setupGainPanels();
 
         controls = List.of(deviceLabel, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton,
-                loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton,
-                rampButton, sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton,
-                constantSpringCheckBox, maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText,
-                minForceText, maxForceText, cutForceText, minForceSlider, maxForceSlider, cutForceSlider, frequencyCombo);
+                loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton, rampButton,
+                sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton, constantSpringCheckBox,
+                maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText, minForceText, maxForceText, cutForceText,
+                minForceSlider, maxForceSlider, cutForceSlider, frequencyCombo, afcCheckBox);
 
         setupControlListener();
 
@@ -229,6 +230,8 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 return device.doFfbTriangle();
             } else if (e.getActionCommand().equals(constantSpringCheckBox.getActionCommand())) {
                 return device.setMiscValue(Device.MISC_CONSTANT_SPRING, constantSpringCheckBox.isSelected());
+            } else if (e.getActionCommand().equals(afcCheckBox.getActionCommand())) {
+                return device.setMiscValue(Device.MISC_AFC_STARTUP, afcCheckBox.isSelected());
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
                 isWaitingOnDevice = true;
                 boolean status = device.saveSettings();
@@ -490,6 +493,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         if (!constantSpringCheckBox.isFocusOwner()) {
             constantSpringCheckBox.setSelected(miscData.isConstantSpring());
         }
+        if (!afcCheckBox.isFocusOwner()) {
+            afcCheckBox.setSelected(miscData.isAutoCenterOnStartup());
+        }
     }
 
     private void updateWheelPanel(WheelDataReport wheelData) {
@@ -591,14 +597,17 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         rangeComboBox.setActionCommand("rangeChanged");
         rangeComboBox.setEditable(true);
         rangeComboBox.setMinimumSize(new Dimension(100, 30));
-        rangeComboBox.setPreferredSize(new Dimension(100, 30));
+        rangeComboBox.setPreferredSize(new Dimension(97, 30));
         wheelPanel.add(rangeComboBox);
         centerButton = new JButton();
-        centerButton.setPreferredSize(new Dimension(100, 30));
-        centerButton.setText("Set Center");
+        centerButton.setPreferredSize(new Dimension(75, 30));
+        centerButton.setText("Center");
         wheelPanel.add(centerButton);
         autoCenterButton = new JButton();
         autoCenterButton.setActionCommand("autoCenter");
+        autoCenterButton.setMaximumSize(new Dimension(105, 34));
+        autoCenterButton.setMinimumSize(new Dimension(105, 34));
+        autoCenterButton.setPreferredSize(new Dimension(100, 34));
         autoCenterButton.setText("AutoCenter");
         wheelPanel.add(autoCenterButton);
         wheelIconLabel = new JLabel();
@@ -625,7 +634,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         wheelRawTextField.setEditable(false);
         wheelRawTextField.setFocusable(false);
         wheelRawTextField.setMinimumSize(new Dimension(25, 30));
-        wheelRawTextField.setPreferredSize(new Dimension(65, 30));
+        wheelRawTextField.setPreferredSize(new Dimension(55, 30));
         wheelPanel.add(wheelRawTextField);
         wheelValueLabel = new JLabel();
         wheelValueLabel.setFocusable(false);
@@ -635,7 +644,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         wheelValueTextField.setEditable(false);
         wheelValueTextField.setFocusable(false);
         wheelValueTextField.setMinimumSize(new Dimension(25, 30));
-        wheelValueTextField.setPreferredSize(new Dimension(65, 30));
+        wheelValueTextField.setPreferredSize(new Dimension(55, 30));
         wheelPanel.add(wheelValueTextField);
         final JLabel label1 = new JLabel();
         label1.setFocusable(false);
@@ -645,7 +654,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         velocityText.setEditable(false);
         velocityText.setFocusable(false);
         velocityText.setMinimumSize(new Dimension(25, 30));
-        velocityText.setPreferredSize(new Dimension(65, 30));
+        velocityText.setPreferredSize(new Dimension(55, 30));
         wheelPanel.add(velocityText);
         accLabel = new JLabel();
         accLabel.setFocusable(false);
@@ -654,7 +663,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         accText = new JTextField();
         accText.setEditable(false);
         accText.setFocusable(false);
-        accText.setPreferredSize(new Dimension(65, 30));
+        accText.setPreferredSize(new Dimension(55, 30));
         wheelPanel.add(accText);
         axis1Panel = new AxisPanel();
         axisPanel.add(axis1Panel.$$$getRootComponent$$$());
@@ -880,6 +889,14 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         gbc.gridx = 1;
         gbc.gridy = 0;
         miscPanel.add(maxVelocityDamperText, gbc);
+        afcCheckBox = new JCheckBox();
+        afcCheckBox.setLabel("AutoCenter at Startup");
+        afcCheckBox.setText("AutoCenter at Startup");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 8;
+        gbc.anchor = GridBagConstraints.WEST;
+        miscPanel.add(afcCheckBox, gbc);
         constantSpringCheckBox = new JCheckBox();
         constantSpringCheckBox.setHorizontalAlignment(0);
         constantSpringCheckBox.setLabel("Constant Spring");
@@ -887,6 +904,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 7;
+        gbc.anchor = GridBagConstraints.WEST;
         miscPanel.add(constantSpringCheckBox, gbc);
         testPanel = new JPanel();
         testPanel.setLayout(new GridBagLayout());
