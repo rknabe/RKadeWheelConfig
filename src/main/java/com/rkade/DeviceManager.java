@@ -76,15 +76,14 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
                                     device.setPort(port);
                                     String version = device.readVersion();
                                     if (version != null && version.contains(":")) {
-                                        String[] parts =  version.split(":");
+                                        String[] parts = version.split(":");
                                         if (parts.length == 2) {
                                             String firmwareType = parts[0];
                                             if (Device.SUPPORTED_FIRMWARE_TYPE.equalsIgnoreCase(firmwareType)) {
                                                 device.setFirmwareType(firmwareType);
                                                 device.setFirmwareVersion(parts[1]);
                                                 return device;
-                                            }
-                                            else {
+                                            } else {
                                                 notifyListenersDeviceUpdated(null, "Unsupported Firmware", null);
                                             }
                                         }

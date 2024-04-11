@@ -50,6 +50,7 @@ public class Device {
     public static final byte MISC_ENDSTOP = 7;
     public static final byte MISC_CONSTANT_SPRING = 8;
     public static final byte MISC_AFC_STARTUP = 9;
+    public static final byte MISC_MPLEX_SHIFTER = 10;
     public static final byte CMD_SET_ODTRIM = 19;
     public static final byte CMD_EELOAD = 20;
     public static final byte CMD_EESAVE = 21;
@@ -149,6 +150,10 @@ public class Device {
 
     public synchronized boolean setDebounce(byte value) {
         return sendCommand(CMD_SET_DEBOUNCE, value);
+    }
+
+    public synchronized boolean setMultiplexShifter(boolean value) {
+        return setMiscValue(MISC_MPLEX_SHIFTER, value);
     }
 
     public synchronized boolean setConstantSpring(boolean state) {

@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.util.List;
@@ -48,10 +49,11 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     private JButton button30;
     private JButton button31;
     private JButton button32;
+    private JCheckBox multiplexCheckbox;
     private Device device = null;
 
     public ButtonsPanel() {
-        controls = List.of(debounceSpinner);
+        controls = List.of(debounceSpinner, multiplexCheckbox);
         switchButtons = List.of(button1, button2, button3, button4, button5, button6, button7, button8,
                 button9, button10, button11, button12, button13, button14, button15, button16,
                 button17, button18, button19, button20, button21, button22, button23, button24,
@@ -93,9 +95,27 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
 
     private void updateControls(ButtonsDataReport buttonsDataReport) {
         debounceSpinner.setValue(buttonsDataReport.getDebounce());
+        if (!multiplexCheckbox.isFocusOwner()) {
+            multiplexCheckbox.setSelected(buttonsDataReport.isMultiplexShifterButtons());
+        }
         for (JButton button : switchButtons) {
             button.setSelected(getButtonState(buttonsDataReport, switchButtons.indexOf(button)));
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        boolean status = handleAction(e);
+        if (!status) {
+            logger.warning("Action failed for:" + e.getActionCommand());
+        }
+    }
+
+    private boolean handleAction(ActionEvent e) {
+        if (e.getActionCommand().equals(multiplexCheckbox.getActionCommand())) {
+            return device.setMultiplexShifter(multiplexCheckbox.isSelected());
+        }
+        return true;
     }
 
     @Override
@@ -133,26 +153,37 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         mainButtonPanel = new JPanel();
         mainButtonPanel.setLayout(new BorderLayout(0, 0));
         mainButtonPanel.setAutoscrolls(false);
-        mainButtonPanel.setMinimumSize(new Dimension(100, 240));
+        mainButtonPanel.setMaximumSize(new Dimension(400, 240));
+        mainButtonPanel.setMinimumSize(new Dimension(400, 240));
         mainButtonPanel.setName("mainButtonPanel");
-        mainButtonPanel.setPreferredSize(new Dimension(500, 240));
+        mainButtonPanel.setPreferredSize(new Dimension(400, 240));
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        bottomPanel.setMaximumSize(new Dimension(400, 50));
         bottomPanel.setMinimumSize(new Dimension(100, 35));
-        bottomPanel.setPreferredSize(new Dimension(100, 45));
+        bottomPanel.setPreferredSize(new Dimension(400, 45));
         mainButtonPanel.add(bottomPanel, BorderLayout.CENTER);
+        debounceSpinner = new JSpinner();
+        debounceSpinner.setAlignmentY(1.0f);
+        debounceSpinner.setMinimumSize(new Dimension(90, 35));
+        debounceSpinner.setPreferredSize(new Dimension(60, 25));
+        bottomPanel.add(debounceSpinner);
         final JLabel label1 = new JLabel();
-        label1.setHorizontalAlignment(0);
-        label1.setPreferredSize(new Dimension(125, 17));
+        label1.setAlignmentY(1.0f);
+        label1.setHorizontalAlignment(2);
+        label1.setMinimumSize(new Dimension(200, 25));
+        label1.setPreferredSize(new Dimension(226, 17));
         label1.setText("Debounce  (0-255)");
         bottomPanel.add(label1);
-        debounceSpinner = new JSpinner();
-        debounceSpinner.setMinimumSize(new Dimension(88, 35));
-        debounceSpinner.setPreferredSize(new Dimension(70, 35));
-        bottomPanel.add(debounceSpinner);
+        multiplexCheckbox = new JCheckBox();
+        multiplexCheckbox.setAlignmentY(1.0f);
+        multiplexCheckbox.setPreferredSize(new Dimension(290, 25));
+        multiplexCheckbox.setText("Multiplex 4 Switch Shifter to 6 Buttons");
+        bottomPanel.add(multiplexCheckbox);
         topPanel = new JPanel();
         topPanel.setLayout(new GridBagLayout());
         topPanel.setAutoscrolls(false);
+        topPanel.setMaximumSize(new Dimension(200, 205));
         topPanel.setMinimumSize(new Dimension(100, 205));
         topPanel.setPreferredSize(new Dimension(200, 205));
         mainButtonPanel.add(topPanel, BorderLayout.NORTH);

@@ -20,6 +20,7 @@ public class App {
 
     public static void main(String[] args) {
         boolean showGui = true;
+        System.setProperty("fazecast.jSerialComm.appid", "com.rkade.FfbWheelConfig");
 
         Options options = setupCommandLineOptions();
 

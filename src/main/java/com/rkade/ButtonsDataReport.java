@@ -6,12 +6,14 @@ public final class ButtonsDataReport extends DataReport {
     private final int buttonsState;
     private final byte centerButton;
     private final byte debounce;
+    private final boolean multiplexShifterButtons;
 
     public ButtonsDataReport(byte reportType, byte reportIndex, short section, ByteBuffer buffer) {
         super(reportType, reportIndex, section);
         buttonsState = buffer.getInt();
         centerButton = buffer.get();
         debounce = buffer.get();
+        multiplexShifterButtons = buffer.get() > 0;
     }
 
     public int getButtonsState() {
@@ -26,15 +28,7 @@ public final class ButtonsDataReport extends DataReport {
         return debounce;
     }
 
-    @Override
-    public String toString() {
-        return "ButtonsDataReport{" +
-                "buttonsState=" + buttonsState +
-                ", centerButton=" + centerButton +
-                ", debounce=" + debounce +
-                ", reportType=" + reportType +
-                ", reportIndex=" + reportIndex +
-                ", section=" + section +
-                '}';
+    public boolean isMultiplexShifterButtons() {
+        return multiplexShifterButtons;
     }
 }
