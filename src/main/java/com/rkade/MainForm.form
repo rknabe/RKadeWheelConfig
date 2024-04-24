@@ -532,114 +532,6 @@
                                   <verticalAlignment value="0"/>
                                 </properties>
                               </component>
-                              <component id="2cf0a" class="javax.swing.JButton" binding="sineButton">
-                                <constraints>
-                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Sine"/>
-                                </properties>
-                              </component>
-                              <component id="4de4d" class="javax.swing.JButton" binding="springButton">
-                                <constraints>
-                                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Spring"/>
-                                </properties>
-                              </component>
-                              <component id="34c0a" class="javax.swing.JButton" binding="frictionButton">
-                                <constraints>
-                                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Friction"/>
-                                </properties>
-                              </component>
-                              <component id="573e3" class="javax.swing.JButton" binding="rampButton">
-                                <constraints>
-                                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Ramp"/>
-                                </properties>
-                              </component>
-                              <component id="6a336" class="javax.swing.JButton" binding="sawtoothUpButton">
-                                <constraints>
-                                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Sawtooth Up"/>
-                                </properties>
-                              </component>
-                              <component id="abcb2" class="javax.swing.JButton" binding="sawtoothDownButton">
-                                <constraints>
-                                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Sawtooth Down"/>
-                                </properties>
-                              </component>
-                              <component id="83ff7" class="javax.swing.JButton" binding="inertiaButton">
-                                <constraints>
-                                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Inertia"/>
-                                </properties>
-                              </component>
-                              <component id="8f72e" class="javax.swing.JButton" binding="damperButton">
-                                <constraints>
-                                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Damper"/>
-                                </properties>
-                              </component>
-                              <component id="8fa5c" class="javax.swing.JButton" binding="triangleButton">
-                                <constraints>
-                                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <maximumSize width="153" height="30"/>
-                                  <minimumSize width="153" height="30"/>
-                                  <preferredSize width="153" height="30"/>
-                                  <text value="Triangle"/>
-                                </properties>
-                              </component>
                               <component id="b82ef" class="javax.swing.JButton" binding="constantRightButton">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -651,6 +543,114 @@
                                   <preferredSize width="153" height="30"/>
                                   <text value="Constant Pull Right"/>
                                   <verticalAlignment value="0"/>
+                                </properties>
+                              </component>
+                              <component id="573e3" class="javax.swing.JButton" binding="rampButton">
+                                <constraints>
+                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Ramp"/>
+                                </properties>
+                              </component>
+                              <component id="2cf0a" class="javax.swing.JButton" binding="sineButton">
+                                <constraints>
+                                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Sine"/>
+                                </properties>
+                              </component>
+                              <component id="8fa5c" class="javax.swing.JButton" binding="triangleButton">
+                                <constraints>
+                                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Triangle"/>
+                                </properties>
+                              </component>
+                              <component id="6a336" class="javax.swing.JButton" binding="sawtoothUpButton">
+                                <constraints>
+                                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Sawtooth Up"/>
+                                </properties>
+                              </component>
+                              <component id="abcb2" class="javax.swing.JButton" binding="sawtoothDownButton">
+                                <constraints>
+                                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Sawtooth Down"/>
+                                </properties>
+                              </component>
+                              <component id="4de4d" class="javax.swing.JButton" binding="springButton">
+                                <constraints>
+                                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Spring"/>
+                                </properties>
+                              </component>
+                              <component id="8f72e" class="javax.swing.JButton" binding="damperButton">
+                                <constraints>
+                                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Damper"/>
+                                </properties>
+                              </component>
+                              <component id="83ff7" class="javax.swing.JButton" binding="inertiaButton">
+                                <constraints>
+                                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Inertia"/>
+                                </properties>
+                              </component>
+                              <component id="34c0a" class="javax.swing.JButton" binding="frictionButton">
+                                <constraints>
+                                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <maximumSize width="153" height="30"/>
+                                  <minimumSize width="153" height="30"/>
+                                  <preferredSize width="153" height="30"/>
+                                  <text value="Friction"/>
                                 </properties>
                               </component>
                             </children>
