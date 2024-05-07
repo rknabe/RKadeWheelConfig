@@ -7,7 +7,7 @@
     <properties>
       <alignmentX value="1.0"/>
       <alignmentY value="1.0"/>
-      <maximumSize width="32767" height="32767"/>
+      <maximumSize width="1024" height="110"/>
       <minimumSize width="1024" height="110"/>
       <preferredSize width="1024" height="110"/>
     </properties>
@@ -21,8 +21,10 @@
         <properties>
           <horizontalAlignment value="4"/>
           <labelFor value="f9f79"/>
+          <maximumSize width="26" height="17"/>
           <minimumSize width="26" height="17"/>
           <preferredSize width="26" height="17"/>
+          <requestFocusEnabled value="false"/>
           <text value="Min"/>
         </properties>
       </component>
@@ -35,6 +37,7 @@
           <horizontalAlignment value="4"/>
           <horizontalTextPosition value="2"/>
           <labelFor value="e7c9d"/>
+          <maximumSize width="63" height="17"/>
           <minimumSize width="63" height="17"/>
           <preferredSize width="63" height="17"/>
           <text value="Center"/>
@@ -49,6 +52,7 @@
         </constraints>
         <properties>
           <horizontalAlignment value="2"/>
+          <maximumSize width="2147483647" height="2147483647"/>
           <preferredSize width="65" height="30"/>
         </properties>
       </component>
@@ -73,7 +77,8 @@
         <properties>
           <focusLostBehavior value="1"/>
           <horizontalAlignment value="2"/>
-          <preferredSize width="65" height="30"/>
+          <maximumSize width="2147483647" height="2147483647"/>
+          <preferredSize width="49" height="34"/>
         </properties>
       </component>
       <component id="c231f" class="javax.swing.JFormattedTextField" binding="maxText">
@@ -85,6 +90,7 @@
         </constraints>
         <properties>
           <horizontalAlignment value="2"/>
+          <maximumSize width="2147483647" height="2147483647"/>
           <preferredSize width="65" height="30"/>
         </properties>
       </component>
@@ -121,7 +127,9 @@
         <properties>
           <focusable value="false"/>
           <horizontalAlignment value="4"/>
-          <preferredSize width="35" height="17"/>
+          <maximumSize width="39" height="17"/>
+          <minimumSize width="39" height="17"/>
+          <preferredSize width="39" height="17"/>
           <text value="Value"/>
         </properties>
       </component>
@@ -173,11 +181,11 @@
           <enabled value="false"/>
           <focusable value="false"/>
           <maximum value="1023"/>
-          <maximumSize width="760" height="4"/>
+          <maximumSize width="720" height="29"/>
           <minimum value="0"/>
-          <minimumSize width="760" height="29"/>
+          <minimumSize width="720" height="29"/>
           <name value="Y Axis"/>
-          <preferredSize width="760" height="29"/>
+          <preferredSize width="720" height="29"/>
           <value value="0"/>
         </properties>
       </component>
@@ -238,7 +246,7 @@
       <hspacer id="cbffd">
         <constraints>
           <grid row="1" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag top="0" left="180" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+          <gridbag top="0" left="158" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
       </hspacer>
       <component id="7570f" class="javax.swing.JCheckBox" binding="enabledCheckBox" default-binding="true">
