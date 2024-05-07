@@ -132,7 +132,7 @@
                               <preferredSize width="49" height="34"/>
                             </properties>
                           </component>
-                          <component id="46db6" class="javax.swing.JLabel" binding="deadZoneLabel">
+                          <component id="46db6" class="javax.swing.JLabel" binding="dzLabel">
                             <constraints>
                               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -177,7 +177,7 @@
                               <text value="Trim"/>
                             </properties>
                           </component>
-                          <component id="f0703" class="javax.swing.JLabel">
+                          <component id="f0703" class="javax.swing.JLabel" binding="velocityLabel">
                             <constraints>
                               <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -292,7 +292,7 @@
                               <text value="Set MIn"/>
                             </properties>
                           </component>
-                          <component id="caa55" class="javax.swing.JLabel" binding="wheelValueLabel">
+                          <component id="caa55" class="javax.swing.JLabel" binding="valueLabel">
                             <constraints>
                               <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -310,7 +310,7 @@
                               <text value="Value"/>
                             </properties>
                           </component>
-                          <component id="6952" class="javax.swing.JLabel" binding="wheelRawLabel">
+                          <component id="6952" class="javax.swing.JLabel" binding="rawLabel">
                             <constraints>
                               <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -328,7 +328,7 @@
                               <text value="Raw"/>
                             </properties>
                           </component>
-                          <component id="5880e" class="javax.swing.JTextField" binding="wheelValueTextField">
+                          <component id="5880e" class="javax.swing.JTextField" binding="valueText">
                             <constraints>
                               <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>

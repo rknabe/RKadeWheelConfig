@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 public class MainForm extends BaseForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
+    private final static short WHEEL_AXIS = 6;
     private final static List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
             "Axis 2 (Z - Brake)",
@@ -54,10 +55,10 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JPanel wheelPanel;
     private JPanel axisPanel;
     private JLabel wheelIconLabel;
-    private JLabel wheelRawLabel;
+    private JLabel rawLabel;
     private JTextField wheelRawTextField;
-    private JTextField wheelValueTextField;
-    private JLabel wheelValueLabel;
+    private JTextField valueText;
+    private JLabel valueLabel;
     private JLabel firmwareLabel;
     private AxisPanel axis1Panel;
     private AxisPanel axis2Panel;
@@ -109,16 +110,17 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JButton setMinButton;
     private JButton setMaxButton;
     private JCheckBox autoLimitCheckBox;
-    private JComboBox trimComboBox;
+    private JComboBox<String> trimComboBox;
     private JLabel trimLabel;
     private JLabel minLabel;
     private JLabel maxLabel;
     private JFormattedTextField maxText;
     private JLabel centerLabel;
     private JFormattedTextField centerText;
-    private JLabel deadZoneLabel;
+    private JLabel dzLabel;
     private JFormattedTextField dzText;
     private JFormattedTextField minText;
+    private JLabel velocityLabel;
     private BufferedImage wheelImage;
     private double prevWheelRotation = 0.0;
     private Device device = null;
@@ -162,7 +164,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton, rampButton,
                 sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton, constantSpringCheckBox,
                 maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText, minForceText, maxForceText, cutForceText,
-                minForceSlider, maxForceSlider, cutForceSlider, frequencyCombo, afcCheckBox);
+                minForceSlider, maxForceSlider, cutForceSlider, frequencyCombo, afcCheckBox, setMinButton, setMaxButton,
+                autoLimitCheckBox, trimComboBox, trimLabel, minLabel, maxLabel, maxText, centerLabel, centerText, dzLabel,
+                dzText, minText, velocityLabel);
 
         setupControlListener();
 
@@ -216,8 +220,23 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
 
     private boolean handleAction(ActionEvent e) {
         if (device != null) {
-            if (e.getActionCommand().equals(centerButton.getActionCommand())) {
-                return device.setWheelCenter();
+            if (e.getActionCommand().equals(setMinButton.getActionCommand())) {
+                short min = Short.parseShort(wheelRawTextField.getText());
+                short max = Short.parseShort(maxText.getText());
+                if (max > min) {
+                    return device.setAxisLimits(WHEEL_AXIS, min, max);
+                }
+            } else if (e.getActionCommand().equals(setMaxButton.getActionCommand())) {
+                short min = Short.parseShort(minText.getText());
+                short max = Short.parseShort(wheelRawTextField.getText());
+                if (max > min) {
+                    return device.setAxisLimits(WHEEL_AXIS, min, max);
+                }
+            } else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
+                centerText.setText(wheelRawTextField.getText());
+                return device.setAxisCenter(WHEEL_AXIS, Short.parseShort(wheelRawTextField.getText()));
+                //} else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
+                //     return device.setWheelCenter();
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
                 return device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
             } else if (e.getActionCommand().equals(frequencyCombo.getActionCommand())) {
@@ -431,6 +450,8 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                             int index = axisData.getAxis() - 1;
                             if (index < axisPanels.size()) {
                                 updateAxisPanel(axisPanels.get(index), device, status, report);
+                            } else if (index == WHEEL_AXIS) {//this is the wheel axis
+                                updateWheelPanel(axisData);
                             }
                         }
                     }
@@ -519,6 +540,33 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         }
     }
 
+    private void updateWheelPanel(AxisDataReport axisData) {
+        valueText.setText(String.valueOf(axisData.getValue()));
+        wheelRawTextField.setText(String.valueOf(axisData.getRawValue()));
+
+        if (!minText.isFocusOwner()) {
+            minText.setText(String.valueOf(axisData.getMin()));
+        }
+        if (!maxText.isFocusOwner()) {
+            maxText.setText(String.valueOf(axisData.getMax()));
+        }
+        if (!centerText.isFocusOwner()) {
+            String value = String.valueOf(axisData.getCenter());
+            if (!value.equals(centerText.getText())) {
+                centerText.setText(value);
+            }
+        }
+        if (!dzText.isFocusOwner()) {
+            dzText.setText(String.valueOf(axisData.getDeadZone()));
+        }
+        if (!autoLimitCheckBox.isFocusOwner()) {
+            autoLimitCheckBox.setSelected(axisData.isAutoLimit());
+        }
+        if (!trimComboBox.isFocusOwner()) {
+            trimComboBox.setSelectedIndex(axisData.getTrim());
+        }
+    }
+
     private void updateWheelPanel(WheelDataReport wheelData) {
         if (Math.abs(wheelData.getAngle() - prevWheelRotation) > 0.2) {
             wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, wheelData.getAngle())));
@@ -533,7 +581,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
             }
         }
         wheelRawTextField.setText(String.valueOf(wheelData.getRawValue()));
-        wheelValueTextField.setText(String.valueOf(wheelData.getValue()));
+        valueText.setText(String.valueOf(wheelData.getValue()));
         velocityText.setText(String.valueOf(wheelData.getVelocity()));
         accText.setText(String.valueOf(wheelData.getAcceleration()));
     }
@@ -640,26 +688,26 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         degreesLabel.setPreferredSize(new Dimension(50, 31));
         degreesLabel.setText("00.00°");
         wheelPanel.add(degreesLabel);
-        wheelRawLabel = new JLabel();
-        wheelRawLabel.setFocusable(false);
-        wheelRawLabel.setText("Raw");
-        wheelPanel.add(wheelRawLabel);
+        rawLabel = new JLabel();
+        rawLabel.setFocusable(false);
+        rawLabel.setText("Raw");
+        wheelPanel.add(rawLabel);
         wheelRawTextField = new JTextField();
         wheelRawTextField.setEditable(false);
         wheelRawTextField.setFocusable(false);
         wheelRawTextField.setMinimumSize(new Dimension(25, 30));
         wheelRawTextField.setPreferredSize(new Dimension(55, 30));
         wheelPanel.add(wheelRawTextField);
-        wheelValueLabel = new JLabel();
-        wheelValueLabel.setFocusable(false);
-        wheelValueLabel.setText("Value");
-        wheelPanel.add(wheelValueLabel);
-        wheelValueTextField = new JTextField();
-        wheelValueTextField.setEditable(false);
-        wheelValueTextField.setFocusable(false);
-        wheelValueTextField.setMinimumSize(new Dimension(25, 30));
-        wheelValueTextField.setPreferredSize(new Dimension(55, 30));
-        wheelPanel.add(wheelValueTextField);
+        valueLabel = new JLabel();
+        valueLabel.setFocusable(false);
+        valueLabel.setText("Value");
+        wheelPanel.add(valueLabel);
+        valueText = new JTextField();
+        valueText.setEditable(false);
+        valueText.setFocusable(false);
+        valueText.setMinimumSize(new Dimension(25, 30));
+        valueText.setPreferredSize(new Dimension(55, 30));
+        wheelPanel.add(valueText);
         final JLabel label1 = new JLabel();
         label1.setFocusable(false);
         label1.setText("Velocity");
@@ -1101,8 +1149,8 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         saveButton.setPreferredSize(new Dimension(196, 30));
         saveButton.setText("Save Settings to EEPROM");
         bottomPanel.add(saveButton);
-        wheelRawLabel.setLabelFor(velocityText);
-        wheelValueLabel.setLabelFor(velocityText);
+        rawLabel.setLabelFor(velocityText);
+        valueLabel.setLabelFor(velocityText);
         label1.setLabelFor(velocityText);
         accLabel.setLabelFor(accText);
     }
