@@ -110,8 +110,7 @@ public class App {
                     frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
 
-                    deviceManager = new DeviceManager();
-                    deviceManager.addDeviceListener(mainForm);
+                    deviceManager = new DeviceManager(mainForm);
                 } catch (Exception ex) {
                     logger.warning(ex.getMessage());
                 }

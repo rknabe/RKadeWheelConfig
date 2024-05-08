@@ -23,7 +23,8 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
     private static volatile HidDeviceInfo deviceInfo = null;
     private static volatile HidDevice openedDevice = null;
 
-    public DeviceManager() {
+    public DeviceManager(DeviceListener listener) {
+        addDeviceListener(listener);
         new Thread(new ConnectionRunner()).start();
         new Thread(new OutputReportRunner()).start();
     }
@@ -48,56 +49,60 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
 
     public static Device openDevice() {
         List<HidDeviceInfo> devList = PureJavaHidApi.enumerateDevices();
+        HidDeviceInfo myHidInfo = null;
         for (HidDeviceInfo info : devList) {
             if (info.getVendorId() == LEONARDO_VENDOR_ID && info.getProductId() == LEONARDO_PRODUCT_ID) {
                 deviceInfo = info;
+                myHidInfo = info;
                 break;
             }
         }
-        if (deviceInfo == null) {
+        if (myHidInfo == null) {
             logger.info("device not found");
             notifyListenersDeviceUpdated(null, "Device Not Found...", null);
             sleep(1000);
         } else {
             logger.info("device found");
-            notifyListenersDeviceUpdated(null, "Attached...", null);
+            notifyListenersDeviceUpdated(null, "Device Found...", null);
             deviceAttached = true;
-            if (deviceAttached) {
-                try {
-                    openedDevice = PureJavaHidApi.openDevice(deviceInfo);
-                    if (openedDevice != null) {
-                        openedDevice.open();
-                        Device device = getDevice(openedDevice);
-                        if (device != null) {
-                            SerialPort[] ports = SerialPort.getCommPorts();
-                            for (SerialPort port : ports) {
-                                if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
-                                    device.setName(port.getDescriptivePortName());
-                                    device.setPort(port);
-                                    String version = device.readVersion();
-                                    if (version != null && version.contains(":")) {
-                                        String[] parts = version.split(":");
-                                        if (parts.length == 2) {
-                                            String firmwareType = parts[0];
-                                            if (Device.SUPPORTED_FIRMWARE_TYPE.equalsIgnoreCase(firmwareType)) {
-                                                device.setFirmwareType(firmwareType);
-                                                device.setFirmwareVersion(parts[1]);
-                                                return device;
-                                            } else {
-                                                notifyListenersDeviceUpdated(null, "Unsupported Firmware", null);
-                                            }
+            try {
+                logger.info("opening device...");
+                openedDevice = PureJavaHidApi.openDevice(myHidInfo);
+                if (openedDevice != null) {
+                    openedDevice.open();
+                    Device device = getDevice(openedDevice);
+                    if (device != null) {
+                        SerialPort[] ports = SerialPort.getCommPorts();
+                        for (SerialPort port : ports) {
+                            if (port.getVendorID() == LEONARDO_VENDOR_ID && port.getProductID() == LEONARDO_PRODUCT_ID) {
+                                device.setName(port.getDescriptivePortName());
+                                device.setPort(port);
+                                String version = device.readVersion();
+                                if (version != null && version.contains(":")) {
+                                    String[] parts = version.split(":");
+                                    if (parts.length == 2) {
+                                        String firmwareType = parts[0];
+                                        if (Device.SUPPORTED_FIRMWARE_TYPE.equalsIgnoreCase(firmwareType)) {
+                                            logger.info("Device Attached");
+                                            device.setFirmwareType(firmwareType);
+                                            device.setFirmwareVersion(parts[1]);
+                                            return device;
+                                        } else {
+                                            notifyListenersDeviceUpdated(null, "Unsupported Firmware", null);
                                         }
                                     }
                                 }
                             }
-                        } else {
-                            logger.severe("Device could not be opened");
                         }
-                        return null;
+                    } else {
+                        logger.severe("Device could not be obtained");
                     }
-                } catch (IOException ex) {
-                    logger.warning(ex.getMessage());
+                    return null;
+                } else {
+                    logger.severe("Device could not be opened");
                 }
+            } catch (IOException ex) {
+                logger.warning(ex.getMessage());
             }
         }
         return null;

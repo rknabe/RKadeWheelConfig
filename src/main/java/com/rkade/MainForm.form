@@ -128,8 +128,9 @@
                             </constraints>
                             <properties>
                               <horizontalAlignment value="2"/>
-                              <maximumSize width="49" height="34"/>
-                              <preferredSize width="49" height="34"/>
+                              <maximumSize width="55" height="34"/>
+                              <minimumSize width="55" height="34"/>
+                              <preferredSize width="55" height="34"/>
                             </properties>
                           </component>
                           <component id="46db6" class="javax.swing.JLabel" binding="dzLabel">
@@ -157,9 +158,10 @@
                             </constraints>
                             <properties>
                               <horizontalAlignment value="2"/>
-                              <maximumSize width="49" height="34"/>
+                              <maximumSize width="55" height="34"/>
+                              <minimumSize width="55" height="34"/>
                               <opaque value="true"/>
-                              <preferredSize width="49" height="34"/>
+                              <preferredSize width="55" height="34"/>
                             </properties>
                           </component>
                           <component id="b4a48" class="javax.swing.JLabel" binding="trimLabel">
@@ -338,9 +340,9 @@
                               <alignmentY value="1.0"/>
                               <editable value="false"/>
                               <focusable value="false"/>
-                              <maximumSize width="49" height="34"/>
-                              <minimumSize width="49" height="34"/>
-                              <preferredSize width="49" height="34"/>
+                              <maximumSize width="55" height="34"/>
+                              <minimumSize width="55" height="34"/>
+                              <preferredSize width="55" height="34"/>
                             </properties>
                           </component>
                           <component id="d7455" class="javax.swing.JTextField" binding="velocityText">
@@ -353,10 +355,10 @@
                               <alignmentY value="1.0"/>
                               <editable value="false"/>
                               <focusable value="false"/>
-                              <maximumSize width="49" height="34"/>
-                              <minimumSize width="49" height="34"/>
+                              <maximumSize width="55" height="34"/>
+                              <minimumSize width="55" height="34"/>
                               <opaque value="true"/>
-                              <preferredSize width="49" height="34"/>
+                              <preferredSize width="55" height="34"/>
                             </properties>
                           </component>
                           <component id="292c" class="javax.swing.JLabel" binding="accLabel">
@@ -490,13 +492,13 @@
                           <hspacer id="e9e16">
                             <constraints>
                               <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag top="0" left="26" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                              <gridbag top="0" left="23" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                             </constraints>
                           </hspacer>
                           <hspacer id="86079">
                             <constraints>
                               <grid row="0" column="11" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag top="0" left="56" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                              <gridbag top="0" left="47" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                             </constraints>
                           </hspacer>
                         </children>

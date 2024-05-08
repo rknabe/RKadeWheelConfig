@@ -233,9 +233,10 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                     return device.setAxisLimits(WHEEL_AXIS, min, max);
                 }
             } else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
-                centerText.setText(wheelRawTextField.getText());
+                String centerStr = wheelRawTextField.getText();
+                centerText.setText(centerStr);
                 device.setWheelCenter();
-                return device.setAxisCenter(WHEEL_AXIS, Short.parseShort(wheelRawTextField.getText()));
+                return device.setAxisCenter(WHEEL_AXIS, Short.parseShort(centerStr));
                 //} else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
                 //     return device.setWheelCenter();
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
@@ -563,6 +564,8 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private void updateWheelPanel(AxisDataReport axisData) {
         //valueText.setText(String.valueOf(axisData.getValue()));
         //wheelRawTextField.setText(String.valueOf(axisData.getRawValue()));
+        //double angle = axisData.getRawValue() / ((double) Short.MAX_VALUE / (270 / 2.0));
+        //wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, angle)));
 
         if (!minText.isFocusOwner()) {
             minText.setText(String.valueOf(axisData.getMin()));
