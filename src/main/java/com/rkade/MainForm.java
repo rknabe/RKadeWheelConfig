@@ -243,6 +243,15 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 return device.setMiscValue(Device.MISC_FFBBD, (short) (frequencyCombo.getSelectedIndex() + 8));
             } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
                 return doWheelAutoCenter();
+            } else if (e.getActionCommand().equals(autoLimitCheckBox.getActionCommand())) {
+                if (autoLimitCheckBox.isSelected()) {
+                    return device.setAxisAutoLimit(WHEEL_AXIS, (short) 1);
+                } else {
+                    return device.setAxisAutoLimit(WHEEL_AXIS, (short) 0);
+                }
+            } else if (e.getActionCommand().equals(trimComboBox.getActionCommand())) {
+                //these are inverted, since the original value is isDisabled
+                return device.setAxisEnabledAndTrim(WHEEL_AXIS, (short) 0, (short) trimComboBox.getSelectedIndex()); //last param is trim index
             } else if (e.getActionCommand().equals(constantLeftButton.getActionCommand())) {
                 return device.doFfbConstantLeft();
             } else if (e.getActionCommand().equals(constantRightButton.getActionCommand())) {
@@ -333,6 +342,16 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 return device.setMiscValue(Device.MISC_MAXF, Short.parseShort(maxForceText.getText()));
             } else if (e.getSource() == cutForceText) {
                 return device.setMiscValue(Device.MISC_CUTF, Short.parseShort(cutForceText.getText()));
+            } else if (e.getSource() == minText || e.getSource() == maxText) {
+                short min = Short.parseShort(minText.getText());
+                short max = Short.parseShort(maxText.getText());
+                if (max > min) {
+                    return device.setAxisLimits(WHEEL_AXIS, min, max);
+                }
+            } else if (e.getSource() == centerText) {
+                return device.setAxisCenter(WHEEL_AXIS, Short.parseShort(centerText.getText()));
+            } else if (e.getSource() == dzText) {
+                return device.setAxisDeadZone(WHEEL_AXIS, Short.parseShort(dzText.getText()));
             }
         }
         return true;
