@@ -234,6 +234,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 }
             } else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
                 centerText.setText(wheelRawTextField.getText());
+                device.setWheelCenter();
                 return device.setAxisCenter(WHEEL_AXIS, Short.parseShort(wheelRawTextField.getText()));
                 //} else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
                 //     return device.setWheelCenter();
