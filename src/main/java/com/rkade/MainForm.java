@@ -560,8 +560,8 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     }
 
     private void updateWheelPanel(AxisDataReport axisData) {
-        valueText.setText(String.valueOf(axisData.getValue()));
-        wheelRawTextField.setText(String.valueOf(axisData.getRawValue()));
+        //valueText.setText(String.valueOf(axisData.getValue()));
+        //wheelRawTextField.setText(String.valueOf(axisData.getRawValue()));
 
         if (!minText.isFocusOwner()) {
             minText.setText(String.valueOf(axisData.getMin()));
