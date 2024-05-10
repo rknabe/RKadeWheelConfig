@@ -390,8 +390,9 @@
                               <alignmentY value="1.0"/>
                               <editable value="false"/>
                               <focusable value="false"/>
-                              <maximumSize width="49" height="34"/>
-                              <preferredSize width="49" height="34"/>
+                              <maximumSize width="55" height="34"/>
+                              <minimumSize width="55" height="34"/>
+                              <preferredSize width="55" height="34"/>
                               <requestFocusEnabled value="true"/>
                             </properties>
                           </component>
@@ -405,9 +406,9 @@
                               <alignmentY value="1.0"/>
                               <editable value="false"/>
                               <focusable value="false"/>
-                              <maximumSize width="49" height="34"/>
-                              <minimumSize width="49" height="34"/>
-                              <preferredSize width="49" height="34"/>
+                              <maximumSize width="55" height="34"/>
+                              <minimumSize width="55" height="34"/>
+                              <preferredSize width="55" height="34"/>
                             </properties>
                           </component>
                           <component id="bcd32" class="javax.swing.JFormattedTextField" binding="minText">

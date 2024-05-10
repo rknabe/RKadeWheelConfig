@@ -9,6 +9,12 @@ public final class WheelDataReport extends DataReport {
     private final short velocity;
     private final short acceleration;
     private final double angle;
+    private final short min;
+    private final short max;
+    private final short center;
+    private final short deadZone;
+    private final boolean autoLimit;
+    private final byte trim;
 
     public WheelDataReport(byte reportType, byte reportIndex, short section, ByteBuffer buffer) {
         super(reportType, reportIndex, section);
@@ -18,6 +24,12 @@ public final class WheelDataReport extends DataReport {
         range = buffer.getShort();
         velocity = buffer.getShort();
         acceleration = buffer.getShort();
+        min = buffer.getShort();
+        max = buffer.getShort();
+        center = buffer.getShort();
+        deadZone = buffer.getShort();
+        autoLimit = (buffer.get() == 1);
+        trim = buffer.get();
         if (range == 0) {
             angle = 0;
         } else {
@@ -47,5 +59,29 @@ public final class WheelDataReport extends DataReport {
 
     public double getAngle() {
         return angle;
+    }
+
+    public short getMin() {
+        return min;
+    }
+
+    public short getMax() {
+        return max;
+    }
+
+    public short getCenter() {
+        return center;
+    }
+
+    public short getDeadZone() {
+        return deadZone;
+    }
+
+    public boolean isAutoLimit() {
+        return autoLimit;
+    }
+
+    public byte getTrim() {
+        return trim;
     }
 }

@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 
 public class MainForm extends BaseForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
-    private final static short WHEEL_AXIS = 6;
     private final static List<String> axisLabels = List.of(
             "Axis 1 (Y - Accelerator)",
             "Axis 2 (Z - Brake)",
@@ -223,24 +222,38 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private boolean handleAction(ActionEvent e) {
         if (device != null) {
             if (e.getActionCommand().equals(setMinButton.getActionCommand())) {
-                short min = Short.parseShort(wheelRawTextField.getText());
-                short max = Short.parseShort(maxText.getText());
+                String minStr = wheelRawTextField.getText();
+                if (minStr == null || minStr.isEmpty()) {
+                    minStr = "0";
+                }
+                short min = Short.parseShort(minStr);
+                String maxStr = maxText.getText();
+                if (maxStr == null || maxStr.isEmpty()) {
+                    maxStr = String.valueOf(min + 10);
+                }
+                short max = Short.parseShort(maxStr);
                 if (max > min) {
-                    return device.setAxisLimits(WHEEL_AXIS, min, max);
+                    return device.setWheelLimits(min, max);
                 }
             } else if (e.getActionCommand().equals(setMaxButton.getActionCommand())) {
-                short min = Short.parseShort(minText.getText());
-                short max = Short.parseShort(wheelRawTextField.getText());
+                String minStr = minText.getText();
+                if (minStr == null || minStr.isEmpty()) {
+                    minStr = "0";
+                }
+                short min = Short.parseShort(minStr);
+                String maxStr = wheelRawTextField.getText();
+                if (maxStr == null || maxStr.isEmpty()) {
+                    maxStr = String.valueOf(min + 10);
+                }
+                short max = Short.parseShort(maxStr);
                 if (max > min) {
-                    return device.setAxisLimits(WHEEL_AXIS, min, max);
+                    return device.setWheelLimits(min, max);
                 }
             } else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
                 String centerStr = wheelRawTextField.getText();
                 centerText.setText(centerStr);
                 device.setWheelCenter();
-                return device.setAxisCenter(WHEEL_AXIS, Short.parseShort(centerStr));
-                //} else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
-                //     return device.setWheelCenter();
+                return device.setWheelCenter(Short.parseShort(centerStr));
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
                 return device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
             } else if (e.getActionCommand().equals(frequencyCombo.getActionCommand())) {
@@ -249,13 +262,12 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 return doWheelAutoCenter();
             } else if (e.getActionCommand().equals(autoLimitCheckBox.getActionCommand())) {
                 if (autoLimitCheckBox.isSelected()) {
-                    return device.setAxisAutoLimit(WHEEL_AXIS, (short) 1);
+                    return device.setWheelAutoLimit((short) 1);
                 } else {
-                    return device.setAxisAutoLimit(WHEEL_AXIS, (short) 0);
+                    return device.setWheelAutoLimit((short) 0);
                 }
             } else if (e.getActionCommand().equals(trimComboBox.getActionCommand())) {
-                //these are inverted, since the original value is isDisabled
-                return device.setAxisEnabledAndTrim(WHEEL_AXIS, (short) 0, (short) trimComboBox.getSelectedIndex()); //last param is trim index
+                return device.setWheelTrim((short) trimComboBox.getSelectedIndex()); //last param is trim index
             } else if (e.getActionCommand().equals(constantLeftButton.getActionCommand())) {
                 return device.doFfbConstantLeft();
             } else if (e.getActionCommand().equals(constantRightButton.getActionCommand())) {
@@ -350,12 +362,12 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 short min = Short.parseShort(minText.getText());
                 short max = Short.parseShort(maxText.getText());
                 if (max > min) {
-                    return device.setAxisLimits(WHEEL_AXIS, min, max);
+                    return device.setWheelLimits(min, max);
                 }
             } else if (e.getSource() == centerText) {
-                return device.setAxisCenter(WHEEL_AXIS, Short.parseShort(centerText.getText()));
+                return device.setWheelCenter(Short.parseShort(centerText.getText()));
             } else if (e.getSource() == dzText) {
-                return device.setAxisDeadZone(WHEEL_AXIS, Short.parseShort(dzText.getText()));
+                return device.setWheelDeadZone(Short.parseShort(dzText.getText()));
             }
         }
         return true;
@@ -473,8 +485,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                             int index = axisData.getAxis() - 1;
                             if (index < axisPanels.size()) {
                                 updateAxisPanel(axisPanels.get(index), device, status, report);
-                            } else if (index == WHEEL_AXIS) {//this is the wheel axis
-                                updateWheelPanel(axisData);
                             }
                         }
                     }
@@ -563,35 +573,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         }
     }
 
-    private void updateWheelPanel(AxisDataReport axisData) {
-        //valueText.setText(String.valueOf(axisData.getValue()));
-        //wheelRawTextField.setText(String.valueOf(axisData.getRawValue()));
-        //double angle = axisData.getRawValue() / ((double) Short.MAX_VALUE / (270 / 2.0));
-        //wheelIconLabel.setIcon(new ImageIcon(rotate(wheelImage, angle)));
-
-        /*if (!minText.isFocusOwner()) {
-            minText.setText(String.valueOf(axisData.getMin()));
-        }
-        if (!maxText.isFocusOwner()) {
-            maxText.setText(String.valueOf(axisData.getMax()));
-        }
-        if (!centerText.isFocusOwner()) {
-            String value = String.valueOf(axisData.getCenter());
-            if (!value.equals(centerText.getText())) {
-                centerText.setText(value);
-            }
-        }
-        if (!dzText.isFocusOwner()) {
-            dzText.setText(String.valueOf(axisData.getDeadZone()));
-        }
-        if (!autoLimitCheckBox.isFocusOwner()) {
-            autoLimitCheckBox.setSelected(axisData.isAutoLimit());
-        }
-        if (!trimComboBox.isFocusOwner()) {
-            trimComboBox.setSelectedIndex(axisData.getTrim());
-        }*/
-    }
-
     private void updateWheelPanel(WheelDataReport wheelData) {
         int angleInt = (int) Math.round(wheelData.getAngle());
         wheelIconLabel.setIcon(wheelRotateImages.computeIfAbsent(angleInt, k -> new ImageIcon(rotate(wheelImage, (double) angleInt))));
@@ -603,6 +584,24 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
             if (!newRange.equals(oldRange)) {
                 rangeComboBox.setSelectedItem(newRange);
             }
+        }
+        if (!trimComboBox.isFocusOwner()) {
+            trimComboBox.setSelectedIndex(wheelData.getTrim());
+        }
+        if (!minText.isFocusOwner()) {
+            minText.setText(String.valueOf(wheelData.getMin()));
+        }
+        if (!maxText.isFocusOwner()) {
+            maxText.setText(String.valueOf(wheelData.getMax()));
+        }
+        if (!centerText.isFocusOwner()) {
+            centerText.setText(String.valueOf(wheelData.getCenter()));
+        }
+        if (!dzText.isFocusOwner()) {
+            dzText.setText(String.valueOf(wheelData.getDeadZone()));
+        }
+        if (!autoLimitCheckBox.isFocusOwner()) {
+            autoLimitCheckBox.setSelected(wheelData.isAutoLimit());
         }
         wheelRawTextField.setText(String.valueOf(wheelData.getRawValue()));
         valueText.setText(String.valueOf(wheelData.getValue()));

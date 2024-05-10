@@ -56,6 +56,11 @@ public class Device {
     public static final byte CMD_EESAVE = 21;
     public static final byte CMD_DEFAULT = 22;
     public static final byte CMD_CENTER = 23;
+    public static final byte CMD_WHEEL_LIMITS = 24;
+    public static final byte CMD_WHEEL_CENTER = 25;
+    public static final byte CMD_WHEEL_DZ = 26;
+    public static final byte CMD_WHEEL_AUTO_LIMIT = 27;
+    public static final byte CMD_WHEEL_TRIM = 28;
     public static final String CMD_AUTOCENTER_TEXT = "autocenter ";
     public static final String CMD_CENTER_TEXT = "center ";
     public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
@@ -111,6 +116,26 @@ public class Device {
 
     public synchronized boolean setWheelRange(Short range) {
         return sendCommand(CMD_SET_RANGE, range);
+    }
+
+    public synchronized boolean setWheelLimits(Short minValue, short maxValue) {
+        return sendCommand(CMD_WHEEL_LIMITS, minValue, maxValue);
+    }
+
+    public synchronized boolean setWheelCenter(short center) {
+        return sendCommand(CMD_WHEEL_CENTER, center);
+    }
+
+    public synchronized boolean setWheelDeadZone(short deadZone) {
+        return sendCommand(CMD_WHEEL_DZ, deadZone);
+    }
+
+    public synchronized boolean setWheelAutoLimit(short flag) {
+        return sendCommand(CMD_WHEEL_AUTO_LIMIT, flag);
+    }
+
+    public synchronized boolean setWheelTrim(short trimIndex) {
+        return sendCommand(CMD_WHEEL_TRIM, trimIndex);
     }
 
     public synchronized boolean setAxisLimits(short axisIndex, Short minValue, short maxValue) {
