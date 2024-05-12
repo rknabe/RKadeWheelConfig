@@ -140,7 +140,7 @@ public class Device {
     }
 
     public synchronized boolean setWheelInvert(short state) {
-        return sendCommand(CMD_WHEEL_TRIM, state);
+        return sendCommand(CMD_WHEEL_INVERT, state);
     }
 
     public synchronized boolean setAxisLimits(short axisIndex, Short minValue, short maxValue) {
