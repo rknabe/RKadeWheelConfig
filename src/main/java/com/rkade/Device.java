@@ -61,6 +61,7 @@ public class Device {
     public static final byte CMD_WHEEL_DZ = 26;
     public static final byte CMD_WHEEL_AUTO_LIMIT = 27;
     public static final byte CMD_WHEEL_TRIM = 28;
+    public static final byte CMD_WHEEL_INVERT = 29;
     public static final String CMD_AUTOCENTER_TEXT = "autocenter ";
     public static final String CMD_CENTER_TEXT = "center ";
     public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
@@ -136,6 +137,10 @@ public class Device {
 
     public synchronized boolean setWheelTrim(short trimIndex) {
         return sendCommand(CMD_WHEEL_TRIM, trimIndex);
+    }
+
+    public synchronized boolean setWheelInvert(short state) {
+        return sendCommand(CMD_WHEEL_TRIM, state);
     }
 
     public synchronized boolean setAxisLimits(short axisIndex, Short minValue, short maxValue) {

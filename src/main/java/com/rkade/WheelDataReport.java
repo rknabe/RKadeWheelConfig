@@ -15,6 +15,7 @@ public final class WheelDataReport extends DataReport {
     private final short deadZone;
     private final boolean autoLimit;
     private final byte trim;
+    private final boolean invertRotation;
 
     public WheelDataReport(byte reportType, byte reportIndex, short section, ByteBuffer buffer) {
         super(reportType, reportIndex, section);
@@ -30,6 +31,7 @@ public final class WheelDataReport extends DataReport {
         deadZone = buffer.getShort();
         autoLimit = (buffer.get() == 1);
         trim = buffer.get();
+        invertRotation = (buffer.get() == 1);
         if (range == 0) {
             angle = 0;
         } else {
@@ -83,5 +85,9 @@ public final class WheelDataReport extends DataReport {
 
     public byte getTrim() {
         return trim;
+    }
+
+    public boolean isInvertRotation() {
+        return invertRotation;
     }
 }

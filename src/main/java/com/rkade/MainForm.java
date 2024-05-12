@@ -123,6 +123,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JFormattedTextField dzText;
     private JFormattedTextField minText;
     private JLabel velocityLabel;
+    private JCheckBox invertCheckBox;
     private BufferedImage wheelImage;
     private Device device = null;
     private volatile boolean isWaitingOnDevice = false;
@@ -167,7 +168,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText, minForceText, maxForceText, cutForceText,
                 minForceSlider, maxForceSlider, cutForceSlider, frequencyCombo, afcCheckBox, setMinButton, setMaxButton,
                 autoLimitCheckBox, trimComboBox, trimLabel, minLabel, maxLabel, maxText, centerLabel, centerText, dzLabel,
-                dzText, minText, velocityLabel);
+                dzText, minText, velocityLabel, invertCheckBox);
 
         setupControlListener();
 
@@ -268,6 +269,12 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 }
             } else if (e.getActionCommand().equals(trimComboBox.getActionCommand())) {
                 return device.setWheelTrim((short) trimComboBox.getSelectedIndex()); //last param is trim index
+            } else if (e.getActionCommand().equals(invertCheckBox.getActionCommand())) {
+                if (invertCheckBox.isSelected()) {
+                    return device.setWheelInvert((short) 1);
+                } else {
+                    return device.setWheelInvert((short) 0);
+                }
             } else if (e.getActionCommand().equals(constantLeftButton.getActionCommand())) {
                 return device.doFfbConstantLeft();
             } else if (e.getActionCommand().equals(constantRightButton.getActionCommand())) {
@@ -602,6 +609,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         }
         if (!autoLimitCheckBox.isFocusOwner()) {
             autoLimitCheckBox.setSelected(wheelData.isAutoLimit());
+        }
+        if (!invertCheckBox.isFocusOwner()) {
+            invertCheckBox.setSelected(wheelData.isInvertRotation());
         }
         wheelRawTextField.setText(String.valueOf(wheelData.getRawValue()));
         valueText.setText(String.valueOf(wheelData.getValue()));
