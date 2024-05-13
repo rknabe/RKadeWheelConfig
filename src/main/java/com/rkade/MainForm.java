@@ -251,10 +251,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                     return device.setWheelLimits(min, max);
                 }
             } else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
-                String centerStr = wheelRawTextField.getText();
-                centerText.setText(centerStr);
-                device.setWheelCenter();
-                return device.setWheelCenter(Short.parseShort(centerStr));
+                return device.setWheelCenter(Short.parseShort(wheelRawTextField.getText()));
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
                 return device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
             } else if (e.getActionCommand().equals(frequencyCombo.getActionCommand())) {
