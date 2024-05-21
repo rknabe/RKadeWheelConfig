@@ -143,6 +143,10 @@ public class Device {
         return sendCommand(CMD_WHEEL_INVERT, state);
     }
 
+    public synchronized boolean setShiftButton(short buttonIndex) {
+        return sendCommand(CMD_SET_CENTERBTN, buttonIndex);
+    }
+
     public synchronized boolean setAxisLimits(short axisIndex, Short minValue, short maxValue) {
         return sendCommand(CMD_SET_AALIMITS, axisIndex, minValue, maxValue);
     }

@@ -4,14 +4,14 @@ import java.nio.ByteBuffer;
 
 public final class ButtonsDataReport extends DataReport {
     private final int buttonsState;
-    private final byte centerButton;
+    private final byte shiftButton;
     private final int debounce;
     private final boolean multiplexShifterButtons;
 
     public ButtonsDataReport(byte reportType, byte reportIndex, short section, ByteBuffer buffer) {
         super(reportType, reportIndex, section);
         buttonsState = buffer.getInt();
-        centerButton = buffer.get();
+        shiftButton = buffer.get();
         debounce = Byte.toUnsignedInt(buffer.get());
         multiplexShifterButtons = buffer.get() > 0;
     }
@@ -20,8 +20,8 @@ public final class ButtonsDataReport extends DataReport {
         return buttonsState;
     }
 
-    public byte getCenterButton() {
-        return centerButton;
+    public byte getShiftButton() {
+        return shiftButton;
     }
 
     public int getDebounce() {
