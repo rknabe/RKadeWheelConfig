@@ -46,3 +46,5 @@ build/
 /app.log
 /nbactions.xml
 /FfbWheelConfig.log.lck
+/RKadeWheelConfig.log
+/RKadeWheelConfig.log.lck
