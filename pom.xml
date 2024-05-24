@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.rkade</groupId>
-    <artifactId>FFbWheelConfig</artifactId>
-    <version>1.0.3.0</version>
+    <artifactId>RKadeWheelConfig</artifactId>
+    <version>1.1.5.0</version>
     <packaging>jar</packaging>
     <description>RKADE FFB Device Configuration Utility</description>
-    <name>FFbWheelConfig</name>
+    <name>RKadeWheelConfig</name>
     <organization>
         <name>RKADE</name>
     </organization>
@@ -111,12 +111,12 @@
                         </goals>
                         <configuration>
                             <headerType>gui</headerType>
-                            <outfile>target/FFbWheelConfig.exe</outfile>
-                            <jar>target/FFbWheelConfig-${project.version}.jar</jar>
-                            <errTitle>FFbWheelConfig</errTitle>
+                            <outfile>target/RKadeWheelConfig.exe</outfile>
+                            <jar>target/RKadeWheelConfig-${project.version}.jar</jar>
+                            <errTitle>RKadeWheelConfig</errTitle>
                             <icon>src/main/resources/wheel.ico</icon>
                             <singleInstance>
-                                <mutexName>com.rkade.FFbWheelConfig</mutexName>
+                                <mutexName>com.rkade.RKadeWheelConfig</mutexName>
                             </singleInstance>
                             <classPath>
                                 <mainClass>com.rkade.App</mainClass>
@@ -134,9 +134,9 @@
                                 <fileDescription>FFB Wheel Device Config</fileDescription>
                                 <copyright>Copyright 2024 Rusty Knabe</copyright>
                                 <productVersion>${project.version}</productVersion>
-                                <productName>FFbWheelConfig</productName>
-                                <internalName>FFbWheelConfig</internalName>
-                                <originalFilename>FFbWheelConfig.exe</originalFilename>
+                                <productName>RKadeWheelConfig</productName>
+                                <internalName>RKadeWheelConfig</internalName>
+                                <originalFilename>RKadeWheelConfig.exe</originalFilename>
                             </versionInfo>
                         </configuration>
                     </execution>
@@ -148,12 +148,12 @@
                         </goals>
                         <configuration>
                             <headerType>console</headerType>
-                            <outfile>target/FFbWheelConfig-cli.exe</outfile>
-                            <jar>target/FFbWheelConfig-${project.version}.jar</jar>
-                            <errTitle>FFbWheelConfig</errTitle>
+                            <outfile>target/RKadeWheelConfig-cli.exe</outfile>
+                            <jar>target/RKadeWheelConfig-${project.version}.jar</jar>
+                            <errTitle>RKadeWheelConfig</errTitle>
                             <icon>src/main/resources/wheel.ico</icon>
                             <singleInstance>
-                                <mutexName>com.rkade.FFbWheelConfig</mutexName>
+                                <mutexName>com.rkade.RKadeWheelConfig</mutexName>
                             </singleInstance>
                             <classPath>
                                 <mainClass>com.rkade.App</mainClass>
@@ -171,9 +171,9 @@
                                 <fileDescription>FFB Wheel Device Config</fileDescription>
                                 <copyright>Copyright 2024 Rusty Knabe</copyright>
                                 <productVersion>${project.version}</productVersion>
-                                <productName>FFbWheelConfig</productName>
-                                <internalName>FFbWheelConfig</internalName>
-                                <originalFilename>FFbWheelConfig-cli.exe</originalFilename>
+                                <productName>RKadeWheelConfig</productName>
+                                <internalName>RKadeWheelConfig</internalName>
+                                <originalFilename>RKadeWheelConfig-cli.exe</originalFilename>
                             </versionInfo>
                         </configuration>
                     </execution>
