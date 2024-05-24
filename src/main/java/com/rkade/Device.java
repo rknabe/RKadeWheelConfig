@@ -36,7 +36,7 @@ public class Device {
     public static final byte CMD_SET_AACENTER = 12;
     public static final byte CMD_SET_AADZ = 13;
     public static final byte CMD_SET_AAAUTOLIM = 14;
-    public static final byte CMD_SET_CENTERBTN = 15;
+    public static final byte CMD_SET_SHIFT_BTN = 15;
     public static final byte CMD_SET_DEBOUNCE = 16;
     public static final byte CMD_SET_GAIN = 17;
     public static final byte CMD_SET_MISC = 18;
@@ -144,7 +144,7 @@ public class Device {
     }
 
     public synchronized boolean setShiftButton(short buttonIndex) {
-        return sendCommand(CMD_SET_CENTERBTN, buttonIndex);
+        return sendCommand(CMD_SET_SHIFT_BTN, buttonIndex);
     }
 
     public synchronized boolean setAxisLimits(short axisIndex, Short minValue, short maxValue) {
