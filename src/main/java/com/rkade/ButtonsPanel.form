@@ -67,7 +67,7 @@
               <maximumSize width="370" height="25"/>
               <minimumSize width="370" height="25"/>
               <preferredSize width="370" height="25"/>
-              <text value="Multiplex 4 Switch Shifter to 6 Buttons"/>
+              <text value="Demux 4 Switch Shifter to 6 Buttons"/>
             </properties>
           </component>
         </children>
