@@ -64,10 +64,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JLabel firmwareLabel;
     private AxisPanel axis1Panel;
     private AxisPanel axis2Panel;
-    private AxisPanel axis3Panel;
-    private AxisPanel axis4Panel;
-    private AxisPanel axis5Panel;
-    private AxisPanel axis6Panel;
     private JScrollPane axisScroll;
     private JPanel axesTab;
     private JButton defaultsButton;
@@ -189,7 +185,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     }
 
     private void setupAxisPanels() {
-        axisPanels = List.of(axis1Panel, axis2Panel, axis3Panel, axis4Panel, axis5Panel, axis6Panel);
+        axisPanels = List.of(axis1Panel, axis2Panel);
         for (short i = 0; i < axisPanels.size(); i++) {
             AxisPanel panel = axisPanels.get(i);
             if (panel != null) {
@@ -761,14 +757,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         axisPanel.add(axis1Panel.$$$getRootComponent$$$());
         axis2Panel = new AxisPanel();
         axisPanel.add(axis2Panel.$$$getRootComponent$$$());
-        axis3Panel = new AxisPanel();
-        axisPanel.add(axis3Panel.$$$getRootComponent$$$());
-        axis4Panel = new AxisPanel();
-        axisPanel.add(axis4Panel.$$$getRootComponent$$$());
-        axis5Panel = new AxisPanel();
-        axisPanel.add(axis5Panel.$$$getRootComponent$$$());
-        axis6Panel = new AxisPanel();
-        axisPanel.add(axis6Panel.$$$getRootComponent$$$());
         ffbTab = new JPanel();
         ffbTab.setLayout(new BorderLayout(0, 0));
         ffbTab.setAutoscrolls(false);

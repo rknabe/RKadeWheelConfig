@@ -517,18 +517,6 @@
                       <nested-form id="1b52d" form-file="com/rkade/AxisPanel.form" binding="axis2Panel">
                         <constraints/>
                       </nested-form>
-                      <nested-form id="6447b" form-file="com/rkade/AxisPanel.form" binding="axis3Panel">
-                        <constraints/>
-                      </nested-form>
-                      <nested-form id="fffa5" form-file="com/rkade/AxisPanel.form" binding="axis4Panel">
-                        <constraints/>
-                      </nested-form>
-                      <nested-form id="e6f0" form-file="com/rkade/AxisPanel.form" binding="axis5Panel">
-                        <constraints/>
-                      </nested-form>
-                      <nested-form id="75b87" form-file="com/rkade/AxisPanel.form" binding="axis6Panel">
-                        <constraints/>
-                      </nested-form>
                     </children>
                   </grid>
                 </children>
