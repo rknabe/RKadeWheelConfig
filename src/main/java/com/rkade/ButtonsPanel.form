@@ -61,18 +61,6 @@
               <toolTipText value="Hold this button and press another to create a virtual button (Button 17+)"/>
             </properties>
           </component>
-          <component id="1b2c9" class="javax.swing.JCheckBox" binding="multiplexCheckbox">
-            <constraints/>
-            <properties>
-              <alignmentY value="1.0"/>
-              <horizontalAlignment value="0"/>
-              <maximumSize width="370" height="25"/>
-              <minimumSize width="370" height="25"/>
-              <preferredSize width="370" height="25"/>
-              <text value="Demux 4 Switch Shifter to 6 Buttons"/>
-              <toolTipText value="Happ 6 speed shifters use 4 switches, and this option converts the four switches to six buttons"/>
-            </properties>
-          </component>
         </children>
       </grid>
       <grid id="5f99" binding="topPanel" layout-manager="GridBagLayout">

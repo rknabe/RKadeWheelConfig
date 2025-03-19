@@ -95,7 +95,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JFormattedTextField maxForceText;
     private JFormattedTextField cutForceText;
     private JSlider cutForceSlider;
-    private JComboBox<String> frequencyCombo;
     private JFormattedTextField maxVelocityDamperText;
     private JLabel minForceLabel;
     private JLabel maxForceLabel;
@@ -147,14 +146,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         rangeComboBox.addItem("900");
         rangeComboBox.addItem("1080");
 
-        frequencyCombo.addItem("8bit, 31.25kHz");
-        frequencyCombo.addItem("9bit, 15.625kHz");
-        frequencyCombo.addItem("10bit, 7.85kHz");
-        frequencyCombo.addItem("11bit, 3.9kHz");
-        frequencyCombo.addItem("12bit, 1.95kHz");
-        frequencyCombo.addItem("13bit, 0.97kHz");
-        frequencyCombo.addItem("14bit, 0.48kHz");
-
         setupAxisPanels();
         setupGainPanels();
 
@@ -162,7 +153,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton, rampButton,
                 sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton, constantSpringCheckBox,
                 maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText, minForceText, maxForceText, cutForceText,
-                minForceSlider, maxForceSlider, cutForceSlider, frequencyCombo, afcCheckBox, setMinButton, setMaxButton,
+                minForceSlider, maxForceSlider, cutForceSlider, afcCheckBox, setMinButton, setMaxButton,
                 autoLimitCheckBox, trimComboBox, trimLabel, minLabel, maxLabel, maxText, centerLabel, centerText, dzLabel,
                 dzText, minText, velocityLabel, invertCheckBox);
 
@@ -250,8 +241,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 return device.setWheelCenter(Short.parseShort(wheelRawTextField.getText()));
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
                 return device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
-            } else if (e.getActionCommand().equals(frequencyCombo.getActionCommand())) {
-                return device.setMiscValue(Device.MISC_FFBBD, (short) (frequencyCombo.getSelectedIndex() + 8));
             } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
                 return doWheelAutoCenter();
             } else if (e.getActionCommand().equals(autoLimitCheckBox.getActionCommand())) {
@@ -558,12 +547,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         }
         if (!cutForceText.isFocusOwner()) {
             cutForceText.setText(String.valueOf(miscData.getCutForce()));
-        }
-        if (!frequencyCombo.isFocusOwner()) {
-            int index = miscData.getFfbBitDepth() - 8;
-            if (frequencyCombo.getSelectedIndex() != index) {
-                frequencyCombo.setSelectedIndex(index);
-            }
         }
         if (!constantSpringCheckBox.isFocusOwner()) {
             constantSpringCheckBox.setSelected(miscData.isConstantSpring());
@@ -909,15 +892,11 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         gbc.gridy = 6;
         gbc.anchor = GridBagConstraints.EAST;
         miscPanel.add(label5, gbc);
-        frequencyCombo = new JComboBox();
-        frequencyCombo.setActionCommand("changeFfbBd");
-        frequencyCombo.setPreferredSize(new Dimension(100, 30));
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 6;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        miscPanel.add(frequencyCombo, gbc);
         final JLabel label6 = new JLabel();
         label6.setHorizontalAlignment(4);
         label6.setMinimumSize(new Dimension(170, 17));
