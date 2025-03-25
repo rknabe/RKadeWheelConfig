@@ -18,13 +18,7 @@ import java.util.logging.Logger;
 
 public class MainForm extends BaseForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
-    private final static List<String> axisLabels = List.of(
-            "Axis 1 (Y - Accelerator)",
-            "Axis 2 (Z - Brake)",
-            "Axis 3 (rX - Clutch)",
-            "Axis 4 (rY - Aux 1)",
-            "Axis 5 (rZ - Aux 2)",
-            "Axis 6 (Slider - Aux 3)");
+    private final static List<String> axisLabels = List.of("Axis 1 (Y - Accelerator)" );
     private final static List<String> gainLabels = List.of(
             "All",
             "Constant",
@@ -63,7 +57,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JLabel valueLabel;
     private JLabel firmwareLabel;
     private AxisPanel axis1Panel;
-    private AxisPanel axis2Panel;
     private JScrollPane axisScroll;
     private JPanel axesTab;
     private JButton defaultsButton;
@@ -176,7 +169,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     }
 
     private void setupAxisPanels() {
-        axisPanels = List.of(axis1Panel, axis2Panel);
+        axisPanels = List.of(axis1Panel);
         for (short i = 0; i < axisPanels.size(); i++) {
             AxisPanel panel = axisPanels.get(i);
             if (panel != null) {
@@ -738,8 +731,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         wheelPanel.add(accText);
         axis1Panel = new AxisPanel();
         axisPanel.add(axis1Panel.$$$getRootComponent$$$());
-        axis2Panel = new AxisPanel();
-        axisPanel.add(axis2Panel.$$$getRootComponent$$$());
         ffbTab = new JPanel();
         ffbTab.setLayout(new BorderLayout(0, 0));
         ffbTab.setAutoscrolls(false);
