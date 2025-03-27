@@ -40,30 +40,6 @@ public class App {
                 int failed = 0;
                 Device device = DeviceManager.openDevice();
                 if (device != null) {
-                    if (cl.hasOption(CL_PARAM_SPRING_ON)) {
-                        if (device.setConstantSpring(true)) {
-                            System.out.println("Constant Spring enabled");
-                        } else {
-                            failed = 1;
-                            System.out.println("Error enabling Constant Spring");
-                        }
-                    }
-                    if (cl.hasOption(CL_PARAM_SPRING_OFF)) {
-                        if (device.setConstantSpring(false)) {
-                            System.out.println("Constant Spring disabled");
-                        } else {
-                            failed = 1;
-                            System.out.println("Error disabling Constant Spring");
-                        }
-                    }
-                    if (cl.hasOption(CL_PARAM_AUTO_CENTER)) {
-                        if (device.runAutoCenter()) {
-                            System.out.println("AutoCenter complete");
-                        } else {
-                            failed = 1;
-                            System.out.println("Error running AutoCenter");
-                        }
-                    }
                     if (cl.hasOption(CL_PARAM_CENTER)) {
                         if (device.setWheelCenterCli()) {
                             System.out.println("Wheel center set to current position");

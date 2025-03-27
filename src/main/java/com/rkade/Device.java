@@ -7,10 +7,6 @@ import io.github.libsdl4j.api.joystick.SDL_Joystick;
 import purejavahidapi.HidDevice;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
@@ -46,11 +42,8 @@ public class Device {
     public static final byte MISC_MINF = 3;
     public static final byte MISC_MAXF = 4;
     public static final byte MISC_CUTF = 5;
-    public static final byte MISC_FFBBD = 6;
-    public static final byte MISC_ENDSTOP = 7;
     public static final byte MISC_CONSTANT_SPRING = 8;
     public static final byte MISC_AFC_STARTUP = 9;
-    public static final byte MISC_MPLEX_SHIFTER = 10;
     public static final byte CMD_SET_ODTRIM = 19;
     public static final byte CMD_EELOAD = 20;
     public static final byte CMD_EESAVE = 21;
@@ -62,12 +55,7 @@ public class Device {
     public static final byte CMD_WHEEL_AUTO_LIMIT = 27;
     public static final byte CMD_WHEEL_TRIM = 28;
     public static final byte CMD_WHEEL_INVERT = 29;
-    public static final String CMD_AUTOCENTER_TEXT = "autocenter ";
     public static final String CMD_CENTER_TEXT = "center ";
-    public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
-    public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
-    public static final String CMD_VERSION = "version ";
-    public static final String SUPPORTED_FIRMWARE_TYPE = "RKADE";
     private static final Logger logger = Logger.getLogger(Device.class.getName());
     private static final int WAIT_AFTER_EFFECT_UPDATE = 5;
     private final String hidPath;
@@ -186,17 +174,6 @@ public class Device {
         return sendCommand(CMD_SET_DEBOUNCE, value);
     }
 
-    public synchronized boolean setMultiplexShifter(boolean value) {
-        return setMiscValue(MISC_MPLEX_SHIFTER, value);
-    }
-
-    public synchronized boolean setConstantSpring(boolean state) {
-        if (state) {
-            return writeTextToPort(CMD_SPRING_ON_TEXT);
-        }
-        return writeTextToPort(CMD_SPRING_OFF_TEXT);
-    }
-
     public synchronized boolean writeTextToPort(String text) {
         boolean isOpen = port.isOpen();
         if (!isOpen) {
@@ -213,40 +190,6 @@ public class Device {
             return (ret > 0);
         }
         return false;
-    }
-
-    public synchronized String readVersion() {
-        boolean isOpen = port.isOpen();
-        if (!isOpen) {
-            port.setBaudRate(9600);
-            port.setParity(0);
-            port.setNumStopBits(1);
-            port.setNumDataBits(8);
-            isOpen = port.openPort(500);
-        }
-        if (isOpen) {
-            byte[] value = CMD_VERSION.getBytes(StandardCharsets.US_ASCII);
-            int ret = port.writeBytes(value, value.length);
-            if (ret > 0) {
-                try {
-                    InputStream is = port.getInputStream();
-                    port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 0, 0);
-                    InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-                    BufferedReader bufferedReader = new BufferedReader(streamReader);
-                    return bufferedReader.readLine();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } finally {
-                    port.closePort();
-                }
-            }
-            return null;
-        }
-        return null;
-    }
-
-    public synchronized boolean runAutoCenter() {
-        return writeTextToPort(CMD_AUTOCENTER_TEXT);
     }
 
     public void setPort(SerialPort port) {

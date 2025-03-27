@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 public class MainForm extends BaseForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(MainForm.class.getName());
-    private final static List<String> axisLabels = List.of("Axis 1 (Y - Accelerator)" );
+    private final static List<String> axisLabels = List.of("Axis 1 (Y - Accelerator)");
     private final static List<String> gainLabels = List.of(
             "All",
             "Constant",
@@ -62,7 +62,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JButton defaultsButton;
     private JButton loadButton;
     private JButton saveButton;
-    private JButton autoCenterButton;
     private JScrollPane ffbScroll;
     private JPanel ffbSubPanel;
     private JPanel gainsPanel;
@@ -92,11 +91,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JLabel minForceLabel;
     private JLabel maxForceLabel;
     private JLabel cutForceLabel;
-    private JCheckBox constantSpringCheckBox;
     private ButtonsPanel buttonsPanel;
     private JPanel buttonsTab;
     private JLabel versionLabel;
-    private JCheckBox afcCheckBox;
     private JButton setMinButton;
     private JButton setMaxButton;
     private JCheckBox autoLimitCheckBox;
@@ -142,11 +139,11 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         setupAxisPanels();
         setupGainPanels();
 
-        controls = List.of(deviceLabel, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton,
+        controls = List.of(deviceLabel, rangeComboBox, centerButton, saveButton, defaultsButton,
                 loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton, rampButton,
-                sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton, constantSpringCheckBox,
-                maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText, minForceText, maxForceText, cutForceText,
-                minForceSlider, maxForceSlider, cutForceSlider, afcCheckBox, setMinButton, setMaxButton,
+                sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton, maxVelocityDamperText,
+                maxVelocityInertiaText, maxVelocityFrictionText, minForceText, maxForceText, cutForceText,
+                minForceSlider, maxForceSlider, cutForceSlider, setMinButton, setMaxButton,
                 autoLimitCheckBox, trimComboBox, trimLabel, minLabel, maxLabel, maxText, centerLabel, centerText, dzLabel,
                 dzText, minText, velocityLabel, invertCheckBox);
 
@@ -234,8 +231,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 return device.setWheelCenter(Short.parseShort(wheelRawTextField.getText()));
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
                 return device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
-            } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
-                return doWheelAutoCenter();
             } else if (e.getActionCommand().equals(autoLimitCheckBox.getActionCommand())) {
                 if (autoLimitCheckBox.isSelected()) {
                     return device.setWheelAutoLimit((short) 1);
@@ -272,10 +267,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 return device.doFfbDamper();
             } else if (e.getActionCommand().equals(triangleButton.getActionCommand())) {
                 return device.doFfbTriangle();
-            } else if (e.getActionCommand().equals(constantSpringCheckBox.getActionCommand())) {
-                return device.setMiscValue(Device.MISC_CONSTANT_SPRING, constantSpringCheckBox.isSelected());
-            } else if (e.getActionCommand().equals(afcCheckBox.getActionCommand())) {
-                return device.setMiscValue(Device.MISC_AFC_STARTUP, afcCheckBox.isSelected());
             } else if (e.getActionCommand().equals(saveButton.getActionCommand())) {
                 isWaitingOnDevice = true;
                 boolean status = device.saveSettings();
@@ -396,26 +387,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 logger.warning("State Changed, failed for:" + e.getSource());
             }
         }
-    }
-
-    private boolean doWheelAutoCenter() {
-        final boolean[] status = {true};
-        JLabel validator = new JLabel("<html><body>Please keep hands off wheel!<br>Press OK When AutoCentering is Complete.</body></html>");
-        JOptionPane pane = new JOptionPane(validator, JOptionPane.WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION);
-        final JDialog dialog = pane.createDialog(autoCenterButton, "Please keep hands off wheel!");
-        dialog.setModal(true);
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            public Void doInBackground() {
-                status[0] = device.runAutoCenter();
-                return null;
-            }
-        };
-        worker.execute();
-        dialog.setVisible(true);
-        if (status[0]) {
-            return device.setWheelCenter();
-        }
-        return false;
     }
 
     @Override
@@ -541,12 +512,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         if (!cutForceText.isFocusOwner()) {
             cutForceText.setText(String.valueOf(miscData.getCutForce()));
         }
-        if (!constantSpringCheckBox.isFocusOwner()) {
-            constantSpringCheckBox.setSelected(miscData.isConstantSpring());
-        }
-        if (!afcCheckBox.isFocusOwner()) {
-            afcCheckBox.setSelected(miscData.isAutoCenterOnStartup());
-        }
     }
 
     private void updateWheelPanel(WheelDataReport wheelData) {
@@ -667,13 +632,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         centerButton.setPreferredSize(new Dimension(75, 30));
         centerButton.setText("Center");
         wheelPanel.add(centerButton);
-        autoCenterButton = new JButton();
-        autoCenterButton.setActionCommand("autoCenter");
-        autoCenterButton.setMaximumSize(new Dimension(105, 34));
-        autoCenterButton.setMinimumSize(new Dimension(105, 34));
-        autoCenterButton.setPreferredSize(new Dimension(100, 34));
-        autoCenterButton.setText("AutoCenter");
-        wheelPanel.add(autoCenterButton);
         wheelIconLabel = new JLabel();
         wheelIconLabel.setAlignmentY(0.0f);
         wheelIconLabel.setDoubleBuffered(true);
@@ -937,23 +895,14 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         gbc.gridx = 1;
         gbc.gridy = 0;
         miscPanel.add(maxVelocityDamperText, gbc);
-        afcCheckBox = new JCheckBox();
-        afcCheckBox.setLabel("AutoCenter at Startup");
-        afcCheckBox.setText("AutoCenter at Startup");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 8;
         gbc.anchor = GridBagConstraints.WEST;
-        miscPanel.add(afcCheckBox, gbc);
-        constantSpringCheckBox = new JCheckBox();
-        constantSpringCheckBox.setHorizontalAlignment(0);
-        constantSpringCheckBox.setLabel("Constant Spring");
-        constantSpringCheckBox.setText("Constant Spring");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 7;
         gbc.anchor = GridBagConstraints.WEST;
-        miscPanel.add(constantSpringCheckBox, gbc);
         testPanel = new JPanel();
         testPanel.setLayout(new GridBagLayout());
         testPanel.setMaximumSize(new Dimension(400, 400));

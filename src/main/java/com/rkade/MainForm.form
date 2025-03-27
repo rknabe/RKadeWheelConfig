@@ -20,7 +20,7 @@
         <properties>
           <minimumSize width="1060" height="400"/>
           <name value="Inputs"/>
-          <preferredSize width="1060" height="750"/>
+          <preferredSize width="1060" height="800"/>
           <tabLayoutPolicy value="0"/>
         </properties>
         <border type="none"/>
@@ -31,7 +31,8 @@
             </constraints>
             <properties>
               <minimumSize width="1060" height="60"/>
-              <preferredSize width="1060" height="750"/>
+              <preferredSize width="1060" height="800"/>
+              <requestFocusEnabled value="false"/>
             </properties>
             <border type="none"/>
             <children>
@@ -41,7 +42,7 @@
                   <autoscrolls value="true"/>
                   <maximumSize width="32767" height="32767"/>
                   <minimumSize width="1060" height="60"/>
-                  <preferredSize width="1060" height="590"/>
+                  <preferredSize width="1060" height="600"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -51,7 +52,7 @@
                       <autoscrolls value="true"/>
                       <maximumSize width="32767" height="32767"/>
                       <minimumSize width="1040" height="60"/>
-                      <preferredSize width="1040" height="800"/>
+                      <preferredSize width="1040" height="600"/>
                     </properties>
                     <border type="bevel-lowered"/>
                     <children>
@@ -209,25 +210,6 @@
                               <minimumSize width="90" height="30"/>
                               <preferredSize width="90" height="30"/>
                               <text value="AutoLimit"/>
-                            </properties>
-                          </component>
-                          <component id="2e33b" class="javax.swing.JButton" binding="autoCenterButton">
-                            <constraints>
-                              <grid row="1" column="14" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <actionCommand value="autoCenter"/>
-                              <alignmentX value="1.0"/>
-                              <alignmentY value="1.0"/>
-                              <horizontalTextPosition value="0"/>
-                              <maximumSize width="105" height="30"/>
-                              <minimumSize width="105" height="30"/>
-                              <opaque value="true"/>
-                              <preferredSize width="105" height="30"/>
-                              <rolloverEnabled value="false"/>
-                              <text value="Autocenter"/>
-                              <verticalTextPosition value="0"/>
                             </properties>
                           </component>
                           <component id="ac1f1" class="javax.swing.JComboBox" binding="trimComboBox">
@@ -526,7 +508,7 @@
             </constraints>
             <properties>
               <autoscrolls value="false"/>
-              <minimumSize width="1060" height="60"/>
+              <minimumSize width="1060" height="600"/>
               <preferredSize width="1060" height="800"/>
             </properties>
             <border type="none"/>
@@ -541,15 +523,15 @@
                   <grid id="ad3ac" binding="ffbSubPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
                     <constraints/>
                     <properties>
-                      <preferredSize width="1000" height="800"/>
+                      <preferredSize width="1000" height="600"/>
                     </properties>
                     <border type="none"/>
                     <children>
                       <grid id="c9b9b" binding="gainsPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                         <constraints border-constraint="West"/>
                         <properties>
-                          <minimumSize width="570" height="650"/>
-                          <preferredSize width="575" height="650"/>
+                          <minimumSize width="585" height="600"/>
+                          <preferredSize width="585" height="600"/>
                         </properties>
                         <border type="etched" title="Effect Gains"/>
                         <children/>
@@ -557,8 +539,8 @@
                       <grid id="c8afc" binding="rightPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                         <constraints border-constraint="Center"/>
                         <properties>
-                          <minimumSize width="520" height="310"/>
-                          <preferredSize width="520" height="400"/>
+                          <minimumSize width="450" height="310"/>
+                          <preferredSize width="450" height="400"/>
                         </properties>
                         <border type="none"/>
                         <children>
@@ -775,27 +757,6 @@
                                   <preferredSize width="75" height="30"/>
                                 </properties>
                               </component>
-                              <component id="59045" class="javax.swing.JCheckBox" binding="afcCheckBox">
-                                <constraints>
-                                  <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <label value="AutoCenter at Startup"/>
-                                  <text value="AutoCenter at Startup"/>
-                                </properties>
-                              </component>
-                              <component id="4efbe" class="javax.swing.JCheckBox" binding="constantSpringCheckBox">
-                                <constraints>
-                                  <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
-                                </constraints>
-                                <properties>
-                                  <horizontalAlignment value="0"/>
-                                  <label value="Constant Spring"/>
-                                  <text value="Constant Spring"/>
-                                </properties>
-                              </component>
                             </children>
                           </grid>
                           <grid id="b8603" binding="testPanel" layout-manager="GridBagLayout">
@@ -990,9 +951,9 @@
                 <properties>
                   <enabled value="true"/>
                   <horizontalAlignment value="2"/>
-                  <maximumSize width="145" height="20"/>
-                  <minimumSize width="145" height="20"/>
-                  <preferredSize width="145" height="20"/>
+                  <maximumSize width="165" height="20"/>
+                  <minimumSize width="165" height="20"/>
+                  <preferredSize width="165" height="20"/>
                   <text value="Device"/>
                 </properties>
               </component>
@@ -1014,9 +975,9 @@
                   <enabled value="true"/>
                   <focusable value="false"/>
                   <horizontalAlignment value="2"/>
-                  <maximumSize width="70" height="20"/>
-                  <minimumSize width="70" height="20"/>
-                  <preferredSize width="70" height="20"/>
+                  <maximumSize width="140" height="20"/>
+                  <minimumSize width="140" height="20"/>
+                  <preferredSize width="140" height="20"/>
                   <text value="Version"/>
                 </properties>
               </component>
