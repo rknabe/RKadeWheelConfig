@@ -42,8 +42,6 @@ public class Device {
     public static final byte MISC_MINF = 3;
     public static final byte MISC_MAXF = 4;
     public static final byte MISC_CUTF = 5;
-    public static final byte MISC_CONSTANT_SPRING = 8;
-    public static final byte MISC_AFC_STARTUP = 9;
     public static final byte CMD_SET_ODTRIM = 19;
     public static final byte CMD_EELOAD = 20;
     public static final byte CMD_EESAVE = 21;
