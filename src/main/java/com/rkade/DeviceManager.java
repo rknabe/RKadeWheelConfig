@@ -52,6 +52,9 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
         HidDeviceInfo myHidInfo = null;
         for (HidDeviceInfo info : devList) {
             if (info.getVendorId() == LEONARDO_VENDOR_ID && info.getProductId() == LEONARDO_PRODUCT_ID) {
+                if (info.getUsageId() > 4) { //HID keyboard is 128 usage id, gamepad is 4
+                    continue;
+                }
                 deviceInfo = info;
                 myHidInfo = info;
                 break;
