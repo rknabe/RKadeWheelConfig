@@ -69,7 +69,7 @@ public class Device {
     public static final String CMD_VERSION = "version ";
     public static final String SUPPORTED_FIRMWARE_TYPE = "RKADE";
     private static final Logger logger = Logger.getLogger(Device.class.getName());
-    private static final int WAIT_AFTER_EFFECT_UPDATE = 5;
+    private static final int WAIT_AFTER_EFFECT_UPDATE = 510;
     private final String hidPath;
     private final HidDevice hidDevice;
     private String name;
