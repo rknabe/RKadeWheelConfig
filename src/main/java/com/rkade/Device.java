@@ -68,6 +68,9 @@ public class Device {
     public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
     public static final String CMD_VERSION = "version ";
     public static final String SUPPORTED_FIRMWARE_TYPE = "RKADE";
+    private final static int LEONARDO_VENDOR_ID = 0x2341;
+    private final static int LEONARDO_PRODUCT_ID = 0x8036;
+    private final static int LEONARDO_BOOTLOADER_PRODUCT_ID = 54;
     private static final Logger logger = Logger.getLogger(Device.class.getName());
     private static final int WAIT_AFTER_EFFECT_UPDATE = 510;
     private final String hidPath;
@@ -241,6 +244,35 @@ public class Device {
                 }
             }
             return null;
+        }
+        return null;
+    }
+
+    public boolean resetToBootLoader() {
+        if (port == null) {
+            logger.warning("Com port not set, ensure no other software attached");
+            return false;
+        }
+        if (!port.isOpen()) {
+            port.openPort();
+        }
+        port.setBaudRate(1200);
+        port.writeBytes(new byte[1], 1);
+        port.flushIOBuffers();
+        port.closePort();
+        //port.setBaudRate(9600);
+        return true;
+    }
+
+    public SerialPort findBootLoaderPort() {
+        for (int i = 0; i < 6000; i++) {
+            SerialPort[] ports = SerialPort.getCommPorts();
+            for (SerialPort port : ports) {
+                if (port.getVendorID() == Device.LEONARDO_VENDOR_ID && port.getProductID() == Device.LEONARDO_BOOTLOADER_PRODUCT_ID) {
+                    return port;
+                }
+            }
+            sleep(1);
         }
         return null;
     }

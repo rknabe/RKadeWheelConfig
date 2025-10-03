@@ -107,7 +107,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JCheckBox constantSpringCheckBox;
     private ButtonsPanel buttonsPanel;
     private JPanel buttonsTab;
-    private JLabel versionLabel;
+    private JButton versionLabel;
     private JCheckBox afcCheckBox;
     private JButton setMinButton;
     private JButton setMaxButton;
@@ -168,7 +168,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText, minForceText, maxForceText, cutForceText,
                 minForceSlider, maxForceSlider, cutForceSlider, frequencyCombo, afcCheckBox, setMinButton, setMaxButton,
                 autoLimitCheckBox, trimComboBox, trimLabel, minLabel, maxLabel, maxText, centerLabel, centerText, dzLabel,
-                dzText, minText, velocityLabel, invertCheckBox);
+                dzText, minText, velocityLabel, invertCheckBox, versionLabel);
 
         setupControlListener();
 
@@ -313,6 +313,12 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 boolean status = device.loadFromEeprom();
                 showWaitDialog();
                 return status;
+            } else if (e.getActionCommand().equals(versionLabel.getActionCommand())) {
+                FirmwareDialog dialog = new FirmwareDialog(device);
+                dialog.pack();
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+                return true;
             }
         }
         return true;
@@ -507,8 +513,11 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                             buttonsPanel.deviceUpdated(device, status, buttonsData);
                         }
                     }
-                    case VersionDataReport versionData ->
-                            versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
+                    case VersionDataReport versionData -> {
+                        versionLabel.setText(versionData.getId() + ":" + versionData.getVersion());
+                        device.setFirmwareVersion(versionData.getVersion());
+                        device.setFirmwareType(versionData.getId());
+                    }
                     default -> {
                     }
                 }
@@ -1141,7 +1150,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         firmwareLabel.setPreferredSize(new Dimension(70, 20));
         firmwareLabel.setText("Firmware:");
         panel1.add(firmwareLabel);
-        versionLabel = new JLabel();
+        versionLabel = new JButton();
         versionLabel.setEnabled(true);
         versionLabel.setFocusable(false);
         versionLabel.setHorizontalAlignment(2);
