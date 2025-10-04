@@ -123,7 +123,12 @@ public class FirmwareDialog extends JDialog {
     }
 
     private boolean isDeluxe() {
-        return device.getFirmwareVersion().trim().endsWith("-DX") || "1.1.8".equals(device.getFirmwareVersion());
+        String version = device.getFirmwareVersion();
+        if (version != null) {
+            version = version.trim();
+            return version.endsWith("-DX") || "1.1.8".equals(version);
+        }
+        return false;
     }
 
     private void sleep(int millis) {
