@@ -189,15 +189,15 @@ public class FirmwareDialog extends JDialog {
     private boolean applyFirmware(Void unused) {
         try {
             Path exePath = getExePathFromCurrentDir();
+            Runtime rt = Runtime.getRuntime();
             boolean reset = device.resetToBootLoader();
             if (reset) {
                 txtOutput.append("Waiting for Upload port" + System.lineSeparator());
                 SerialPort port = device.findBootLoaderPort();
-                txtOutput.append("Uploading firmware..." + System.lineSeparator());
                 if (port != null) {
+                    txtOutput.append("Uploading firmware..." + System.lineSeparator());
                     String portName = port.getSystemPortName();
                     String cmd = String.format(updateCmd, exePath, portName, firmwareBinFile);
-                    Runtime rt = Runtime.getRuntime();
                     String[] commands = {cmd};
                     Process proc = rt.exec(commands);
                     BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));

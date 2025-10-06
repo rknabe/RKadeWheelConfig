@@ -253,7 +253,7 @@ public class Device {
             sleep(10);
         }
         port.setBaudRate(1200);
-        sleep(10);
+        //sleep(10);
         //port.writeBytes(new byte[1], 1);
         //port.flushIOBuffers();
         port.closePort();
