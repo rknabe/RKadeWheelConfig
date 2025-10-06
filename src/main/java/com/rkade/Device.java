@@ -62,7 +62,6 @@ public class Device {
     public static final byte CMD_WHEEL_AUTO_LIMIT = 27;
     public static final byte CMD_WHEEL_TRIM = 28;
     public static final byte CMD_WHEEL_INVERT = 29;
-    public static final String CMD_AUTOCENTER_TEXT = "autocenter ";
     public static final String CMD_CENTER_TEXT = "center ";
     public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
     public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
@@ -112,10 +111,6 @@ public class Device {
 
     public synchronized boolean setWheelCenter() {
         return sendCommand(CMD_CENTER);
-    }
-
-    public synchronized boolean setWheelCenterCli() {
-        return writeTextToPort(CMD_CENTER_TEXT);
     }
 
     public synchronized boolean setWheelRange(Short range) {
@@ -255,12 +250,14 @@ public class Device {
         }
         if (!port.isOpen()) {
             port.openPort();
+            sleep(10);
         }
         port.setBaudRate(1200);
-        port.writeBytes(new byte[1], 1);
-        port.flushIOBuffers();
+        sleep(10);
+        //port.writeBytes(new byte[1], 1);
+        //port.flushIOBuffers();
         port.closePort();
-        //port.setBaudRate(9600);
+        port.setBaudRate(9600);
         return true;
     }
 
@@ -275,10 +272,6 @@ public class Device {
             sleep(1);
         }
         return null;
-    }
-
-    public synchronized boolean runAutoCenter() {
-        return writeTextToPort(CMD_AUTOCENTER_TEXT);
     }
 
     public void setPort(SerialPort port) {

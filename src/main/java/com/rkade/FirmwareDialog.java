@@ -25,16 +25,21 @@ import java.util.logging.Logger;
 
 public class FirmwareDialog extends JDialog {
     private final static Logger logger = Logger.getLogger(FirmwareDialog.class.getName());
+    private final static int FIRMWARE_TYPE_UNKNOWN = 0;
+    private final static int FIRMWARE_TYPE_ORIG = 1;
+    private final static int FIRMWARE_TYPE_DLX = 2;
+    private final static int FIRMWARE_TYPE_V3 = 3;
     private final static String FILE_VERSION = "version.txt";
     private final static String FILE_VERSION_DLX = "version-dlx.txt";
+    private final static String FILE_VERSION_V3 = "version-v3.txt";
     private final static String FILE_FIRMWARE_BIN = "RKadeWheel.ino.hex";
     private final static String FILE_FIRMWARE_BIN_DLX = "RKadeWheel-Deluxe.ino.hex";
+    private final static String FILE_FIRMWARE_BIN_V3 = "RKadeWheel-V3.ino.hex";
     private final static String FILE_FIRMWARE_URL = "https://github.com/rknabe/RKadeWheel/releases/download/Firmware/";
     private final static String DIR_TEMP = System.getProperty("java.io.tmpdir");
     private final static String EXE_PROGRAMMER = "avrdude.exe";
     private final static String updateCmd = "\"%s\" -v -patmega32u4 -cavr109 \"-P%s\" -b57600 -D \"-Uflash:w:%s:i\"";
     private final static String firmwareBinFile = DIR_TEMP + FILE_FIRMWARE_BIN;
-    private final static String firmwareBinFileDlx = DIR_TEMP + FILE_FIRMWARE_BIN_DLX;
     private final Device device;
     private JPanel contentPane;
     private JButton btnCheck;
@@ -103,10 +108,16 @@ public class FirmwareDialog extends JDialog {
         txtOutput.setText("Checking..." + System.lineSeparator());
         try {
             String versionFileName = DIR_TEMP + FILE_VERSION;
-            if (isDeluxe()) {
+            int firmwareType = getFirmwareType();
+            if (firmwareType == FIRMWARE_TYPE_DLX) {
                 downloadToFile(FILE_FIRMWARE_URL, FILE_VERSION_DLX, versionFileName);
-            } else {
+            } else if (firmwareType == FIRMWARE_TYPE_ORIG) {
                 downloadToFile(FILE_FIRMWARE_URL, FILE_VERSION, versionFileName);
+            } else if (firmwareType == FIRMWARE_TYPE_V3) {
+                downloadToFile(FILE_FIRMWARE_URL, FILE_VERSION_V3, versionFileName);
+            } else {
+                txtOutput.append("Cannot update, unable to determine Device version:" + device.getFirmwareVersion() + System.lineSeparator());
+                return;
             }
             sleep(1000);
             String version = Files.readString(Path.of(versionFileName)).trim();
@@ -122,13 +133,20 @@ public class FirmwareDialog extends JDialog {
         }
     }
 
-    private boolean isDeluxe() {
+    private int getFirmwareType() {
         String version = device.getFirmwareVersion();
         if (version != null) {
             version = version.trim();
-            return version.endsWith("-DX") || "1.1.8".equals(version);
+            if (version.endsWith("-DX") || "1.1.8".equals(version)) {
+                return FIRMWARE_TYPE_DLX;
+            } else if (version.startsWith("3.")) {
+                return FIRMWARE_TYPE_V3;
+            } else if (version.startsWith("1.")) {
+                return FIRMWARE_TYPE_ORIG;
+            }
+            return FIRMWARE_TYPE_UNKNOWN;
         }
-        return false;
+        return FIRMWARE_TYPE_UNKNOWN;
     }
 
     private void sleep(int millis) {
@@ -146,9 +164,17 @@ public class FirmwareDialog extends JDialog {
     private void onUpdate() {
         try {
             txtOutput.append("Downloading Firmware Bin..." + System.lineSeparator());
-            String file = FILE_FIRMWARE_BIN;
-            if (isDeluxe()) {
+            String file;
+            int firmwareType = getFirmwareType();
+            if (firmwareType == FIRMWARE_TYPE_DLX) {
                 file = FILE_FIRMWARE_BIN_DLX;
+            } else if (firmwareType == FIRMWARE_TYPE_ORIG) {
+                file = FILE_FIRMWARE_BIN;
+            } else if (firmwareType == FIRMWARE_TYPE_V3) {
+                file = FILE_FIRMWARE_BIN_V3;
+            } else {
+                txtOutput.append("Cannot update, unable to determine Device version:" + device.getFirmwareVersion() + System.lineSeparator());
+                return;
             }
             CompletableFuture<Long> download = downloadToFile(FILE_FIRMWARE_URL, file, firmwareBinFile);
             download.thenApply(this::firmwareBinComplete);

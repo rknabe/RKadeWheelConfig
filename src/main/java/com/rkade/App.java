@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 public class App {
     public static final String CL_PARAM_SPRING_ON = "springon";
     public static final String CL_PARAM_SPRING_OFF = "springoff";
-    public static final String CL_PARAM_AUTO_CENTER = "autocenter";
-    public static final String CL_PARAM_CENTER = "center";
     public static final String CL_PARAM_HELP = "help";
     private static DeviceManager deviceManager;
 
@@ -34,8 +32,7 @@ public class App {
                 System.exit(1);
             }
 
-            if (cl.hasOption(CL_PARAM_SPRING_ON) || cl.hasOption(CL_PARAM_SPRING_OFF)
-                    || cl.hasOption(CL_PARAM_AUTO_CENTER) || cl.hasOption(CL_PARAM_CENTER)) {
+            if (cl.hasOption(CL_PARAM_SPRING_ON) || cl.hasOption(CL_PARAM_SPRING_OFF)) {
                 showGui = false;
                 int failed = 0;
                 Device device = DeviceManager.openDevice();
@@ -54,22 +51,6 @@ public class App {
                         } else {
                             failed = 1;
                             System.out.println("Error disabling Constant Spring");
-                        }
-                    }
-                    if (cl.hasOption(CL_PARAM_AUTO_CENTER)) {
-                        if (device.runAutoCenter()) {
-                            System.out.println("AutoCenter complete");
-                        } else {
-                            failed = 1;
-                            System.out.println("Error running AutoCenter");
-                        }
-                    }
-                    if (cl.hasOption(CL_PARAM_CENTER)) {
-                        if (device.setWheelCenterCli()) {
-                            System.out.println("Wheel center set to current position");
-                        } else {
-                            failed = 1;
-                            System.out.println("Error setting wheel center");
                         }
                     }
                 } else {
@@ -131,16 +112,6 @@ public class App {
         springOffOption.setRequired(false);
         springOffOption.setOptionalArg(false);
         options.addOption(springOffOption);
-
-        Option autocenterOption = new Option(CL_PARAM_AUTO_CENTER, "Perform automatic range and center calibration");
-        autocenterOption.setRequired(false);
-        autocenterOption.setOptionalArg(false);
-        options.addOption(autocenterOption);
-
-        Option centerOption = new Option(CL_PARAM_CENTER, "Set wheel center to current position");
-        centerOption.setRequired(false);
-        centerOption.setOptionalArg(false);
-        options.addOption(centerOption);
 
         Option helpOption = Option.builder("h")
                 .longOpt(CL_PARAM_HELP)

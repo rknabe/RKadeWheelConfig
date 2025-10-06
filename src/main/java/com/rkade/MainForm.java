@@ -73,7 +73,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JButton defaultsButton;
     private JButton loadButton;
     private JButton saveButton;
-    private JButton autoCenterButton;
     private JScrollPane ffbScroll;
     private JPanel ffbSubPanel;
     private JPanel gainsPanel;
@@ -162,7 +161,7 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         setupAxisPanels();
         setupGainPanels();
 
-        controls = List.of(deviceLabel, rangeComboBox, centerButton, autoCenterButton, saveButton, defaultsButton,
+        controls = List.of(deviceLabel, rangeComboBox, centerButton, saveButton, defaultsButton,
                 loadButton, constantLeftButton, constantRightButton, sineButton, springButton, frictionButton, rampButton,
                 sawtoothUpButton, sawtoothDownButton, inertiaButton, damperButton, triangleButton, constantSpringCheckBox,
                 maxVelocityDamperText, maxVelocityInertiaText, maxVelocityFrictionText, minForceText, maxForceText, cutForceText,
@@ -256,8 +255,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 return device.setWheelRange(Short.valueOf(Objects.requireNonNull(rangeComboBox.getSelectedItem()).toString()));
             } else if (e.getActionCommand().equals(frequencyCombo.getActionCommand())) {
                 return device.setMiscValue(Device.MISC_FFBBD, (short) (frequencyCombo.getSelectedIndex() + 8));
-            } else if (e.getActionCommand().equals(autoCenterButton.getActionCommand())) {
-                return doWheelAutoCenter();
             } else if (e.getActionCommand().equals(autoLimitCheckBox.getActionCommand())) {
                 if (autoLimitCheckBox.isSelected()) {
                     return device.setWheelAutoLimit((short) 1);
@@ -424,26 +421,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 logger.warning("State Changed, failed for:" + e.getSource());
             }
         }
-    }
-
-    private boolean doWheelAutoCenter() {
-        final boolean[] status = {true};
-        JLabel validator = new JLabel("<html><body>Please keep hands off wheel!<br>Press OK When AutoCentering is Complete.</body></html>");
-        JOptionPane pane = new JOptionPane(validator, JOptionPane.WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION);
-        final JDialog dialog = pane.createDialog(autoCenterButton, "Please keep hands off wheel!");
-        dialog.setModal(true);
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            public Void doInBackground() {
-                status[0] = device.runAutoCenter();
-                return null;
-            }
-        };
-        worker.execute();
-        dialog.setVisible(true);
-        if (status[0]) {
-            return device.setWheelCenter();
-        }
-        return false;
     }
 
     @Override
@@ -704,13 +681,6 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
         centerButton.setPreferredSize(new Dimension(75, 30));
         centerButton.setText("Center");
         wheelPanel.add(centerButton);
-        autoCenterButton = new JButton();
-        autoCenterButton.setActionCommand("autoCenter");
-        autoCenterButton.setMaximumSize(new Dimension(105, 34));
-        autoCenterButton.setMinimumSize(new Dimension(105, 34));
-        autoCenterButton.setPreferredSize(new Dimension(100, 34));
-        autoCenterButton.setText("AutoCenter");
-        wheelPanel.add(autoCenterButton);
         wheelIconLabel = new JLabel();
         wheelIconLabel.setAlignmentY(0.0f);
         wheelIconLabel.setDoubleBuffered(true);

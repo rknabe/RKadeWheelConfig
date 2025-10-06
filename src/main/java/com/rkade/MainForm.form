@@ -211,25 +211,6 @@
                               <text value="AutoLimit"/>
                             </properties>
                           </component>
-                          <component id="2e33b" class="javax.swing.JButton" binding="autoCenterButton">
-                            <constraints>
-                              <grid row="1" column="14" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <actionCommand value="autoCenter"/>
-                              <alignmentX value="1.0"/>
-                              <alignmentY value="1.0"/>
-                              <horizontalTextPosition value="0"/>
-                              <maximumSize width="105" height="30"/>
-                              <minimumSize width="105" height="30"/>
-                              <opaque value="true"/>
-                              <preferredSize width="105" height="30"/>
-                              <rolloverEnabled value="false"/>
-                              <text value="Autocenter"/>
-                              <verticalTextPosition value="0"/>
-                            </properties>
-                          </component>
                           <component id="ac1f1" class="javax.swing.JComboBox" binding="trimComboBox">
                             <constraints>
                               <grid row="1" column="13" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
