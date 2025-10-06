@@ -311,10 +311,16 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                 showWaitDialog();
                 return status;
             } else if (e.getActionCommand().equals(versionLabel.getActionCommand())) {
-                FirmwareDialog dialog = new FirmwareDialog(device);
-                dialog.pack();
-                dialog.setLocationRelativeTo(null);
-                dialog.setVisible(true);
+                int action = JOptionPane.showConfirmDialog(
+                        this.$$$getRootComponent$$$(), "Before updating firmware, unplug other RKADE devices (eg, Keypad) or Arduino Devices.\r\n \r\n Continue?",
+                        "Firmware Update Warning",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (action == JOptionPane.OK_OPTION) {
+                    FirmwareDialog dialog = new FirmwareDialog(device);
+                    dialog.pack();
+                    dialog.setLocationRelativeTo(null);
+                    dialog.setVisible(true);
+                }
                 return true;
             }
         }
