@@ -48,6 +48,7 @@
           <component id="878e" class="javax.swing.JSpinner" binding="shiftSpinner">
             <constraints/>
             <properties>
+              <autoscrolls value="false"/>
               <maximumSize width="60" height="25"/>
               <minimumSize width="60" height="25"/>
               <preferredSize width="60" height="25"/>
@@ -57,6 +58,7 @@
           <component id="12cfc" class="javax.swing.JLabel" binding="shiftLabel">
             <constraints/>
             <properties>
+              <autoscrolls value="false"/>
               <text value="Shift/Hotkey Button"/>
               <toolTipText value="Hold this button and press another to create a virtual button (Button 17+)"/>
             </properties>
