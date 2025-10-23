@@ -52,6 +52,7 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     private JCheckBox multiplexCheckbox;
     private JSpinner shiftSpinner;
     private JLabel shiftLabel;
+    private JLabel lblDebounce;
     private Device device = null;
 
     {
@@ -62,7 +63,7 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     }
 
     public ButtonsPanel() {
-        controls = List.of(debounceSpinner, multiplexCheckbox, shiftSpinner, shiftLabel);
+        controls = List.of(debounceSpinner, multiplexCheckbox, shiftSpinner, shiftLabel, lblDebounce);
         switchButtons = List.of(button1, button2, button3, button4, button5, button6, button7, button8,
                 button9, button10, button11, button12, button13, button14, button15, button16,
                 button17, button18, button19, button20, button21, button22, button23, button24,

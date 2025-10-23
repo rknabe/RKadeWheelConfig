@@ -33,7 +33,7 @@
               <requestFocusEnabled value="false"/>
             </properties>
           </component>
-          <component id="ab876" class="javax.swing.JLabel">
+          <component id="ab876" class="javax.swing.JLabel" binding="lblDebounce">
             <constraints/>
             <properties>
               <alignmentY value="1.0"/>
