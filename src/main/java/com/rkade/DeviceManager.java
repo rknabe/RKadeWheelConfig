@@ -157,6 +157,8 @@ public final class DeviceManager implements InputReportListener, DeviceRemovalLi
             notifyListenersDeviceUpdated(getDevice(hidDevice), null, report);
             if (report instanceof VersionDataReport) {
                 versionReported = true;
+                Device device = getDevice(hidDevice);
+                device.setVersion(((VersionDataReport) report).getVersion());
             }
         }
     }

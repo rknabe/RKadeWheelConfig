@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 public class ButtonsPanel extends BaseForm implements DeviceListener, ActionListener, FocusListener, ChangeListener {
     private final static Logger logger = Logger.getLogger(ButtonsPanel.class.getName());
     private final List<JButton> switchButtons;
+    private final List<JComponent> actionButtons;
     private JPanel mainButtonPanel;
     private JSpinner debounceSpinner;
     private JPanel bottomPanel;
@@ -53,6 +54,15 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     private JSpinner shiftSpinner;
     private JLabel shiftLabel;
     private JLabel lblDebounce;
+    private JPanel actionPanel;
+    private JComboBox<String> cbActionBtn11;
+    private JLabel lblActionBtn11;
+    private JComboBox<String> cbActionBtn12;
+    private JLabel lblActionBtn12;
+    private JComboBox<String> cbActionBtn13;
+    private JLabel lblActionBtn13;
+    private JLabel lblActionBtn14;
+    private JComboBox<String> cbActionBtn14;
     private Device device = null;
 
     {
@@ -63,11 +73,15 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     }
 
     public ButtonsPanel() {
-        controls = List.of(debounceSpinner, multiplexCheckbox, shiftSpinner, shiftLabel, lblDebounce);
+        controls = List.of(debounceSpinner, multiplexCheckbox, shiftSpinner, shiftLabel, lblDebounce,
+                cbActionBtn11, lblActionBtn11, cbActionBtn12, lblActionBtn12, cbActionBtn13, lblActionBtn13,
+                cbActionBtn14, lblActionBtn14);
         switchButtons = List.of(button1, button2, button3, button4, button5, button6, button7, button8,
                 button9, button10, button11, button12, button13, button14, button15, button16,
                 button17, button18, button19, button20, button21, button22, button23, button24,
                 button25, button26, button27, button28, button29, button30, button31, button32);
+        actionButtons = List.of(cbActionBtn11, cbActionBtn12, cbActionBtn13, cbActionBtn14,
+                lblActionBtn11, lblActionBtn12, lblActionBtn13, lblActionBtn14);
 
         setPanelEnabled(false);
         setupControlListener();
@@ -77,6 +91,11 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
 
         SpinnerModel shiftModel = new SpinnerNumberModel(0, 0, 14, 1);
         shiftSpinner.setModel(shiftModel);
+
+        cbActionBtn11.setModel(new DefaultComboBoxModel<>(ButtonAction.getStringValues()));
+        cbActionBtn12.setModel(new DefaultComboBoxModel<>(ButtonAction.getStringValues()));
+        cbActionBtn13.setModel(new DefaultComboBoxModel<>(ButtonAction.getStringValues()));
+        cbActionBtn14.setModel(new DefaultComboBoxModel<>(ButtonAction.getStringValues()));
     }
 
     @Override
@@ -119,6 +138,19 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         for (JButton button : switchButtons) {
             button.setSelected(getButtonState(buttonsDataReport, switchButtons.indexOf(button)));
         }
+        if (device != null) {
+            if (device.getVersionNumber() >= Device.VERSION_ACTION_BUTTONS) {
+                setEnabled(actionButtons, true);
+                setSelectionIfNeeded(cbActionBtn11, buttonsDataReport.getButton11Action().ordinal());
+                setSelectionIfNeeded(cbActionBtn12, buttonsDataReport.getButton12Action().ordinal());
+                setSelectionIfNeeded(cbActionBtn13, buttonsDataReport.getButton13Action().ordinal());
+                setSelectionIfNeeded(cbActionBtn14, buttonsDataReport.getButton14Action().ordinal());
+            } else {
+                setEnabled(actionButtons, false);
+            }
+        } else {
+            setEnabled(actionButtons, false);
+        }
     }
 
     @Override
@@ -132,6 +164,14 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
     private boolean handleAction(ActionEvent e) {
         if (e.getActionCommand().equals(multiplexCheckbox.getActionCommand())) {
             return device.setMultiplexShifter(multiplexCheckbox.isSelected());
+        } else if (e.getActionCommand().equals(cbActionBtn11.getActionCommand())) {
+            device.setButtonAction((short) 11, (byte) cbActionBtn11.getSelectedIndex());
+        } else if (e.getActionCommand().equals(cbActionBtn12.getActionCommand())) {
+            device.setButtonAction((short) 12, (byte) cbActionBtn12.getSelectedIndex());
+        } else if (e.getActionCommand().equals(cbActionBtn13.getActionCommand())) {
+            device.setButtonAction((short) 13, (byte) cbActionBtn13.getSelectedIndex());
+        } else if (e.getActionCommand().equals(cbActionBtn14.getActionCommand())) {
+            device.setButtonAction((short) 14, (byte) cbActionBtn14.getSelectedIndex());
         }
         return true;
     }

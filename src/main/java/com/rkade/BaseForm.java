@@ -30,8 +30,19 @@ public abstract class BaseForm implements ActionListener, ChangeListener, FocusL
         }
     }
 
+    protected <T> void setSelectionIfNeeded(JComboBox<T> comboBox, int indexToSelect) {
+        int selectedIndex = comboBox.getSelectedIndex();
+        if (selectedIndex != indexToSelect) {
+            comboBox.setSelectedIndex(indexToSelect);
+        }
+    }
+
     protected void setPanelEnabled(boolean enable) {
-        for (JComponent component : controls) {
+        setEnabled(controls, enable);
+    }
+
+    protected void setEnabled(List<JComponent> controlList, boolean enable) {
+        for (JComponent component : controlList) {
             component.setEnabled(enable);
         }
     }

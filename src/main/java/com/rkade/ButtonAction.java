@@ -1,7 +1,8 @@
 package com.rkade;
 
+import java.util.Vector;
+
 public enum ButtonAction {
-    UNKNOWN(255),
     NONE(0),
     PAUSE(1),
     SHUTDOWN(2),
@@ -19,10 +20,18 @@ public enum ButtonAction {
                 return action;
             }
         }
-        return UNKNOWN;
+        return NONE;
     }
 
     public int getCode() {
         return code;
+    }
+
+    public static Vector<String> getStringValues() {
+        Vector<String> values = new Vector<>();
+        for (ButtonAction action : ButtonAction.values()) {
+            values.add(action.name());
+        }
+        return values;
     }
 }

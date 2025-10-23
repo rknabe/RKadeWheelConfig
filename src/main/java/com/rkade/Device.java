@@ -62,11 +62,13 @@ public class Device {
     public static final byte CMD_WHEEL_AUTO_LIMIT = 27;
     public static final byte CMD_WHEEL_TRIM = 28;
     public static final byte CMD_WHEEL_INVERT = 29;
+    public static final byte CMD_SET_BUTTON_ACTION = 30;
     public static final String CMD_CENTER_TEXT = "center ";
     public static final String CMD_SPRING_ON_TEXT = "spring 1 ";
     public static final String CMD_SPRING_OFF_TEXT = "spring 0 ";
     public static final String CMD_VERSION = "version ";
     public static final String SUPPORTED_FIRMWARE_TYPE = "RKADE";
+    public static final long VERSION_ACTION_BUTTONS = 30001;
     private final static int LEONARDO_VENDOR_ID = 0x2341;
     private final static int LEONARDO_PRODUCT_ID = 0x8036;
     private final static int LEONARDO_BOOTLOADER_PRODUCT_ID = 54;
@@ -90,11 +92,33 @@ public class Device {
     private int inertiaEffectId = -1;
     private int damperEffectId = -1;
     private int triangleEffectId = -1;
+    private int versionNumber;
+    private String version;
 
     public Device(HidDevice hidDevice, String path) {
         this.hidDevice = hidDevice;
         this.name = hidDevice.getHidDeviceInfo().getProductString();
         this.hidPath = path;
+    }
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+        String v = version.trim().replaceAll("[^0-9]\\.", "");
+        String[] sections = version.split("\\.");
+        StringBuilder sb = new StringBuilder();
+        for (String section : sections) {
+            String digit = String.format("%02d", Integer.parseInt(section.trim()));
+            sb.append(digit);
+        }
+        this.versionNumber = Integer.parseInt(sb.toString());
     }
 
     public synchronized boolean saveSettings() {
@@ -178,6 +202,10 @@ public class Device {
             return sendCommand(CMD_SET_MISC, miscType, (short) 1);
         }
         return sendCommand(CMD_SET_MISC, miscType, (short) 0);
+    }
+
+    public synchronized boolean setButtonAction(short buttonNumber, int value) {
+        return sendCommand(CMD_SET_BUTTON_ACTION, buttonNumber, (byte) value);
     }
 
     public synchronized boolean setDebounce(byte value) {

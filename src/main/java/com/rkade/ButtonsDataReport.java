@@ -7,10 +7,10 @@ public final class ButtonsDataReport extends DataReport {
     private final byte shiftButton;
     private final int debounce;
     private final boolean multiplexShifterButtons;
-    private ButtonAction button11Action = ButtonAction.UNKNOWN;
-    private ButtonAction button12Action = ButtonAction.UNKNOWN;
-    private ButtonAction button13Action = ButtonAction.UNKNOWN;
-    private ButtonAction button14Action = ButtonAction.UNKNOWN;
+    private ButtonAction button11Action = ButtonAction.NONE;
+    private ButtonAction button12Action = ButtonAction.NONE;
+    private ButtonAction button13Action = ButtonAction.NONE;
+    private ButtonAction button14Action = ButtonAction.NONE;
 
     public ButtonsDataReport(byte reportType, byte reportIndex, short section, ByteBuffer buffer) {
         super(reportType, reportIndex, section);
