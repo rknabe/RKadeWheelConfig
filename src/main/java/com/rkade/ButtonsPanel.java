@@ -165,13 +165,13 @@ public class ButtonsPanel extends BaseForm implements DeviceListener, ActionList
         if (e.getActionCommand().equals(multiplexCheckbox.getActionCommand())) {
             return device.setMultiplexShifter(multiplexCheckbox.isSelected());
         } else if (e.getActionCommand().equals(cbActionBtn11.getActionCommand())) {
-            device.setButtonAction((short) 11, (byte) cbActionBtn11.getSelectedIndex());
+            return device.setButtonAction((short) 11, (byte) cbActionBtn11.getSelectedIndex());
         } else if (e.getActionCommand().equals(cbActionBtn12.getActionCommand())) {
-            device.setButtonAction((short) 12, (byte) cbActionBtn12.getSelectedIndex());
+            return device.setButtonAction((short) 12, (byte) cbActionBtn12.getSelectedIndex());
         } else if (e.getActionCommand().equals(cbActionBtn13.getActionCommand())) {
-            device.setButtonAction((short) 13, (byte) cbActionBtn13.getSelectedIndex());
+            return device.setButtonAction((short) 13, (byte) cbActionBtn13.getSelectedIndex());
         } else if (e.getActionCommand().equals(cbActionBtn14.getActionCommand())) {
-            device.setButtonAction((short) 14, (byte) cbActionBtn14.getSelectedIndex());
+            return device.setButtonAction((short) 14, (byte) cbActionBtn14.getSelectedIndex());
         }
         return true;
     }
