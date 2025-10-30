@@ -431,6 +431,10 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
 
     @Override
     public void deviceAttached(Device device) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException _) {
+        }
         this.device = device;
         deviceLabel.setText(device.getName());
         versionLabel.setText(device.getFirmwareType() + ":" + device.getFirmwareVersion());
@@ -442,6 +446,10 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
             gainPanel.deviceAttached(device);
         }
         buttonsPanel.deviceAttached(device);
+
+        if (!device.hasFfb()) {
+            mainTab.remove(ffbTab);
+        }
     }
 
     @Override

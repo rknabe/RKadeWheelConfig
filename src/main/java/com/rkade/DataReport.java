@@ -22,6 +22,27 @@ public class DataReport {
         return new String(newArray, StandardCharsets.ISO_8859_1);
     }
 
+    protected String getZString(ByteBuffer buffer, int maxBytes) {
+        byte[] newArray = new byte[maxBytes];
+        boolean nullTermFound = false;
+        byte ch;
+        for (int i = 0; i < maxBytes; i++) {
+            ch = buffer.get();
+            if (ch == 0) {
+                nullTermFound = true;
+            }
+            if (!nullTermFound) {
+                newArray[i] = ch;
+            } else {
+                if (ch != 0) {
+                    buffer.position(buffer.position() - 1);
+                    break;
+                }
+            }
+        }
+        return new String(newArray, StandardCharsets.ISO_8859_1).trim();
+    }
+
     public byte getReportType() {
         return reportType;
     }

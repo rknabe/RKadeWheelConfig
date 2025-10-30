@@ -112,7 +112,7 @@ public class Device {
     public void setVersion(String version) {
         this.version = version;
         String v = version.trim().replaceAll("[^0-9]\\.", "");
-        String[] sections = version.split("\\.");
+        String[] sections = v.split("\\.");
         StringBuilder sb = new StringBuilder();
         for (String section : sections) {
             String digit = String.format("%02d", Integer.parseInt(section.trim()));
@@ -360,6 +360,10 @@ public class Device {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean hasFfb() {
+        return firmwareType != null && !firmwareType.contains("MOTO");
     }
 
     public String getFirmwareType() {

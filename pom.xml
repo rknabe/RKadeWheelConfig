@@ -162,9 +162,9 @@
                             </classPath>
                             <jre>
                                 <path>jre</path>
-                                <opts>
+                                <!--<opts>
                                     <opt>-XX:+UseZGC -XX:+ZGenerational</opt>
-                                </opts>
+                                </opts>-->
                             </jre>
                             <versionInfo>
                                 <fileVersion>${project.version}</fileVersion>
