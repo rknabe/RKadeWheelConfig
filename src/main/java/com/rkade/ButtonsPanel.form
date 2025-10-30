@@ -82,6 +82,7 @@
             <properties>
               <minimumSize width="295" height="160"/>
               <preferredSize width="295" height="160"/>
+              <toolTipText value="Action Buttons only for firmware 3.0.1 and later"/>
             </properties>
             <border type="none"/>
             <children>
