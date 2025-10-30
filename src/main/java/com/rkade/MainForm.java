@@ -123,6 +123,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
     private JFormattedTextField minText;
     private JLabel velocityLabel;
     private JCheckBox invertCheckBox;
+    private JPanel fwPanel;
+    private JPanel statusPanel;
+    private JPanel epromPanel;
     private BufferedImage wheelImage;
     private Device device = null;
     private volatile boolean isWaitingOnDevice = false;
