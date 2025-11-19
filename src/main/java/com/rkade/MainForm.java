@@ -235,9 +235,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                     maxStr = String.valueOf(min + 10);
                 }
                 short max = Short.parseShort(maxStr);
-                if (max > min) {
-                    return device.setWheelLimits(min, max);
-                }
+                //if (max > min) {
+                return device.setWheelLimits(min, max);
+                //}
             } else if (e.getActionCommand().equals(setMaxButton.getActionCommand())) {
                 String minStr = minText.getText();
                 if (minStr == null || minStr.isEmpty()) {
@@ -249,9 +249,9 @@ public class MainForm extends BaseForm implements DeviceListener, ActionListener
                     maxStr = String.valueOf(min + 10);
                 }
                 short max = Short.parseShort(maxStr);
-                if (max > min) {
-                    return device.setWheelLimits(min, max);
-                }
+                //if (max > min) {
+                return device.setWheelLimits(min, max);
+                //}
             } else if (e.getActionCommand().equals(centerButton.getActionCommand())) {
                 return device.setWheelCenter(Short.parseShort(wheelRawTextField.getText()));
             } else if (e.getActionCommand().equals(rangeComboBox.getActionCommand())) {
