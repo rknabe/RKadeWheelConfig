@@ -29,12 +29,15 @@ public class FirmwareDialog extends JDialog {
     private final static int FIRMWARE_TYPE_ORIG = 1;
     private final static int FIRMWARE_TYPE_DLX = 2;
     private final static int FIRMWARE_TYPE_V3 = 3;
+    private final static int FIRMWARE_TYPE_MOTO = 99;
     private final static String FILE_VERSION = "version.txt";
     private final static String FILE_VERSION_DLX = "version-dlx.txt";
     private final static String FILE_VERSION_V3 = "version-v3.txt";
+    private final static String FILE_VERSION_MOTO = "version-moto.txt";
     private final static String FILE_FIRMWARE_BIN = "RKadeWheel.ino.hex";
     private final static String FILE_FIRMWARE_BIN_DLX = "RKadeWheel-Deluxe.ino.hex";
     private final static String FILE_FIRMWARE_BIN_V3 = "RKadeWheel-V3.ino.hex";
+    private final static String FILE_FIRMWARE_BIN_MOTO = "RKadeWheel-MOTO.ino.hex";
     private final static String FILE_FIRMWARE_URL = "https://github.com/rknabe/RKadeWheel/releases/download/Firmware/";
     private final static String DIR_TEMP = System.getProperty("java.io.tmpdir");
     private final static String EXE_PROGRAMMER = "avrdude.exe";
@@ -115,6 +118,8 @@ public class FirmwareDialog extends JDialog {
                 downloadToFile(FILE_FIRMWARE_URL, FILE_VERSION, versionFileName);
             } else if (firmwareType == FIRMWARE_TYPE_V3) {
                 downloadToFile(FILE_FIRMWARE_URL, FILE_VERSION_V3, versionFileName);
+            } else if (firmwareType == FIRMWARE_TYPE_MOTO) {
+                downloadToFile(FILE_FIRMWARE_URL, FILE_VERSION_MOTO, versionFileName);
             } else {
                 txtOutput.append("Cannot update, unable to determine Device version:" + device.getFirmwareVersion() + System.lineSeparator());
                 return;
@@ -135,6 +140,10 @@ public class FirmwareDialog extends JDialog {
 
     private int getFirmwareType() {
         String version = device.getFirmwareVersion();
+        String type = device.getFirmwareType();
+        if ("RKADE-MOTO".equalsIgnoreCase(type)) {
+            return FIRMWARE_TYPE_MOTO;
+        }
         if (version != null) {
             version = version.trim();
             if (version.endsWith("-DX") || "1.1.8".equals(version)) {
@@ -172,6 +181,8 @@ public class FirmwareDialog extends JDialog {
                 file = FILE_FIRMWARE_BIN;
             } else if (firmwareType == FIRMWARE_TYPE_V3) {
                 file = FILE_FIRMWARE_BIN_V3;
+            } else if (firmwareType == FIRMWARE_TYPE_MOTO) {
+                file = FILE_FIRMWARE_BIN_MOTO;
             } else {
                 txtOutput.append("Cannot update, unable to determine Device version:" + device.getFirmwareVersion() + System.lineSeparator());
                 return;
