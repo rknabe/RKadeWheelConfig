@@ -4,7 +4,7 @@
 
     <groupId>com.rkade</groupId>
     <artifactId>RKadeWheelConfig</artifactId>
-    <version>1.1.9.4</version>
+    <version>1.1.9.5</version>
     <packaging>jar</packaging>
     <description>RKADE FFB Device Configuration Utility</description>
     <name>RKadeWheelConfig</name>
@@ -79,7 +79,7 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
+                    <artifactId>maven-shade-plugin</artifactId>
                 <version>3.6.1</version>
                 <executions>
                     <execution>
